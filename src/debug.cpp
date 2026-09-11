@@ -79,5 +79,24 @@ void showAST(AST* tree, int indent, const std::string& fo, const std::string& eo
             std::cout << printIndent(indent) << fo << "Id<" << ((Id*)tree)->name << ">" << eo;
             break;
         }
+        case AST::AST_NULL: {
+            std::cout << printIndent(indent) << fo << "Null" << eo;
+            break;
+        }
+        case AST::AST_BOOL: {
+            std::cout << printIndent(indent) << fo << "Bool<" << ((Bool*)tree)->bol << ">" << eo;
+            break;
+        }
+        case AST::AST_THREE_OP: {
+            AST* condition = ((ThreeOp*)tree)->condition;
+            AST* tvalue    = ((ThreeOp*)tree)->trueValue;
+            AST* fvalue    = ((ThreeOp*)tree)->falseValue;
+            std::cout << printIndent(indent) << fo << "ThreeOperatorValue {\n";
+            showAST(condition, indent+1, "CONDITION: ", ",\n");
+            showAST(tvalue, indent+1, "TRUE: ", ",\n");
+            showAST(fvalue, indent+1, "FALSE: ", "\n");
+            std::cout << printIndent(indent) << "}" << eo << std::endl;
+            break;
+        }
     }
 }

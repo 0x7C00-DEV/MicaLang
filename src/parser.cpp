@@ -38,6 +38,7 @@ void Parser::restore() {
 Register Parser::parseExpr(std::string expr) {
     lexer.resetExpr(expr);
     advance(SYN_VALUE);
+    
     return makeExpr();
 }
 
@@ -53,13 +54,13 @@ Register Parser::makeBinOpNode(MPCLBCK clb, std::vector<std::string> ops) {
         advance(SYN_VALUE);
         const auto right = (this->*clb)();
         test(right);
-        left.result = new BinOpNode(op, left.result, right.result);
+        left.result = new BinOpNode(op, left.result, right.result, current.lin, current.col);
     }
     return left;
 }
 
 Register Parser::makeNumberNode() {
-    Register res(new Number(current.data));
+    Register res(new Number(current.data, current.lin, current.col));
     advance(SYN_VALUE);
     return res;
 }
@@ -68,13 +69,13 @@ Register Parser::makeString() {
     std::string str = current.data;
     advance(SYN_VALUE);
     std::vector<AST*> elements;
-    for (auto i : str) elements.push_back(new Char(i));
-    Register res(new Array(elements));
+    for (auto i : str) elements.push_back(new Char(i, current.lin, current.col));
+    Register res(new Array(elements, current.lin, current.col));
     return res;
 }
 
 Register Parser::makeChar() {
-    Register res(new Char(current.data));
+    Register res(new Char(current.data, current.lin, current.col));
     advance(SYN_VALUE);
     return res;
 }
@@ -100,8 +101,17 @@ Register Parser::makeValue() {
         advance(SYN_VALUE);
         auto tmp = makeValue();
         test(tmp);
-        tmp.result = new Neg(tmp.result);
+        tmp.result = new Neg(tmp.result, current.lin, current.col);
         return tmp;
+    }
+    if (equal(TT_BOOL)) {
+        auto tmp = current.data;
+        advance(SYN_VALUE);
+        return new Bool(tmp, current.lin, current.col);
+    }
+    if (equal(TT_NULL)) {
+        advance(SYN_VALUE);
+        return new Null(current.lin, current.col);
     }
     if (equal(TT_ID))
         return makeId();
@@ -111,9 +121,9 @@ Register Parser::makeValue() {
         advance(SYN_VALUE);
         auto tmp = makeExpr();
         test(tmp);
-        setError(tmp, equal(")"), "SyntaxError: Want a ')'");
+        setError(tmp, equal(")") && equal(TT_OP), "SyntaxError: Want a ')'");
         advance(SYN_VALUE);
-        return tmp;
+        return makeElementGetN(tmp.result);
     }
     if (equal(TT_CHAR))
         return makeChar();
@@ -139,7 +149,7 @@ Register Parser::makeArray() {
     setError(res, equal("]") && equal(TT_OP),
              "SyntaxError: want a ']'");
     advance(SYN_VALUE);
-    res.ok(new Array(elements));
+    res.ok(new Array(elements, current.lin, current.col));
     return res;
 }
 
@@ -148,15 +158,31 @@ Register Parser::makeFactor() {
 }
 
 Register Parser::makeTerm() {
-    return makeBinOpNode(&Parser::makeFactor, {"+", "-"});
+    return makeBinOpNode(&Parser::makeFactor, {"+", "-", "in"});
 } 
 
 Register Parser::makeExpr1() {
     return makeBinOpNode(&Parser::makeTerm, {"==", "!=", ">", "<", "<=", ">="});
 }
 
-Register Parser::makeExpr() {
+Register Parser::makeExpr_() {
     return makeBinOpNode(&Parser::makeExpr1, {"&&", "||"});
+}
+
+Register Parser::makeExpr() {
+    Register tmp = makeExpr_();
+    test(tmp);
+    if (!equal("?")) return tmp;
+    advance(SYN_VALUE);
+    Register tvalue = makeExpr();          
+    test(tvalue);
+    setError(tmp, equal(":") && equal(TT_OP),
+             "SyntaxError: want a ':', found '" + current.data + "'");
+    advance(SYN_VALUE);
+    Register fvalue = makeExpr();        
+    test(fvalue);
+    tmp.ok(new ThreeOp(tmp.result, tvalue.result, fvalue.result, current.lin, current.col));
+    return tmp;
 }
 
 bool Parser::equal(TokenKind kind) {
@@ -175,13 +201,13 @@ Register Parser::makeElementGetN(AST* name) {
             advance(SYN_VALUE);
             Register tmp = makeExpr();
             test(tmp);
-            setError(tmp, equal("]")&&equal(TT_OP), "SyntaxError: want a ']'");
-            res.ok(new ElementGet(res.result, tmp.result));
+            setError(tmp, equal("]") && equal(TT_OP), "SyntaxError: want a ']'");
             advance(SYN_VALUE);
-        } else if (equal("(")) {
+            res.ok(new ElementGet(res.result, tmp.result, current.lin, current.col));
+        } else if (equal("(")) {         
             auto tmp = makeCallNodeN(res.result);
             test(tmp);
-            res.ok(tmp.result);
+            res.ok(tmp.result);          
         } else {
             auto tmp = makeMemberAccessN(res.result);
             test(tmp);
@@ -208,7 +234,7 @@ Register Parser::makeCallNodeN(AST* name) {
             }
             setError(res, equal(TT_OP)&&equal(")"), "SyntaxError: want a ')'");
             advance(SYN_CALL);
-            res.ok(new Call(res.result, args));
+            res.ok(new Call(res.result, args, current.lin, current.col));
         } else if (equal("[")) {
             auto tmp = makeElementGetN(res.result);
             test(tmp);
@@ -250,7 +276,7 @@ Register Parser::makeMemberAccess() {
         return {"SyntaxError: want a id node, but found '" + current.data + "'", current.lin, current.col};
     std::string tmp = current.data;
     advance(SYN_VALUE);
-    return makeMemberAccessN(new Id(tmp));
+    return makeMemberAccessN(new Id(tmp, current.lin, current.col));
 }
 
 Register Parser::makeMemberAccessN(AST* name) {
@@ -261,7 +287,7 @@ Register Parser::makeMemberAccessN(AST* name) {
         setError(res, equal(TT_ID), "SyntaxError: want a id node, but found '" + current.data + "'");
         std::string tmp = current.data;
         advance(SYN_VALUE);
-        res.ok(new MemberAccess(res.result, tmp));
+        res.ok(new MemberAccess(res.result, tmp, current.lin, current.col));
     }
     return res;
 }

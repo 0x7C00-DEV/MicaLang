@@ -1,16 +1,16 @@
-CMakeFiles/MicaLang.dir/main.cpp.obj: \
- C:\Users\Lenovo\CLionProjects\MicaLang\main.cpp \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/iostream \
+CMakeFiles/MicaLang.dir/src/debug.cpp.obj: \
+ C:\Users\Lenovo\CLionProjects\MicaLang\src\debug.cpp \
+ C:/Users/Lenovo/CLionProjects/MicaLang/include/debug.h \
+ C:/Users/Lenovo/CLionProjects/MicaLang/include/ast.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/string \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/requires_hosted.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/x86_64-w64-mingw32/bits/c++config.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/x86_64-w64-mingw32/bits/os_defines.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/x86_64-w64-mingw32/bits/cpu_defines.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/pstl/pstl_config.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/ostream \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/ios \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/iosfwd \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stringfwd.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/memoryfwd.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/char_traits.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/postypes.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/cwchar \
  F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/wchar.h \
@@ -26,25 +26,14 @@ CMakeFiles/MicaLang.dir/main.cpp.obj: \
  F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/_mingw_stat64.h \
  F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/swprintf.inl \
  F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/sec_api/wchar_s.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/exception \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/exception.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/version.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/exception_ptr.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/exception_defines.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/cxxabi_init_exception.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/stddef.h \
- F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/stddef.h \
- F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/crtdefs.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/typeinfo \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/hash_bytes.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/new \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/move.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/type_traits \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/nested_exception.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/char_traits.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/version.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/compare \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/concepts \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_construct.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/new \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/exception.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/move.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_iterator_base_types.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/iterator_concepts.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/ptr_traits.h \
@@ -52,39 +41,22 @@ CMakeFiles/MicaLang.dir/main.cpp.obj: \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_iterator_base_funcs.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/concept_check.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/debug/assertions.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/localefwd.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/x86_64-w64-mingw32/bits/c++locale.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/clocale \
- F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/locale.h \
- F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/stdio.h \
- F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/sec_api/stdio_s.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/cctype \
- F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/ctype.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/ios_base.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/ext/atomicity.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/x86_64-w64-mingw32/bits/gthr.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/x86_64-w64-mingw32/bits/gthr-default.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/stdlib.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/cstdlib \
- F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/stdlib.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/limits.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/syslimits.h \
- F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/limits.h \
- F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/sec_api/stdlib_s.h \
- F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/malloc.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/mm_malloc.h \
- F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/errno.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/std_abs.h \
- F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/sys/timeb.h \
- F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/sec_api/sys/timeb_s.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/x86_64-w64-mingw32/bits/atomic_word.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/locale_classes.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/string \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/allocator.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/x86_64-w64-mingw32/bits/c++allocator.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/new_allocator.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/functexcept.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/exception_defines.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/cpp_type_traits.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/localefwd.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/x86_64-w64-mingw32/bits/c++locale.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/clocale \
+ F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/locale.h \
+ F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/crtdefs.h \
+ F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/stdio.h \
+ F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/sec_api/stdio_s.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/iosfwd \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/cctype \
+ F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/ctype.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/ostream_insert.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/cxxabi_forced.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_iterator.h \
@@ -107,21 +79,59 @@ CMakeFiles/MicaLang.dir/main.cpp.obj: \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/alloc_traits.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/string_view \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/functional_hash.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/hash_bytes.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/ranges_base.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/max_size_type.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/numbers \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/string_view.tcc \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/ext/string_conversions.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/cstdlib \
+ F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/stdlib.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/limits.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/syslimits.h \
+ F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/limits.h \
+ F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/sec_api/stdlib_s.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/stdlib.h \
+ F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/malloc.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/mm_malloc.h \
+ F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/errno.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/std_abs.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/cstdio \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/cerrno \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/charconv.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/basic_string.tcc \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/memory_resource.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/cstddef \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/stddef.h \
+ F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/stddef.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/uses_allocator.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/uses_allocator_args.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/tuple \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/ranges_util.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/utility \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_relops.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/vector \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_uninitialized.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_vector.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_bvector.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/vector.tcc \
+ C:/Users/Lenovo/CLionProjects/MicaLang/include/token.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/iostream \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/ostream \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/ios \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/exception \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/exception_ptr.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/cxxabi_init_exception.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/typeinfo \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/nested_exception.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/ios_base.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/ext/atomicity.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/x86_64-w64-mingw32/bits/gthr.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/x86_64-w64-mingw32/bits/gthr-default.h \
+ F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/sys/timeb.h \
+ F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/sec_api/sys/timeb_s.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/x86_64-w64-mingw32/bits/atomic_word.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/locale_classes.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/locale_classes.tcc \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/system_error \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/x86_64-w64-mingw32/bits/error_constants.h \
@@ -139,27 +149,4 @@ CMakeFiles/MicaLang.dir/main.cpp.obj: \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/basic_ios.tcc \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/ostream.tcc \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/istream \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/istream.tcc \
- C:\Users\Lenovo\CLionProjects\MicaLang\include/lexer.h \
- C:\Users\Lenovo\CLionProjects\MicaLang\include/token.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/vector \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_uninitialized.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_vector.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_bvector.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/vector.tcc \
- C:\Users\Lenovo\CLionProjects\MicaLang\include/parser.h \
- C:\Users\Lenovo\CLionProjects\MicaLang\include/lexer.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/algorithm \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_algo.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/algorithmfwd.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_heap.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/uniform_int_dist.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_tempbuf.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/ranges_algo.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/ranges_algobase.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/pstl/glue_algorithm_defs.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/pstl/execution_defs.h \
- C:\Users\Lenovo\CLionProjects\MicaLang\include/ast.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/utility \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_relops.h \
- C:\Users\Lenovo\CLionProjects\MicaLang\include/debug.h
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/istream.tcc

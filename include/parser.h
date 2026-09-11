@@ -57,6 +57,7 @@ private:
     Register makeTerm(); 
     Register makeExpr1();
     Register makeExpr(); 
+    Register makeExpr_();
     Register makeArray();
 
     Register makeElementGetN(AST*);
