@@ -1,0 +1,3 @@
+"F:\Program Files\JetBrains\CLion 2026.2.0.1\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\MicaLang.dir/objects.a
+F:\develop\Mingw-14.2.0\mingw64\bin\ar.exe qc CMakeFiles\MicaLang.dir/objects.a @CMakeFiles\MicaLang.dir\objects1.rsp
+F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\MicaLang.dir/objects.a -Wl,--no-whole-archive -o MicaLang.exe -Wl,--out-implib,libMicaLang.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\MicaLang.dir\linkLibs.rsp

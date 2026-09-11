@@ -1,0 +1,32 @@
+[
+{
+  "directory": "C:/Users/Lenovo/CLionProjects/MicaLang/build",
+  "command": "F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -g -std=gnu++20 -o CMakeFiles\\MicaLang.dir\\main.cpp.obj -c C:\\Users\\Lenovo\\CLionProjects\\MicaLang\\main.cpp",
+  "file": "C:/Users/Lenovo/CLionProjects/MicaLang/main.cpp",
+  "output": "CMakeFiles/MicaLang.dir/main.cpp.obj"
+},
+{
+  "directory": "C:/Users/Lenovo/CLionProjects/MicaLang/build",
+  "command": "F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -g -std=gnu++20 -o CMakeFiles\\MicaLang.dir\\src\\token.cpp.obj -c C:\\Users\\Lenovo\\CLionProjects\\MicaLang\\src\\token.cpp",
+  "file": "C:/Users/Lenovo/CLionProjects/MicaLang/src/token.cpp",
+  "output": "CMakeFiles/MicaLang.dir/src/token.cpp.obj"
+},
+{
+  "directory": "C:/Users/Lenovo/CLionProjects/MicaLang/build",
+  "command": "F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -g -std=gnu++20 -o CMakeFiles\\MicaLang.dir\\src\\lexer.cpp.obj -c C:\\Users\\Lenovo\\CLionProjects\\MicaLang\\src\\lexer.cpp",
+  "file": "C:/Users/Lenovo/CLionProjects/MicaLang/src/lexer.cpp",
+  "output": "CMakeFiles/MicaLang.dir/src/lexer.cpp.obj"
+},
+{
+  "directory": "C:/Users/Lenovo/CLionProjects/MicaLang/build",
+  "command": "F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -g -std=gnu++20 -o CMakeFiles\\MicaLang.dir\\src\\parser.cpp.obj -c C:\\Users\\Lenovo\\CLionProjects\\MicaLang\\src\\parser.cpp",
+  "file": "C:/Users/Lenovo/CLionProjects/MicaLang/src/parser.cpp",
+  "output": "CMakeFiles/MicaLang.dir/src/parser.cpp.obj"
+},
+{
+  "directory": "C:/Users/Lenovo/CLionProjects/MicaLang/build",
+  "command": "F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -g -std=gnu++20 -o CMakeFiles\\MicaLang.dir\\src\\debug.cpp.obj -c C:\\Users\\Lenovo\\CLionProjects\\MicaLang\\src\\debug.cpp",
+  "file": "C:/Users/Lenovo/CLionProjects/MicaLang/src/debug.cpp",
+  "output": "CMakeFiles/MicaLang.dir/src/debug.cpp.obj"
+}
+]
