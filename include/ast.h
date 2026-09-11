@@ -12,7 +12,8 @@ struct AST {
     int lin, col;
     enum TKind {
         AST_BIN_OP, AST_DIGIT, AST_CHAR, AST_ARRAY, AST_NEG, AST_ELEMENT_GET, AST_CALL,
-        AST_MEMBER_ACCESS, AST_ID, AST_BOOL, AST_NULL, AST_THREE_OP
+        AST_MEMBER_ACCESS, AST_ID, AST_BOOL, AST_NULL, AST_THREE_OP, AST_SELF_CHANGE,
+        AST_ASSIGN_NODE
     } kind;
 
     explicit AST(TKind kind, int lin, int col) {
@@ -116,6 +117,36 @@ struct Neg : AST {
     AST* value;
     explicit Neg(AST* value, int lin, int col): AST(AST_NEG, lin, col) {
         this->value = value;
+    }
+};
+
+struct AssignNode : AST {
+    std::string op;
+    AST* src;
+    AST* dst;
+    AssignNode(std::string oper, AST* tdst, AST* tsrc, int lin, int col): AST(AST_ASSIGN_NODE, col, lin) {
+        if (oper != "=") {
+            op = oper.substr(0, oper.find('='));
+            src = new BinOpNode(op, tdst, tsrc, lin, col);
+            dst = tdst;
+        } else {
+            src = tsrc;
+            dst = tdst;
+            op = "=";
+        }
+    }
+};
+
+struct SelfChangeNode : AST {
+    AST* value;
+    bool incOrDec; // true -> inc, false -> dec
+    bool isPre; // true -> pre, false -> no pre
+    AST* expand;
+    SelfChangeNode(AST* value, bool incOrDec, bool isPre, int col, int lin): AST(AST_SELF_CHANGE, col, lin) {
+        this->value = value;
+        this->incOrDec = incOrDec;
+        this->isPre = isPre;
+        expand = new AssignNode(incOrDec? "+=":"-=", value, new Number("1", lin, col), lin, col);
     }
 };
 

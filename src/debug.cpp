@@ -98,5 +98,20 @@ void showAST(AST* tree, int indent, const std::string& fo, const std::string& eo
             std::cout << printIndent(indent) << "}" << eo << std::endl;
             break;
         }
+        case AST::AST_SELF_CHANGE: {
+            auto tmp = (SelfChangeNode*) tree;
+            std::cout << printIndent(indent) << fo << "SelfChange <" << ((tmp->incOrDec)? "INC":"DEC") << "> {\n";
+            showAST(tmp->value, indent+1, "DST: ", "\n");
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
+        case AST::AST_ASSIGN_NODE: {
+            auto tmp = (AssignNode*) tree;
+            std::cout << printIndent(indent) << fo << "Assign <'" << tmp->op << "'> {\n";
+            showAST(tmp->dst, indent+1, "DST: ", ",\n");
+            showAST(tmp->src, indent+1, "SRC: ", "\n");
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
     }
 }

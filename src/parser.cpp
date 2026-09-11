@@ -95,6 +95,13 @@ void Register::fai(std::string error, int lin, int col) {
 Register Parser::makeValue() {
     if (equal(TT_INTEGER) || equal(TT_DOUBLE))
         return makeNumberNode();
+    if (equal("++") || equal("--")) {
+        std::string op = current.data;
+        advance(SYN_VALUE);
+        Register tmp = makeValue();
+        test(tmp);
+        return {new SelfChangeNode(tmp.result, op=="++", true, current.lin, current.col)};
+    }
     if (equal(TT_STRING))
         return makeString();
     if (equal(TT_OP) && equal("-")) {
@@ -113,8 +120,17 @@ Register Parser::makeValue() {
         advance(SYN_VALUE);
         return new Null(current.lin, current.col);
     }
-    if (equal(TT_ID))
-        return makeId();
+    if (equal(TT_ID)) {
+        auto tmp = makeId();
+        test(tmp);
+        if (equal("++") || equal("--")) {
+            std::string op = current.data;
+            advance(SYN_VALUE);
+            return {new SelfChangeNode(tmp.result, op=="++", false,
+                                       tmp.result->lin, tmp.result->col)};
+        }
+        return tmp;
+    }
     if (equal(TT_OP) && equal("["))
         return makeArray();
     if (equal(TT_OP) && equal("(")) {
@@ -170,6 +186,20 @@ Register Parser::makeExpr_() {
 }
 
 Register Parser::makeExpr() {
+    std::vector<std::string> unionSymbol = { "+=", "-=", "/=", "*=", "%=", "&=", "|=", "==", "!=", ">>=", "<<=", "=" };
+    auto first = makeExprA();
+    test(first);
+    if (equal(TT_OP) && std::count(unionSymbol.begin(), unionSymbol.end(), current.data) > 0) {
+        std::string tmp = current.data;
+        advance(SYN_VALUE);
+        Register t = makeExpr();
+        test(t);
+        first.ok(new AssignNode(tmp, first.result, t.result, current.lin, current.col));
+    }
+    return first;
+}
+
+Register Parser::makeExprA() {
     Register tmp = makeExpr_();
     test(tmp);
     if (!equal("?")) return tmp;
@@ -291,3 +321,28 @@ Register Parser::makeMemberAccessN(AST* name) {
     }
     return res;
 }
+
+
+Register Parser::makeStmt() {
+
+}
+
+Register Parser::makeIf() {
+
+}
+
+Register Parser::makeBlock() {
+
+}
+
+Register Parser::makeFor() {}
+
+Register Parser::makeWhile() {}
+
+Register Parser::makeDoWhile() {}
+
+Register Parser::makeSwitch() {}
+
+Register Parser::makeGoto() {}
+
+Register Parser::makeReturn() {}

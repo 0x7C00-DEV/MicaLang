@@ -56,7 +56,8 @@ private:
     Register makeFactor(); 
     Register makeTerm(); 
     Register makeExpr1();
-    Register makeExpr(); 
+    Register makeExpr();
+    Register makeExprA();
     Register makeExpr_();
     Register makeArray();
 
@@ -67,6 +68,17 @@ private:
     Register makeMemberAccess();
     Register makeMemberAccessN(AST*);
     Register makeId();
+
+    Register makeIf();
+    Register makeFor();
+    Register makeWhile();
+    Register makeDoWhile();
+    Register makeSwitch();
+    Register makeBlock();
+    Register makeStmt();
+
+    Register makeGoto();
+    Register makeReturn();
 };
 
 #endif //MICALANG_PARSER_H
