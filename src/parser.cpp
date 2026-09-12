@@ -38,8 +38,7 @@ void Parser::restore() {
 Register Parser::parseExpr(std::string expr) {
     lexer.resetExpr(expr);
     advance(SYN_VALUE);
-    
-    return makeExpr();
+    return makeStmt();
 }
 
 void Parser::advance(int cs = SYN_VALUE) {
@@ -121,7 +120,7 @@ Register Parser::makeValue() {
         return new Null(current.lin, current.col);
     }
     if (equal(TT_ID)) {
-        auto tmp = makeId();
+        auto tmp = makeId(SYN_VALUE);
         test(tmp);
         if (equal("++") || equal("--")) {
             std::string op = current.data;
@@ -139,7 +138,7 @@ Register Parser::makeValue() {
         test(tmp);
         setError(tmp, equal(")") && equal(TT_OP), "SyntaxError: Want a ')'");
         advance(SYN_VALUE);
-        return makeElementGetN(tmp.result);
+        return makeElementGetN(tmp.result, SYN_VALUE);
     }
     if (equal(TT_CHAR))
         return makeChar();
@@ -223,7 +222,7 @@ bool Parser::equal(std::string data) {
     return current.data == data;
 }
 
-Register Parser::makeElementGetN(AST* name) {
+Register Parser::makeElementGetN(AST* name, int ptype) {
     Register res;
     res.ok(name);
     while (current.kind != TT_EOF && (equal("[") || equal("(") || equal(".")) && equal(TT_OP)) {
@@ -235,11 +234,11 @@ Register Parser::makeElementGetN(AST* name) {
             advance(SYN_VALUE);
             res.ok(new ElementGet(res.result, tmp.result, current.lin, current.col));
         } else if (equal("(")) {         
-            auto tmp = makeCallNodeN(res.result);
+            auto tmp = makeCallNodeN(res.result, ptype);
             test(tmp);
             res.ok(tmp.result);          
         } else {
-            auto tmp = makeMemberAccessN(res.result);
+            auto tmp = makeMemberAccessN(res.result,ptype);
             test(tmp);
             res.ok(tmp.result);
         }
@@ -247,7 +246,7 @@ Register Parser::makeElementGetN(AST* name) {
     return res;
 }
 
-Register Parser::makeCallNodeN(AST* name) {
+Register Parser::makeCallNodeN(AST* name, int ptype) {
     Register res;
     res.ok(name);
     while (current.kind != TT_EOF && (equal("(") || equal("[") || equal(".")) && equal(TT_OP)) {
@@ -266,11 +265,11 @@ Register Parser::makeCallNodeN(AST* name) {
             advance(SYN_CALL);
             res.ok(new Call(res.result, args, current.lin, current.col));
         } else if (equal("[")) {
-            auto tmp = makeElementGetN(res.result);
+            auto tmp = makeElementGetN(res.result, ptype);
             test(tmp);
             res.ok(tmp.result);
         } else {
-            auto tmp = makeMemberAccessN(res.result);
+            auto tmp = makeMemberAccessN(res.result, SYN_VALUE);
             test(tmp);
             res.ok(tmp.result);
         }
@@ -279,49 +278,52 @@ Register Parser::makeCallNodeN(AST* name) {
 }
 
 
-Register Parser::makeId() {
-    auto tmp = makeMemberAccess();
+Register Parser::makeId(int ptype) {
+    auto tmp = makeMemberAccess(ptype);
     test(tmp);
     if (equal(TT_OP) && equal("("))
-        return makeCallNodeN(tmp.result);
+        return makeCallNodeN(tmp.result,ptype);
     if (equal(TT_OP) && equal("["))
-        return makeElementGetN(tmp.result);
+        return makeElementGetN(tmp.result,ptype);
     return tmp;
 }
 
-Register Parser::makeElementGet() {
-    auto tmp = makeMemberAccess();
+Register Parser::makeElementGet(int ptype) {
+    auto tmp = makeMemberAccess(ptype);
     test(tmp);
-    return makeElementGetN(tmp.result);
+    return makeElementGetN(tmp.result, ptype);
 }
 
 Register Parser::makeCallNode() {
-    auto tmp = makeMemberAccess();
+    auto tmp = makeMemberAccess(SYN_VALUE);
     test(tmp);
-    return makeCallNodeN(tmp.result);
+    return makeCallNodeN(tmp.result, SYN_VALUE);
 }
 
-Register Parser::makeMemberAccess() {
+Register Parser::makeMemberAccess(int ptype) {
     if (!equal(TT_ID))
         return {"SyntaxError: want a id node, but found '" + current.data + "'", current.lin, current.col};
     std::string tmp = current.data;
-    advance(SYN_VALUE);
-    return makeMemberAccessN(new Id(tmp, current.lin, current.col));
+    advance(ptype);
+    return makeMemberAccessN(new Id(tmp, current.lin, current.col), ptype);
 }
 
-Register Parser::makeMemberAccessN(AST* name) {
+Register Parser::makeMemberAccessN(AST* name, int ptype) {
     Register res;
     res.ok(name);
     while (current.kind != TT_EOF && equal(".")) {
-        advance(SYN_VALUE);
+        advance(ptype);
         setError(res, equal(TT_ID), "SyntaxError: want a id node, but found '" + current.data + "'");
         std::string tmp = current.data;
-        advance(SYN_VALUE);
+        advance(ptype);
         res.ok(new MemberAccess(res.result, tmp, current.lin, current.col));
     }
     return res;
 }
 
+Register Parser::makeFunction() {
+
+}
 
 Register Parser::makeStmt() {
     if (equal(TT_KEY) && equal("for"))
@@ -332,6 +334,8 @@ Register Parser::makeStmt() {
         return makeDoWhile();
     if (equal(TT_KEY) && equal("switch"))
         return makeSwitch();
+    if (equal(TT_KEY) && equal("if"))
+        return makeIf();
     if (equal(TT_OP) && equal("{"))
         return makeBlock();
     if (equal(TT_KEY) && equal("break")) {
@@ -432,6 +436,7 @@ Register Parser::makeType() {
         while (current.kind != TT_EOF && !(equal(")") && equal(TT_OP))) {
             Register st = makeType();
             test(st);
+            argsTypes.push_back(st.result);
             if (equal(")")&&equal(TT_OP)) break;
             setError(st, equal(",")&&equal(TT_OP), "SyntaxError: need a ')");
             advance(SYN_TYPE);
@@ -444,7 +449,7 @@ Register Parser::makeType() {
         test(retT);
         res.ok(new FuncType(retT.result, argsTypes, current.lin, current.col));
     } else if (equal(TT_ID)) {
-        Register clid = makeMemberAccess();
+        Register clid = makeMemberAccess(SYN_TYPE);
         test(clid);
         std::vector<AST*> args;
         bool isT = false;
@@ -545,6 +550,7 @@ Register Parser::makeForInit() {
         Register tmp = makeVarDefine();
         test(tmp);
         res.push_back(tmp.result);
+        if (equal(";") && equal(TT_OP)) break;
         setError(tmp, equal(",")&&equal(TT_OP), "SyntaxError: want a ','");
         advance();
     }
@@ -560,7 +566,7 @@ Register Parser::makeForChange() {
         test(tmp);
         res.push_back(tmp.result);
         if (equal(")")&&equal(TT_OP)) break;
-        setError(tmp, equal(TT_ID)&&equal(","), "SyntaxError: want a ','");
+        setError(tmp, equal(TT_OP)&&equal(","), "SyntaxError: want a ','");
         advance();
     }
     return {new Block(res, current.lin, current.col)};

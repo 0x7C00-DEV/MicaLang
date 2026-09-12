@@ -67,13 +67,13 @@ private:
     
     Register makeVarDefGrp();
     Register makeVarDefine();
-    Register makeElementGetN(AST*);
-    Register makeCallNodeN(AST*);
-    Register makeElementGet();
+    Register makeElementGetN(AST*, int);
+    Register makeCallNodeN(AST*, int);
+    Register makeElementGet(int);
     Register makeCallNode();
-    Register makeMemberAccess();
-    Register makeMemberAccessN(AST*);
-    Register makeId();
+    Register makeMemberAccess(int);
+    Register makeMemberAccessN(AST*, int);
+    Register makeId(int);
 
     Register makeIf();
     Register makeFor();
@@ -83,6 +83,7 @@ private:
     Register makeBlock();
     Register makeStmt();
     Register makeCase();
+    Register makeFunction();
 };
 
 #endif //MICALANG_PARSER_H

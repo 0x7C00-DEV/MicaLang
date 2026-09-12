@@ -1,20 +1,29 @@
 #include <iostream>
+#include "fstream"
 #include "include/lexer.h"
 #include "include/parser.h"
 #include "include/debug.h"
 
+std::string loadFile(std::string path) {
+    std::ifstream ifs(path);
+    std::string res, buffer;
+    while (std::getline(ifs, buffer))
+        res += buffer + '\n';
+    return res;
+}
+
 int main() {
-    Parser parser;
+    Parser p;
     while (true) {
         std::string expr;
-        std::cout << ">>> ";
+        printf(">>> ");
         std::getline(std::cin, expr);
-        Register res = parser.parseExpr(expr);
-        if (!res.isSuc) {
-            std::cout << res.error << " at lin " << res.lin << ", col " << res.col << std::endl;
-            continue;
+        Register tmp = p.parseExpr(expr);
+        if (!tmp.isSuc) {
+            std::cout << "ERROR: " << tmp.error << std::endl;
+        } else {
+            showAST(tmp.result, 0, "", "\n");
         }
-        showAST(res.result, 0, "", "\n");
     }
     return 0;
 }

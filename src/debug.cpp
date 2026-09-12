@@ -113,5 +113,132 @@ void showAST(AST* tree, int indent, const std::string& fo, const std::string& eo
             std::cout << printIndent(indent) << "}" << eo;
             break;
         }
+        case AST::AST_RETURN: {
+            std::cout << printIndent(indent) << fo << "Return {\n";
+            showAST(((Return*)tree)->value, indent+1, "VALUE: ", "\n");
+            std::cout << printIndent(indent) << eo;
+            break;
+        }
+        case AST::AST_CONTINUE: {
+            std::cout << printIndent(indent) << fo << "<ContinueStmt>" << eo;
+            break;
+        }
+        case AST::AST_BREAK: {
+            std::cout << printIndent(indent) << fo << "<BreakStmt>" << eo;
+            break;
+        }
+        case AST::AST_GOTO: {
+            std::cout << printIndent(indent) << fo << "<Goto -> " << (((Goto*)tree)->target) << ">" << eo;
+            break;
+        }
+        case AST::AST_BLOCK: {
+            std::cout << printIndent(indent) << fo << "Block {\n";
+            for (int i=0; i<((Block*)tree)->codes.size(); ++i)
+                showAST(((Block*)tree)->codes[i], indent+1, std::to_string(i)+": ", ",\n");
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
+        case AST::AST_FOR: {
+            std::cout << printIndent(indent) << fo << "ForLoop {\n";
+
+            auto tmp = (ForLoop*) tree;
+            showAST(tmp->init, indent+1, "INIT: ", ",\n");
+            showAST(tmp->condition, indent+1, "COND: ", ",\n");
+            showAST(tmp->change, indent+1, "CHANGE: ", ",\n");
+            showAST(tmp->block, indent+1, "BODY: ", "\n");
+
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
+        case AST::AST_WHILE: {
+            std::cout << printIndent(indent) << fo << "WhileLoop {\n";
+
+            showAST(((WhileLoop*)tree)->condition, indent+1, "COND: ", ",\n");
+            showAST(((WhileLoop*)tree)->body, indent+1, "BODY: ", "\n");
+
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
+        case AST::AST_DO_WHILE: {
+            auto tmp = (DoWhile*) tree;
+
+            std::cout << printIndent(indent) << fo << "DoWhile {\n";
+            showAST(tmp->condition, indent+1, "COND: ", ",\n");
+            showAST(tmp->body, indent+1, "BODY: ", "\n");
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
+        case AST::AST_SWITCH: {
+            auto tmp = (Switch*) tree;
+            std::cout << printIndent(indent) << fo << "Switch {\n";
+            showAST(tmp->value, indent+1, "VALUE: ", ",\n");
+            for (auto i : tmp->cases)
+                showAST(i, indent+1, "", ",\n");
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
+        case AST::AST_TYPE: {
+            auto tp = ((Type*)tree)->tpKind;
+            std::cout << printIndent(indent) << fo << "Type {\n";
+            if (tp == Type::TYPE_ARRAY) {
+                std::cout << printIndent(indent+1) << "KIND: ARRAY, \n";
+                auto v = (ArrayType*) tree;
+                showAST(v->elementType, indent+1, "ELEMENT_TYPE: ", ",\n");
+                showAST(v->size, indent+1, "ARRAY_SIZE: ", "\n");
+            } else if (tp == Type::TYPE_FUNC) {
+                std::cout << printIndent(indent+1) << "KIND: FUNC, \n";
+                auto tmp = (FuncType*) tree;
+                showAST(tmp->retType, indent+1, "RETURN: ", ",\n");
+                if (!tmp->args.empty()) {
+                    std::cout << printIndent(indent+1) << "ARGS: [\n";
+                    for (int i=0; i<tmp->args.size(); ++i)
+                        showAST(tmp->args[i], indent+2, std::to_string(i)+": ", ",\n");
+                    std::cout << printIndent(indent+1) << "]\n";
+                }
+            } else if (tp == Type::TYPE_NORMAL) {
+                std::cout << printIndent(indent+1) << "KIND: NORMAL, \n";
+                showAST(((NormalType*)tree)->classId, indent+1, "CLASS: ", "\n");
+            } else if (tp == Type::TYPE_TEMPLATE) {
+                std::cout << printIndent(indent+1) << "KIND: TEMPLATE, \n";
+                auto tmp = (TemplateType*) tree;
+                showAST(tmp->rootType, indent+1, "ROOT_TYPE: ", ",\n");
+
+                std::cout << printIndent(indent+1) << "Templates: [\n";
+                for (int i=0; i<tmp->subType.size(); ++i)
+                    showAST(tmp->subType[i], indent+2, std::to_string(i)+": ", ",\n");
+                std::cout << printIndent(indent+1) << "]\n";
+            }
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
+        case AST::AST_VAR_DEF: {
+            std::cout << printIndent(indent) << fo << "Var {\n";
+            auto tmp = (VarDef*) tree;
+            std::cout << printIndent(indent+1) << "NAME: " << tmp->name << ",\n";
+            showAST(tmp->type, indent+1, "TYPE: ", ",\n");
+            if (tmp->init)
+                showAST(tmp->init, indent+1, "INIT: ", "\n");
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
+        case AST::AST_VAR_DEF_GRP: {
+            std::cout << printIndent(indent) << fo << "Vars {\n";
+            for (auto i: ((VarDefGrp*)tree)->vars)
+                showAST(i, indent+1, "", ",\n");
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
+        case AST::AST_CASE: {
+            std::cout << printIndent(indent) << fo << "Case {\n";
+            if (((Case*)tree)->value)
+                showAST(((Case*)tree)->value, indent+1, "VALUE: ", ",\n");
+            showAST(((Case*)tree)->value, indent+1, "BODY: ", "\n");
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
+        case AST::AST_LABEL: {
+            std::cout << printIndent(indent) << fo << "LABEL: " << ((Id*)((Label*)tree)->name)->name << eo;
+            break;
+        }
     }
 }
