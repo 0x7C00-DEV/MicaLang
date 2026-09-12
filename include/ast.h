@@ -15,13 +15,46 @@ struct AST {
         AST_BIN_OP, AST_DIGIT, AST_CHAR, AST_ARRAY, AST_NEG, AST_ELEMENT_GET, AST_CALL,
         AST_MEMBER_ACCESS, AST_ID, AST_BOOL, AST_NULL, AST_THREE_OP, AST_SELF_CHANGE,
         AST_ASSIGN_NODE, AST_RETURN, AST_CONTINUE, AST_BREAK, AST_GOTO, AST_BLOCK,
-        AST_FOR, AST_WHILE, AST_DO_WHILE, AST_SWITCH, AST_TYPE, AST_VAR_DEF
+        AST_FOR, AST_WHILE, AST_DO_WHILE, AST_SWITCH, AST_TYPE, AST_VAR_DEF, AST_VAR_DEF_GRP,
+        AST_CASE, AST_LABEL
     } kind;
 
     explicit AST(TKind kind, int lin, int col) {
         this->kind = kind;
         this->lin = lin;
         this->col = col;
+    }
+};
+
+struct Case : AST {
+    AST* value;
+    AST* block;
+    Case(AST* value, AST* block, int lin, int col): AST(AST_CASE, lin, col) {
+        this->value = value;
+        this->block = block;
+    }
+};
+
+struct Switch : AST {
+    AST* value;
+    std::vector<AST*> cases;
+    Switch(AST* value, std::vector<AST*> cases, int lin, int col): AST(AST_SWITCH, lin, col) {
+        this->value = value;
+        this->cases = cases;
+    }
+};
+
+struct Label : AST {
+    AST* name;
+    Label(AST* name, int lin, int col): AST(AST_LABEL, lin, col) {
+        this->name = name;
+    }
+};
+
+struct VarDefGrp : AST {
+    std::vector<AST*> vars;
+    VarDefGrp(std::vector<AST*> vars, int lin, int col): AST(AST_VAR_DEF_GRP, lin, col) {
+        this->vars = vars;
     }
 };
 
@@ -76,11 +109,11 @@ struct NormalType : Type {
 };
 
 struct ForLoop : AST {
-    std::vector<AST*> init;
+    AST* init;
     AST*condition;
-    std::vector<AST*> change;
+    AST* change;
     AST* block;
-    ForLoop(std::vector<AST*> init, AST* condition, std::vector<AST*> change, AST* block, int lin, int col): AST(AST_FOR, lin, col) {
+    ForLoop(AST* init, AST* condition, AST* change, AST* block, int lin, int col): AST(AST_FOR, lin, col) {
         this->init = init;
         this->condition = condition;
         this->change = change;

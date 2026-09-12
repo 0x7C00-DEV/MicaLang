@@ -350,6 +350,12 @@ Register Parser::makeStmt() {
         res.ok(new Continue(current.lin, current.col));
         return res;
     }
+    if (equal(TT_KEY) && equal("let")) {
+        auto tmp = makeVarDefGrp();
+        setError(tmp, equal(TT_OP)&&equal(";"), "SyntaxError: want a ';', found '" + current.data + "'");
+        advance(SYN_VALUE);
+        return tmp;
+    }
     if (equal(TT_KEY) && equal("return")) {
         advance(SYN_VALUE);
         if (equal(";")) {
@@ -464,6 +470,21 @@ Register Parser::makeType() {
     return res;
 }
 
+Register Parser::makeVarDefGrp() {
+    advance();
+    Register res;
+    std::vector<AST*> vars;
+    while (current.kind != TT_EOF && !(equal(";") && equal(TT_OP))) {
+        auto tmp = makeVarDefine();
+        test(tmp);
+        vars.push_back(tmp.result);
+        if (equal(";")&&equal(TT_OP)) break;
+        setError(res, equal(TT_OP)&&equal(","), "SyntaxError: want a ',', found '"+current.data+"'");
+        advance();
+    }
+    res.ok(new VarDefGrp(vars, current.lin, current.col));
+    return res;
+}
 
 Register Parser::makeVarDefine() {
     Register res;
@@ -486,20 +507,139 @@ Register Parser::makeVarDefine() {
 }
 
 Register Parser::makeFor() {
-    advance();
+    Register init;
+    Register cond;
+    Register chang;
+    Register body;
 
-    std::vector<AST*> init;
-    AST* condition = nullptr;
-    std::vector<AST*> change;
-    AST* body = nullptr;
+    advance();
+    setError(init, equal("(")&&equal(TT_OP), "SyntaxError: want a '('");
+    advance();
+    init = makeForInit();
+    test(init);
+    setError(init, equal(";")&&equal(TT_OP), "SyntaxError: want a ';'");
+    advance();
+    cond = makeExpr();
+    test(cond);
+    setError(init, equal(";")&&equal(TT_OP), "SyntaxError: want a ';'");
+    advance();
+    chang = makeForChange();
+    test(chang);
+    setError(init, equal(")")&&equal(TT_OP), "SyntaxError: want a ')'");
+    advance();
+    body = makeBlock();
+    test(body);
+    return {new ForLoop(init.result, cond.result, chang.result, body.result, current.lin, current.col)};
 }
 
-Register Parser::makeWhile() {}
+Register Parser::makeForInit() {
+    std::vector<AST*> res;
+    while (current.kind != TT_EOF && !(equal(TT_OP)&&equal(";"))) {
+        if (equal(TT_KEY)&&equal("let")) {
+            Register temp = makeVarDefGrp();
+            test(temp);
+            res.push_back(temp.result);
+            setError(temp, equal(";")&&equal(TT_OP), "SyntaxError: want a ';'");
+            break;
+        }
+        Register tmp = makeVarDefine();
+        test(tmp);
+        res.push_back(tmp.result);
+        setError(tmp, equal(",")&&equal(TT_OP), "SyntaxError: want a ','");
+        advance();
+    }
+    Register r;
+    r.ok(new Block(res, current.lin, current.col));
+    return r;
+}
 
-Register Parser::makeDoWhile() {}
+Register Parser::makeForChange() {
+    std::vector<AST*> res;
+    while (current.kind != TT_EOF && !(equal(TT_OP) && equal(";"))) {
+        auto tmp = makeExpr();
+        test(tmp);
+        res.push_back(tmp.result);
+        if (equal(")")&&equal(TT_OP)) break;
+        setError(tmp, equal(TT_ID)&&equal(","), "SyntaxError: want a ','");
+        advance();
+    }
+    return {new Block(res, current.lin, current.col)};
+}
 
-Register Parser::makeSwitch() {}
+Register Parser::makeWhile() {
+    advance();
+    Register res;
+    setError(res, equal("(")&&equal(TT_OP), "SyntaxError: want a '(', found '"+current.data+"'");
+    advance();
+    Register cond = makeExpr();
+    test(cond);
+    setError(res, equal(")")&&equal(TT_OP), "SyntaxError: want a ')', found '"+current.data+"'");
+    advance();
+    Register body = makeBlock();
+    test(body);
+    res.ok(new WhileLoop(cond.result, body.result, current.lin, current.col));
+    return res;
+}
 
-Register Parser::makeGoto() {}
+Register Parser::makeDoWhile() {
+    advance();
+    Register body = makeBlock();
+    test(body);
+    setError(body, equal("while")&&equal(TT_KEY), "SyntaxError: want a 'while'");
+    advance();
+    setError(body, equal("(")&&equal(TT_OP), "SyntaxError: want a '('");
+    advance();
+    Register cond = makeExpr();
+    test(cond);
+    setError(body, equal(")")&&equal(TT_OP), "SyntaxError: want a ')'");
+    advance();
+    return {new DoWhile(cond.result, body.result, current.lin, current.col)};
+}
 
-Register Parser::makeReturn() {}
+
+Register Parser::makeCase() {
+    Register res;
+    if (equal("case") && equal(TT_KEY)) {
+        advance();
+        Register tmp = makeExpr();
+        test(tmp);
+        setError(tmp, equal(":")&&equal(TT_OP), "SyntaxError: want a ':', found '" + current.data + "'");
+        advance();
+        Register body = makeBlock();
+        test(body);
+        res.ok(new Case(tmp.result, body.result, current.lin, current.col));
+    } else if (equal("default") && equal(TT_KEY)) {
+        advance();
+        setError(res, equal(":")&&equal(TT_OP), "SyntaxError: want a ':', found '"+current.data+"'");
+        advance();
+        Register tmp = makeBlock();
+        test(tmp);
+        res.ok(new Case(nullptr, tmp.result, current.lin, current.col));
+    } else {
+        setError(res, false, "SyntaxError: unkonwn key '"+current.data+"'");
+    }
+    return res;
+}
+
+Register Parser::makeSwitch() {
+    advance();
+    Register res;
+    setError(res, equal("(")&&equal(TT_OP), "SyntaxError: want a '('");
+    advance();
+    res = makeExpr();
+    setError(res, equal(")")&&equal(TT_OP), "SyntaxError: want a ')'");
+    advance();
+
+    setError(res, equal("{")&&equal(TT_OP), "SyntaxError: want a '{'");
+    advance();
+    std::vector<AST*> cases;
+    while (current.kind!=TT_EOF && !(equal(TT_OP)&&equal("}"))) {
+        auto tmp = makeCase();
+        test(tmp);
+        cases.push_back(tmp.result);
+    }
+    setError(res, equal("}")&&equal(TT_OP), "SyntaxError: want a '}'");
+    advance();
+    res.ok(new Switch(res.result, cases, current.lin, current.col));
+    return res;
+}

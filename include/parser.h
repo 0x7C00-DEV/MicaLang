@@ -62,6 +62,10 @@ private:
     Register makeArray();
     Register makeType();
 
+    Register makeForInit();
+    Register makeForChange();
+    
+    Register makeVarDefGrp();
     Register makeVarDefine();
     Register makeElementGetN(AST*);
     Register makeCallNodeN(AST*);
@@ -78,9 +82,7 @@ private:
     Register makeSwitch();
     Register makeBlock();
     Register makeStmt();
-
-    Register makeGoto();
-    Register makeReturn();
+    Register makeCase();
 };
 
 #endif //MICALANG_PARSER_H
