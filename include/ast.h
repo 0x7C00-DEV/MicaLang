@@ -4,6 +4,7 @@
 
 #ifndef MICALANG_AST_H
 #define MICALANG_AST_H
+#include <complex>
 #include <string>
 #include <utility>
 #include <vector>
@@ -13,11 +14,102 @@ struct AST {
     enum TKind {
         AST_BIN_OP, AST_DIGIT, AST_CHAR, AST_ARRAY, AST_NEG, AST_ELEMENT_GET, AST_CALL,
         AST_MEMBER_ACCESS, AST_ID, AST_BOOL, AST_NULL, AST_THREE_OP, AST_SELF_CHANGE,
-        AST_ASSIGN_NODE
+        AST_ASSIGN_NODE, AST_RETURN, AST_CONTINUE, AST_BREAK, AST_GOTO, AST_BLOCK,
+        AST_FOR, AST_WHILE, AST_DO_WHILE, AST_SWITCH, AST_TYPE, AST_VAR_DEF
     } kind;
 
     explicit AST(TKind kind, int lin, int col) {
         this->kind = kind;
+        this->lin = lin;
+        this->col = col;
+    }
+};
+
+struct VarDef : AST {
+    std::string name;
+    AST* type;
+    AST* init;
+    VarDef(std::string name, AST* type, AST* init, int lin, int col): AST(AST_VAR_DEF, lin, col) {
+        this->name = name;
+        this->type = type;
+        this->init = init;
+    }
+};
+
+struct Type : AST {
+    enum TPKind { TYPE_ARRAY, TYPE_TEMPLATE, TYPE_NORMAL, TYPE_FUNC } tpKind;
+    Type(TPKind tp_kind, int lin, int col) : AST(AST_TYPE, lin, col), tpKind(tp_kind) {}
+};
+
+struct FuncType : Type {
+    AST* retType;
+    std::vector<AST*> args;
+    FuncType(AST* retType, std::vector<AST*> args, int lin, int col): Type(TYPE_FUNC, lin, col) {
+        this->retType = retType;
+        this->args = args;
+    }
+};
+
+struct ArrayType : Type {
+    AST* elementType;
+    AST* size;
+    ArrayType(AST *elementType, AST* size, int lin, int col): Type(TYPE_ARRAY, lin, col) {
+        this->elementType = elementType;
+        this->size = size;
+    }
+};
+
+struct TemplateType : Type {
+    AST* rootType;
+    std::vector<AST*> subType;
+    TemplateType(AST* rootType, std::vector<AST*> subType, int lin, int col): Type(TYPE_TEMPLATE, lin, col) {
+        this->rootType = rootType;
+        this->subType = subType;
+    }
+};
+
+struct NormalType : Type {
+    AST* classId;
+    NormalType(AST* classId, int lin, int col): Type(TYPE_NORMAL, lin, col) {
+        this->classId = classId;
+    }
+};
+
+struct ForLoop : AST {
+    std::vector<AST*> init;
+    AST*condition;
+    std::vector<AST*> change;
+    AST* block;
+    ForLoop(std::vector<AST*> init, AST* condition, std::vector<AST*> change, AST* block, int lin, int col): AST(AST_FOR, lin, col) {
+        this->init = init;
+        this->condition = condition;
+        this->change = change;
+        this->block = block;
+    }
+};
+
+struct WhileLoop : AST {
+    AST* condition;
+    AST* body;
+    WhileLoop(AST* condition, AST* body, int lin, int col): AST(AST_WHILE, lin, col) {
+        this->condition = condition;
+        this->body = body;
+    }
+};
+
+struct DoWhile : AST {
+    AST* condition;
+    AST* body;
+    DoWhile(AST* condition, AST* body, int lin, int col): AST(AST_DO_WHILE, lin, col) {
+        this->condition = condition;
+        this->body = body;
+    }
+};
+
+struct Block : AST {
+    std::vector<AST*> codes;
+    Block(std::vector<AST*> codes, int lin, int col): AST(AST_BLOCK, lin, col) {
+        this->codes = codes;
         this->lin = lin;
         this->col = col;
     }
@@ -49,6 +141,15 @@ struct Id : AST {
     std::string name;
     Id(std::string name, int lin, int col): AST(AST_ID, lin, col) {
         this->name = name;
+    }
+};
+
+struct Goto : AST {
+    std::string target;
+    Goto(std::string target, int lin, int col) :AST(AST_GOTO, lin, col) {
+        this->target = target;
+        this->lin = lin;
+        this->col = col;
     }
 };
 
@@ -134,6 +235,25 @@ struct AssignNode : AST {
             dst = tdst;
             op = "=";
         }
+    }
+};
+
+struct Break : AST {
+    Break(int lin, int col) : AST(AST_BREAK, lin, col) {
+
+    }
+};
+
+struct Continue : AST {
+    Continue(int lin, int col) : AST(AST_CONTINUE, lin, col) {
+
+    }
+};
+
+struct Return : AST {
+    AST* value;
+    Return(AST* value, int lin, int col): AST(AST_RETURN, lin, col) {
+        this->value = value;
     }
 };
 

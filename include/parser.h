@@ -60,7 +60,9 @@ private:
     Register makeExprA();
     Register makeExpr_();
     Register makeArray();
+    Register makeType();
 
+    Register makeVarDefine();
     Register makeElementGetN(AST*);
     Register makeCallNodeN(AST*);
     Register makeElementGet();
