@@ -16,13 +16,39 @@ struct AST {
         AST_MEMBER_ACCESS, AST_ID, AST_BOOL, AST_NULL, AST_THREE_OP, AST_SELF_CHANGE,
         AST_ASSIGN_NODE, AST_RETURN, AST_CONTINUE, AST_BREAK, AST_GOTO, AST_BLOCK,
         AST_FOR, AST_WHILE, AST_DO_WHILE, AST_SWITCH, AST_TYPE, AST_VAR_DEF, AST_VAR_DEF_GRP,
-        AST_CASE, AST_LABEL
+        AST_CASE, AST_LABEL, AST_IF, AST_FUNC_DEF
     } kind;
 
     explicit AST(TKind kind, int lin, int col) {
         this->kind = kind;
         this->lin = lin;
         this->col = col;
+    }
+};
+
+struct Func : AST {
+    std::string name;
+    AST* body;
+    std::vector<AST*> args;
+    bool isNative;
+    AST* ftype;
+    Func(std::string name, AST* body, std::vector<AST*> args, AST* ftype, bool isNative, int lin, int col) : AST(AST_FUNC_DEF, lin, col) {
+        this->name = name;
+        this->body = body;
+        this->args = args;
+        this->ftype = ftype;
+        this->isNative = isNative;
+    }
+};
+
+struct If : AST {
+    AST* condition;
+    AST* tblock;
+    AST* fblock;
+    If(AST* condition, AST* tblock, AST* fblock, int lin, int col): AST(AST_IF, lin, col) {
+        this->condition = condition;
+        this->tblock = tblock;
+        this->fblock = fblock;
     }
 };
 

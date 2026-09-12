@@ -10,11 +10,41 @@ inline std::string printIndent(int indent)  {
 }
 
 void showAST(AST* tree, int indent, const std::string& fo, const std::string& eo)  {
+    if (!tree) {
+        std::cout << printIndent(indent) << fo << "c_null" << eo;
+        return;
+    }
     switch (tree->kind) {
         case AST::AST_BIN_OP: {
             std::cout << printIndent(indent) << fo << "BinOp<'" << ((BinOpNode*)tree)->op << "'> {\n";
             showAST(((BinOpNode*)tree)->left, indent+1, "LEFT: ", ",\n");
             showAST(((BinOpNode*)tree)->right, indent+1, "RIGHT: ", "\n");
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
+        case AST::AST_FUNC_DEF: {
+            auto tmp = (Func*) tree;
+            std::cout << printIndent(indent) << fo << "Function {\n";
+            std::cout << printIndent(indent+1) << "NAME: " << tmp->name << ",\n";
+            showAST(tmp->ftype, indent+1, "FUNC_TYPE: ", ",\n");
+            if (!tmp->args.empty()) {
+                std::cout << printIndent(indent+1) << "ARGS: [\n";
+                for (int i=0; i<tmp->args.size(); ++i)
+                    showAST(tmp->args[i], indent+2, std::to_string(i)+": ", ",\n");
+                std::cout << printIndent(indent+1) << "],\n";
+            }
+            if (!tmp->isNative) showAST(tmp->body, indent+1, "BODY: ", "\n");
+            else std::cout << printIndent(indent+1) << "(NativeFunction)\n";
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
+        case AST::AST_IF: {
+            auto tmp = (If*) tree;
+            std::cout << printIndent(indent) << fo << "If {\n";
+            showAST(tmp->condition, indent+1, "COND: ", ",\n");
+            showAST(tmp->tblock, indent+1, "TRUE: ", ",\n");
+            if (tmp->fblock)
+                showAST(tmp->fblock, indent+1, "FALSE: ", "\n");
             std::cout << printIndent(indent) << "}" << eo;
             break;
         }
@@ -116,7 +146,7 @@ void showAST(AST* tree, int indent, const std::string& fo, const std::string& eo
         case AST::AST_RETURN: {
             std::cout << printIndent(indent) << fo << "Return {\n";
             showAST(((Return*)tree)->value, indent+1, "VALUE: ", "\n");
-            std::cout << printIndent(indent) << eo;
+            std::cout << printIndent(indent) << "}" << eo;
             break;
         }
         case AST::AST_CONTINUE: {

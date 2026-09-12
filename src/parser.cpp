@@ -50,8 +50,11 @@ std::vector<Register> Parser::parseCode(std::string expr) {
     lexer.resetExpr(std::move(expr));
     advance(SYN_VALUE);
     std::vector<Register> res;
-    while (current.kind!=TT_EOF)
-        res.push_back(makeExpr());
+    while (current.kind!=TT_EOF) {
+        auto tmp = makeStmt();
+        res.push_back(tmp);
+        if (!tmp.isSuc) advance();
+    }
     return res;
 }
 
@@ -332,7 +335,48 @@ Register Parser::makeMemberAccessN(AST* name, int ptype) {
 }
 
 Register Parser::makeFunction() {
+    advance();
+    Register body, retType;
+    std::string funcName;
+    bool isNative=false;
+    if (equal(TT_KEY)&&equal("native")) {
+        isNative=true;
+        advance();
+    }
+    setError(body, equal(TT_ID), "SyntaxError: want a id, found '"+current.data+"'");
+    funcName = current.data;
+    advance();
 
+    setError(body, equal("(") && equal(TT_OP), "SyntaxError: want a '(', found '"+current.data+"'");
+    advance();
+
+    std::vector<AST*> args;
+    while (current.kind!=TT_EOF && !(equal(TT_OP)&&equal(")"))) {
+        Register tmp = makeVarDefine();
+        test(tmp);
+        args.push_back(tmp.result);
+        if (equal(TT_OP) && equal(")")) break;
+        setError(tmp, equal(",")&&equal(TT_OP), "SyntaxError: want a ',', found '"+current.data+"'");
+        advance();
+    }
+    setError(body, equal(")")&&equal(TT_OP), "SyntaxError: want a ')', found '"+current.data+"'");
+    advance();
+
+    setError(body, equal(":")&&equal(TT_OP), "SyntaxError: want a ':', found '"+current.data+"'");
+    advance();
+    retType = makeType();
+    test(retType);
+    if (!isNative) {
+        body = makeBlock();
+        test(body);
+    } else {
+        body.ok(nullptr);
+        setError(body, equal(";")&&equal(TT_OP), "SyntaxError: need a ';'");
+        advance();
+    }
+    std::vector<AST*> argTypes;
+    for (auto i : args) argTypes.push_back(((VarDef*)i)->type);
+    return {new Func(funcName, body.result, args, new FuncType(retType.result, argTypes, current.lin,current.col), isNative, current.lin, current.col)};
 }
 
 Register Parser::makeStmt() {
@@ -344,6 +388,8 @@ Register Parser::makeStmt() {
         return makeDoWhile();
     if (equal(TT_KEY) && equal("switch"))
         return makeSwitch();
+    if (equal(TT_KEY) && equal("fn"))
+        return makeFunction();
     if (equal(TT_KEY) && equal("if"))
         return makeIf();
     if (equal(TT_OP) && equal("{"))
@@ -399,7 +445,25 @@ Register Parser::makeStmt() {
 }
 
 Register Parser::makeIf() {
-
+    Register res;
+    advance();
+    setError(res, equal("(")&&equal(TT_OP), "SyntaxError: want a '(', but found '"+current.data+"'");
+    advance();
+    res = makeExpr();
+    test(res);
+    setError(res, equal(")")&&equal(TT_OP), "SyntaxError: want a ')', but found '"+current.data+"'");
+    advance();
+    Register tblock = makeBlock();
+    Register fblock;
+    test(tblock);
+    fblock.ok(nullptr);
+    if (equal("else") && equal(TT_KEY)) {
+        advance();
+        fblock = makeBlock();
+        test(fblock);
+    }
+    res.ok(new If(res.result, tblock.result, fblock.result, current.lin, current.col));
+    return res;
 }
 
 Register Parser::makeBlock() {
