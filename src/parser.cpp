@@ -36,13 +36,23 @@ void Parser::restore() {
 }
 
 Register Parser::parseExpr(std::string expr) {
-    lexer.resetExpr(expr);
+    lexer.resetExpr(std::move(expr));
     advance(SYN_VALUE);
     return makeStmt();
 }
 
 void Parser::advance(int cs = SYN_VALUE) {
     current = lexer.getToken(cs);
+}
+
+
+std::vector<Register> Parser::parseCode(std::string expr) {
+    lexer.resetExpr(std::move(expr));
+    advance(SYN_VALUE);
+    std::vector<Register> res;
+    while (current.kind!=TT_EOF)
+        res.push_back(makeExpr());
+    return res;
 }
 
 Register Parser::makeBinOpNode(MPCLBCK clb, std::vector<std::string> ops) {

@@ -39,6 +39,7 @@ class Parser {
 public:
     Parser();
     Register parseExpr(std::string);
+    std::vector<Register> parseCode(std::string);
 private:
     Token current;
     Lexer lexer;

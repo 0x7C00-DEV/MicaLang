@@ -133,7 +133,7 @@ Token Lexer::getIdOrKey() {
 
 Token Lexer::getSymbol(int syntax) {
     std::vector<std::string> unionSymbol = {
-        "++", "--",
+        "++", "--", "||", "&&",
         "+=", "-=", "/=", "*=", "%=", "&=", "|=", "==", "!="
     };
     if (syntax != SYN_TYPE) {
