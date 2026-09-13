@@ -270,5 +270,21 @@ void showAST(AST* tree, int indent, const std::string& fo, const std::string& eo
             std::cout << printIndent(indent) << fo << "LABEL: " << ((Id*)((Label*)tree)->name)->name << eo;
             break;
         }
+        case AST::AST_INTERFACE: {
+            auto tmp = (Interface*) tree;
+            std::cout << printIndent(indent) << fo << "Interface<" << tmp->name << "> {\n";
+            for (int i=0; i<tmp->funcs.size(); ++i)
+                showAST(tmp->funcs[i], indent+1, std::to_string(i)+": ", ",\n");
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
+        case AST::AST_FUNC_TAG: {
+            auto tmp = (Interface::FunctionTag*) tree;
+            std::cout << printIndent(indent) << fo << "FunctionTag<" << tmp->name << "> {\n";
+            showAST(tmp->funcType, indent+1, "TYPE: ", ",\n");
+            std::cout << printIndent(indent+1) << "ACCESS_TYPE:" << tmp->at << "\n";
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
     }
 }

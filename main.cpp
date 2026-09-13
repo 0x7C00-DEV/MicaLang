@@ -14,16 +14,13 @@ std::string loadFile(std::string path) {
 
 int main() {
     Parser p;
-    while (true) {
-        std::string expr;
-        printf(">>> ");
-        std::getline(std::cin, expr);
-        Register tmp = p.parseExpr(expr);
-        if (!tmp.isSuc) {
-            std::cout << "ERROR: " << tmp.error << std::endl;
-        } else {
-            showAST(tmp.result, 0, "", "\n");
-        }
+    std::string expr = loadFile(R"(..\test\main.mic)");
+    std::cout << expr << std::endl;
+    auto tmp = p.parseExpr(expr);
+    if (!tmp.isSuc) {
+        std::cout << "ERROR: " << tmp.error << std::endl;
+    } else {
+        showAST(tmp.result, 0, "", "\n");
     }
     return 0;
 }

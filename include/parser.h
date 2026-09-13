@@ -84,6 +84,8 @@ private:
     Register makeBlock();
     Register makeStmt();
     Register makeCase();
+    Register makeInterface();
+    Register makeFunctionTag(AccessType);
     Register makeFunction();
 };
 

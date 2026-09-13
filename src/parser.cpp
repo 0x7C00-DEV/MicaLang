@@ -390,6 +390,8 @@ Register Parser::makeStmt() {
         return makeSwitch();
     if (equal(TT_KEY) && equal("fn"))
         return makeFunction();
+    if (equal(TT_KEY) && equal("interface"))
+        return makeInterface();
     if (equal(TT_KEY) && equal("if"))
         return makeIf();
     if (equal(TT_OP) && equal("{"))
@@ -420,13 +422,13 @@ Register Parser::makeStmt() {
         advance(SYN_VALUE);
         if (equal(";")) {
             advance(SYN_VALUE);
-            return Register(new Return(new Null(current.lin, current.col), current.lin, current.col));
+            return {new Return(new Null(current.lin, current.col), current.lin, current.col)};
         }
         Register tmp = makeExpr();
         test(tmp);
         setError(tmp, equal(TT_OP)&&equal(";"), "SyntaxError: want a ';', found '" + current.data + "'");
         advance(SYN_VALUE);
-        return Register(new Return(tmp.result, current.lin, current.col));
+        return {new Return(tmp.result, current.lin, current.col)};
     }
     if (equal(TT_KEY) && equal("goto")) {
         advance(SYN_VALUE);
@@ -436,7 +438,7 @@ Register Parser::makeStmt() {
         advance(SYN_VALUE);
         setError(tmp, equal(TT_OP)&&equal(";"), "SyntaxError: want a ';', found '" + current.data + "'");
         advance(SYN_VALUE);
-        return Register(new Goto(label, current.lin, current.col));
+        return {new Goto(label, current.lin, current.col)};
     }
     Register tmp = makeExpr();
     setError(tmp, equal(TT_OP)&&equal(";"), "SyntaxError: want a ';', found '" + current.data + "'");
@@ -698,6 +700,67 @@ Register Parser::makeCase() {
     } else {
         setError(res, false, "SyntaxError: unkonwn key '"+current.data+"'");
     }
+    return res;
+}
+
+Register Parser::makeFunctionTag(AccessType at) {
+    advance(); // jmp 'fn'
+    Register res;
+    setError(res, equal(TT_ID), "SyntaxError: want a id");
+    std::string name = current.data; // name
+    advance();
+
+    setError(res, equal(TT_OP)&&equal("("), "SyntaxError: want a '(");
+    advance();
+    std::vector<AST*> types;
+    Register retType;
+    while (current.kind!=TT_EOF && !(equal(TT_OP)&&equal(")"))) {
+        Register tmp = makeType();
+        test(tmp);
+        types.push_back(tmp.result);
+        if (equal(")") && equal(TT_OP)) break;
+        setError(tmp, equal(",")&&equal(TT_OP), "SyntaxError: want a ','");
+        advance();
+    }
+    setError(res, equal(TT_OP)&&equal(")"), "SyntaxError: want a ')'");
+    advance();
+
+    setError(res, equal(TT_OP)&&equal(":"), "SyntaxError: want a ':");
+    advance();
+
+    retType = makeTerm();
+    test(retType);
+
+    setError(res, equal(TT_OP)&&equal(";"), "SyntaxError: want a ';'");
+    advance();
+    res.ok(new Interface::FunctionTag(name, new FuncType(retType.result, types, current.lin, current.col), at, current.lin, current.col));
+    return res;
+}
+
+Register Parser::makeInterface() {
+    advance();
+    Register res;
+    setError(res, equal(TT_ID), "SyntaxError: want a id");
+    std::string name = current.data;
+    std::vector<AST*> funcs;
+    advance();
+
+    AccessType at = APRIVATE;
+    setError(res, equal("{")&&equal(TT_OP), "SyntaxError: want a '{'");
+    advance();
+    while (current.kind!=TT_EOF && !(equal(TT_OP)&&equal("}"))) {
+        if (equal(TT_KEY) && equal("public")) { at = APUBLIC; advance(); }
+        else if (equal(TT_KEY) && equal("private")) { advance(); }
+        else if (equal(TT_KEY) && equal("protected")) { at = APROTECTED; advance(); }
+        Register tmp = makeFunctionTag(at);
+        test(tmp);
+        funcs.push_back(tmp.result);
+        at = APRIVATE;
+    }
+    setError(res, equal("}")&&equal(TT_OP), "SyntaxError: want a '}'");
+    advance();
+
+    res.ok(new Interface(name, funcs, current.lin, current.col));
     return res;
 }
 
