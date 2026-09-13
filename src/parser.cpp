@@ -750,7 +750,7 @@ Register Parser::makeInterface() {
     advance();
     while (current.kind!=TT_EOF && !(equal(TT_OP)&&equal("}"))) {
         if (equal(TT_KEY) && equal("public")) { at = APUBLIC; advance(); }
-        else if (equal(TT_KEY) && equal("private")) { advance(); }
+        else if (equal(TT_KEY) && equal("private")) { at = APRIVATE; advance(); }
         else if (equal(TT_KEY) && equal("protected")) { at = APROTECTED; advance(); }
         Register tmp = makeFunctionTag(at);
         test(tmp);
