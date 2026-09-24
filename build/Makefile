@@ -159,30 +159,6 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/main.cpp.s
 .PHONY : main.cpp.s
 
-src/Resolve.obj: src/Resolve.cpp.obj
-.PHONY : src/Resolve.obj
-
-# target to build an object file
-src/Resolve.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/Resolve.cpp.obj
-.PHONY : src/Resolve.cpp.obj
-
-src/Resolve.i: src/Resolve.cpp.i
-.PHONY : src/Resolve.i
-
-# target to preprocess a source file
-src/Resolve.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/Resolve.cpp.i
-.PHONY : src/Resolve.cpp.i
-
-src/Resolve.s: src/Resolve.cpp.s
-.PHONY : src/Resolve.s
-
-# target to generate assembly for a file
-src/Resolve.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/Resolve.cpp.s
-.PHONY : src/Resolve.cpp.s
-
 src/debug.obj: src/debug.cpp.obj
 .PHONY : src/debug.obj
 
@@ -230,6 +206,30 @@ src/lexer.s: src/lexer.cpp.s
 src/lexer.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/lexer.cpp.s
 .PHONY : src/lexer.cpp.s
+
+src/makeError.obj: src/makeError.cpp.obj
+.PHONY : src/makeError.obj
+
+# target to build an object file
+src/makeError.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/makeError.cpp.obj
+.PHONY : src/makeError.cpp.obj
+
+src/makeError.i: src/makeError.cpp.i
+.PHONY : src/makeError.i
+
+# target to preprocess a source file
+src/makeError.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/makeError.cpp.i
+.PHONY : src/makeError.cpp.i
+
+src/makeError.s: src/makeError.cpp.s
+.PHONY : src/makeError.s
+
+# target to generate assembly for a file
+src/makeError.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/makeError.cpp.s
+.PHONY : src/makeError.cpp.s
 
 src/parser.obj: src/parser.cpp.obj
 .PHONY : src/parser.obj
@@ -279,6 +279,30 @@ src/position.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/position.cpp.s
 .PHONY : src/position.cpp.s
 
+src/resolve.obj: src/resolve.cpp.obj
+.PHONY : src/resolve.obj
+
+# target to build an object file
+src/resolve.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/resolve.cpp.obj
+.PHONY : src/resolve.cpp.obj
+
+src/resolve.i: src/resolve.cpp.i
+.PHONY : src/resolve.i
+
+# target to preprocess a source file
+src/resolve.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/resolve.cpp.i
+.PHONY : src/resolve.cpp.i
+
+src/resolve.s: src/resolve.cpp.s
+.PHONY : src/resolve.s
+
+# target to generate assembly for a file
+src/resolve.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/resolve.cpp.s
+.PHONY : src/resolve.cpp.s
+
 src/token.obj: src/token.cpp.obj
 .PHONY : src/token.obj
 
@@ -316,21 +340,24 @@ help:
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
-	@echo ... src/Resolve.obj
-	@echo ... src/Resolve.i
-	@echo ... src/Resolve.s
 	@echo ... src/debug.obj
 	@echo ... src/debug.i
 	@echo ... src/debug.s
 	@echo ... src/lexer.obj
 	@echo ... src/lexer.i
 	@echo ... src/lexer.s
+	@echo ... src/makeError.obj
+	@echo ... src/makeError.i
+	@echo ... src/makeError.s
 	@echo ... src/parser.obj
 	@echo ... src/parser.i
 	@echo ... src/parser.s
 	@echo ... src/position.obj
 	@echo ... src/position.i
 	@echo ... src/position.s
+	@echo ... src/resolve.obj
+	@echo ... src/resolve.i
+	@echo ... src/resolve.s
 	@echo ... src/token.obj
 	@echo ... src/token.i
 	@echo ... src/token.s

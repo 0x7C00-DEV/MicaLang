@@ -5,4 +5,6 @@
 #ifndef MICALANG_RESOLVE_HPP
 #define MICALANG_RESOLVE_HPP
 
+class Resolve {};
+
 #endif //MICALANG_RESOLVE_HPP

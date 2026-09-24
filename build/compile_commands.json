@@ -37,8 +37,14 @@
 },
 {
   "directory": "C:/Users/Lenovo/CLionProjects/MicaLang/build",
-  "command": "F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -g -std=gnu++20 -o CMakeFiles\\MicaLang.dir\\src\\Resolve.cpp.obj -c C:\\Users\\Lenovo\\CLionProjects\\MicaLang\\src\\Resolve.cpp",
-  "file": "C:/Users/Lenovo/CLionProjects/MicaLang/src/Resolve.cpp",
-  "output": "CMakeFiles/MicaLang.dir/src/Resolve.cpp.obj"
+  "command": "F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -g -std=gnu++20 -o CMakeFiles\\MicaLang.dir\\src\\resolve.cpp.obj -c C:\\Users\\Lenovo\\CLionProjects\\MicaLang\\src\\resolve.cpp",
+  "file": "C:/Users/Lenovo/CLionProjects/MicaLang/src/resolve.cpp",
+  "output": "CMakeFiles/MicaLang.dir/src/resolve.cpp.obj"
+},
+{
+  "directory": "C:/Users/Lenovo/CLionProjects/MicaLang/build",
+  "command": "F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -g -std=gnu++20 -o CMakeFiles\\MicaLang.dir\\src\\makeError.cpp.obj -c C:\\Users\\Lenovo\\CLionProjects\\MicaLang\\src\\makeError.cpp",
+  "file": "C:/Users/Lenovo/CLionProjects/MicaLang/src/makeError.cpp",
+  "output": "CMakeFiles/MicaLang.dir/src/makeError.cpp.obj"
 }
 ]

@@ -1,7 +1,9 @@
 #include <iostream>
 #include "fstream"
 #include "include/lexer.h"
+#include "include/makeError.h"
 #include "include/parser.h"
+#include "include/asm.h"
 #include "include/debug.h"
 
 std::string loadFile(std::string path) {
@@ -27,14 +29,18 @@ void shell() {
     }
 }
 
-int main() {
+void testFile() {
     Parser p;
     std::vector<Register> codes = p.parseCode(loadFile(R"(../test/main.mic)"), R"(../test/main.mic)");
     for (auto i : codes){
         if (!i.isSuc) {
-            std::cout << i.error << std::endl;
+            makeError(i);
         } else 
             showAST(i.result, 0, "", "\n");
     }
+}
+
+int main() {
+
     return 0;
 }

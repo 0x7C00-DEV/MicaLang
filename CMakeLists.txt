@@ -17,4 +17,5 @@ add_executable(MicaLang main.cpp
         include/resolve.h
         src/resolve.cpp
         include/makeError.h
-        src/makeError.cpp)
+        src/makeError.cpp
+        src/asm.cpp)
