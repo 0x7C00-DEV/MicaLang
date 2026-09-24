@@ -11,4 +11,10 @@ add_executable(MicaLang main.cpp
         include/parser.h
         src/parser.cpp
         include/debug.h
-        src/debug.cpp)
+        src/debug.cpp
+        include/position.h
+        src/position.cpp
+        include/resolve.h
+        src/resolve.cpp
+        include/makeError.h
+        src/makeError.cpp)

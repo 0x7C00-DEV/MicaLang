@@ -28,17 +28,19 @@ static bool isWord(const char c) {
     return 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || c == '_';
 }
 
-Lexer::Lexer(std::string expr) {
+Lexer::Lexer(std::string expr, std::string file) {
     this->expr = std::move(expr);
     this->pos = -1;
     this->current = 0;
+    this->file = file;
     lin = col = 1;
     advance();
 }
 
-void Lexer::resetExpr(std::string expression) {
+void Lexer::resetExpr(std::string expression, std::string file) {
     this->expr = std::move(expression);
     pos = -1;
+    this->file = file;
     current = 0;
     advance();
 }
@@ -48,14 +50,14 @@ Token Lexer::getToken(const int syntax) {
     if (fcmp("//"))
         while (current && current != '\n' && current != '\r')
             advance();
-    if (!current) return {"", TT_EOF, lin, col};
+    if (!current) return {"", TT_EOF, getPos(), getPos()};
     if (current == '\'') return getChar();
     if (current == '"') return getString();
     if (std::isdigit(current)) return getNumber();
     if (isWord(current)) return getIdOrKey();
     if (!std::isspace(current)) return getSymbol(syntax);
     while (std::isspace(current)) {
-        if (!current) return {"", TT_EOF, lin, col};
+        if (!current) return {"", TT_EOF, getPos(), getPos()};
         advance();
     }
     goto BEGIN;
@@ -79,12 +81,14 @@ void Lexer::restore() {
 }
 
 Token Lexer::getChar() {
+    auto begin = getPos();
     advance();
     std::string res;
     res += current;
     advance();
     advance();
-    return {res, TT_CHAR, lin, col};
+    auto end = getPos();
+    return {res, TT_CHAR, begin, end};
 }
 
 bool Lexer::fcmp(const std::string& name) const {
@@ -96,7 +100,12 @@ bool Lexer::fcmp(const std::string& name) const {
     return true;
 }
 
+Position Lexer::getPos() {
+    return {file, lin, col};
+}
+
 Token Lexer::getString() {
+    auto begin = getPos();
     advance();
     std::string res;
     while (current && current != '"') {
@@ -104,10 +113,12 @@ Token Lexer::getString() {
         advance();
     }
     advance();
-    return {res, TT_STRING, lin, col};
+    auto end = getPos();
+    return {res, TT_STRING, begin, end};
 }
 
 Token Lexer::getNumber() {
+    auto begin = getPos();
     std::string res;
     TokenKind tk = TT_INTEGER;
     while (current && (std::isdigit(current) || current == '.')) {
@@ -115,10 +126,12 @@ Token Lexer::getNumber() {
         if (current == '.') tk = TT_DOUBLE;
         advance();
     }
-    return {res, tk, lin, col};
+    auto end = getPos();
+    return {res, tk, begin, end};
 }
 
 Token Lexer::getIdOrKey() {
+    auto begin = getPos();
     std::string res;
     TokenKind tk = TT_ID;
     while (current && isWord(current)) {
@@ -128,10 +141,12 @@ Token Lexer::getIdOrKey() {
     tk = isKey(res)? TT_KEY : TT_ID;
     tk = res == "false" || res == "true"? TT_BOOL : tk;
     tk = res == "null"? TT_NULL : tk;
-    return {res, tk, lin, col};
+    auto end = getPos();
+    return {res, tk, begin, end};
 }
 
 Token Lexer::getSymbol(int syntax) {
+    auto begin = getPos();
     std::vector<std::string> unionSymbol = {
         "++", "--", "||", "&&",
         "+=", "-=", "/=", "*=", "%=", "&=", "|=", "==", "!="
@@ -151,9 +166,11 @@ Token Lexer::getSymbol(int syntax) {
     }
     if (!best.empty()) {
         advance(best.size());
-        return {best, TT_OP, lin, col};
+        auto end = getPos();
+        return {best, TT_OP, begin, end};
     }
     best += current;
     advance();
-    return {best, TT_OP, lin, col};
+    auto end = getPos();
+    return {best, TT_OP, begin, end};
 }

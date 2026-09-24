@@ -1,4 +1,11 @@
-interface DebugAble {
-	public fn print(string): void;
-	public fn max(Vector<Vector<int>>): int;
+fn main(): int {
+    let d:int = max([1,2,3,4,5]);
+}
+
+fn max(a: [int]): int {
+    let maxx: int = a[0];
+    for (let i:int=0; i<len(a); ++i)
+        if (a[i]>maxx)
+            maxx = a[i];
+    return maxx;
 }

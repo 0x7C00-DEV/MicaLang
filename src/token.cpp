@@ -5,14 +5,12 @@
 
 #include "../include/token.h"
 
-Token::Token(std::string data, const TokenKind kind, int lin, int col) {
+Token::Token(std::string data, const TokenKind kind, Position  begin, Position  end): begin(std::move(begin)), end(std::move(end)) {
     this->kind = kind;
     this->data = std::move(data);
-    this->lin = lin;
-    this->col = col;
 }
 
-Token::Token() {
+Token::Token(): begin({"UNKNOWN", 0,0}), end({"UNKNOWN", 0,0}) {
 
 }
 

@@ -5,8 +5,6 @@
 #ifndef MICALANG_DEBUG_H
 #define MICALANG_DEBUG_H
 #include "ast.h"
-#include "token.h"
-
 
 void showAST(AST* , int , const std::string& , const std::string&);
 

@@ -12,15 +12,29 @@ std::string loadFile(std::string path) {
     return res;
 }
 
+void shell() {
+    Parser p;
+    while (true) {
+        printf(">>> ");
+        std::string expr;
+        std::getline(std::cin, expr);
+        auto tmp = p.parseExpr(expr, "<stdin>");
+        if (!tmp.isSuc) {
+            std::cout << "Error: " << tmp.error << std::endl;
+        } else {
+            showAST(tmp.result, 0, "", "\n");
+        }
+    }
+}
+
 int main() {
     Parser p;
-    std::string expr = loadFile(R"(..\test\main.mic)");
-    std::cout << expr << std::endl;
-    auto tmp = p.parseExpr(expr);
-    if (!tmp.isSuc) {
-        std::cout << "ERROR: " << tmp.error << std::endl;
-    } else {
-        showAST(tmp.result, 0, "", "\n");
+    std::vector<Register> codes = p.parseCode(loadFile(R"(../test/main.mic)"), R"(../test/main.mic)");
+    for (auto i : codes){
+        if (!i.isSuc) {
+            std::cout << i.error << std::endl;
+        } else 
+            showAST(i.result, 0, "", "\n");
     }
     return 0;
 }

@@ -14,12 +14,13 @@ enum {
 
 class Lexer {
 public:
-    explicit Lexer(std::string);
+    explicit Lexer(std::string, std::string);
     Lexer();
 
     Token getToken(int);
 
-    void resetExpr(std::string);
+    std::string file;
+    void resetExpr(std::string, std::string);
     void saveState();
     void restore();
 private:
@@ -39,6 +40,8 @@ private:
     void advance(int);
 
     [[nodiscard]] bool fcmp(const std::string&) const;
+
+    Position getPos();
 
     Token getString();
     Token getNumber();

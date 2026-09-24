@@ -159,6 +159,30 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+src/Resolve.obj: src/Resolve.cpp.obj
+.PHONY : src/Resolve.obj
+
+# target to build an object file
+src/Resolve.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/Resolve.cpp.obj
+.PHONY : src/Resolve.cpp.obj
+
+src/Resolve.i: src/Resolve.cpp.i
+.PHONY : src/Resolve.i
+
+# target to preprocess a source file
+src/Resolve.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/Resolve.cpp.i
+.PHONY : src/Resolve.cpp.i
+
+src/Resolve.s: src/Resolve.cpp.s
+.PHONY : src/Resolve.s
+
+# target to generate assembly for a file
+src/Resolve.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/Resolve.cpp.s
+.PHONY : src/Resolve.cpp.s
+
 src/debug.obj: src/debug.cpp.obj
 .PHONY : src/debug.obj
 
@@ -231,6 +255,30 @@ src/parser.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/parser.cpp.s
 .PHONY : src/parser.cpp.s
 
+src/position.obj: src/position.cpp.obj
+.PHONY : src/position.obj
+
+# target to build an object file
+src/position.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/position.cpp.obj
+.PHONY : src/position.cpp.obj
+
+src/position.i: src/position.cpp.i
+.PHONY : src/position.i
+
+# target to preprocess a source file
+src/position.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/position.cpp.i
+.PHONY : src/position.cpp.i
+
+src/position.s: src/position.cpp.s
+.PHONY : src/position.s
+
+# target to generate assembly for a file
+src/position.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/position.cpp.s
+.PHONY : src/position.cpp.s
+
 src/token.obj: src/token.cpp.obj
 .PHONY : src/token.obj
 
@@ -268,6 +316,9 @@ help:
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
+	@echo ... src/Resolve.obj
+	@echo ... src/Resolve.i
+	@echo ... src/Resolve.s
 	@echo ... src/debug.obj
 	@echo ... src/debug.i
 	@echo ... src/debug.s
@@ -277,6 +328,9 @@ help:
 	@echo ... src/parser.obj
 	@echo ... src/parser.i
 	@echo ... src/parser.s
+	@echo ... src/position.obj
+	@echo ... src/position.i
+	@echo ... src/position.s
 	@echo ... src/token.obj
 	@echo ... src/token.i
 	@echo ... src/token.s

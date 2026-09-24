@@ -2,6 +2,7 @@
 // Created by Lenovo on 2026/9/11.
 //
 #include "../include/debug.h"
+#include "iostream"
 
 inline std::string printIndent(int indent)  {
     std::string res;
@@ -32,6 +33,12 @@ void showAST(AST* tree, int indent, const std::string& fo, const std::string& eo
                 for (int i=0; i<tmp->args.size(); ++i)
                     showAST(tmp->args[i], indent+2, std::to_string(i)+": ", ",\n");
                 std::cout << printIndent(indent+1) << "],\n";
+            }
+            if (!tmp->templates.empty()) {
+                std::cout << printIndent(indent+1) << "TEMP: [ ";
+                for (const auto& i : tmp->templates)
+                    std::cout << i << ", ";
+                std::cout << printIndent(indent) << "],\n";
             }
             if (!tmp->isNative) showAST(tmp->body, indent+1, "BODY: ", "\n");
             else std::cout << printIndent(indent+1) << "(NativeFunction)\n";
@@ -83,8 +90,16 @@ void showAST(AST* tree, int indent, const std::string& fo, const std::string& eo
         case AST::AST_CALL: {
             auto id = ((Call*)tree)->fnid;
             auto args = ((Call*)tree)->args;
+            auto tmp = ((Call*)tree)->templates;
             std::cout << printIndent(indent) << fo << "Call {\n";
             showAST(id, indent+1, "FUNC: ", ",\n");
+
+            if (!tmp.empty()) {
+                std::cout << printIndent(indent+1) << "TMP: [ \n";
+                for (int i=0; i<tmp.size(); ++i)
+                    showAST(tmp[i], indent+2, std::to_string(i)+":", ",\n");
+                std::cout << printIndent(indent+1) << "],\n";
+            }
 
             if (!args.empty()) {
                 std::cout << printIndent(indent+1) << "ARGS: [\n";
@@ -99,7 +114,14 @@ void showAST(AST* tree, int indent, const std::string& fo, const std::string& eo
         case AST::AST_MEMBER_ACCESS: {
             auto p = ((MemberAccess*)tree)->parent;
             auto m = ((MemberAccess*)tree)->member;
+            auto t = ((MemberAccess*)tree)->templates;
             std::cout << printIndent(indent) << fo << "MemberAccess {\n";
+            if (!t.empty()) {
+                std::cout << printIndent(indent+1) << "TPM: [\n";
+                for (int i=0; i<t.size(); ++i)
+                    showAST(t[i], indent+2, std::to_string(i)+": ", ",\n");
+                std::cout << printIndent(indent+1)  << "],\n";
+            }
             showAST(p, indent+1, "PARENT: ", ",\n");
             std::cout << printIndent(indent+1) << "MEMBER: " << m << std::endl;
             std::cout << printIndent(indent) << "}" << eo;
