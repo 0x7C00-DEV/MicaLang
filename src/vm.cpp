@@ -18,6 +18,8 @@ VM::VM(Module* module, std::string func, std::vector<MicaValue> args) {
     initVec();
     env.modules.push_back(module);
     env.mainModule = module;
+    for (auto i : module->funcs)
+        i->module = module;
     auto tmp = lookFunction(func);
     if (!tmp) {
         std::cout << "Function not found in module '" << module->moduleName << "'\n";
@@ -83,13 +85,15 @@ void VM::initVec() {
 
 void VM::setGlobalVar(int address) {
     auto val = pop();
-    env.getCTask()->module->globalVars.resize(address+env.getCTask()->module->globalVars.size());
+    if (address >= env.getCTask()->module->globalVars.size())
+        env.getCTask()->module->globalVars.resize(address+12);
     env.getCTask()->module->globalVars[address] = val;
 }
 
 void VM::setSubVar(int address) {
     auto val = pop();
-    env.getCTask()->localVar.resize(address+env.getCTask()->localVar.size());
+    if (address >= env.getCTask()->localVar.size())
+        env.getCTask()->localVar.resize(address+12);
     env.getCTask()->localVar[address] = val;
 }
 
