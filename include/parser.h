@@ -81,6 +81,8 @@ private:
     Register makeExpr_();
     Register makeArray();
     Register makeType();
+    Register makeClass();
+    Register makeNew();
     TRegister makeTemplate();
 
     Register makeForInit();
@@ -88,7 +90,7 @@ private:
 
     Register makeVarDefGrp();
     Register makeVarDefine();
-    Register makeElementGetN(AST*, int);
+    Register makeElementGetN(AST*, std::vector<AST*>, int);
     Register makeCallNodeN(AST*, std::vector<AST*>, int);
     Register makeElementGet(int);
     Register makeCallNode();

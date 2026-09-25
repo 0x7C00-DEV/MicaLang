@@ -1,8 +1,4 @@
-//
-// Created by Lenovo on 2026/9/11.
-//
 #include <utility>
-
 #include "../include/parser.h"
 
 Register::Register(): begin({"UNKNOWN", -1, -1}), end({"UNKNOWN", -1, -1}) {
@@ -14,7 +10,7 @@ Register::Register(std::string error, Position begin, Position end): begin(std::
     this->isSuc = false;
 }
 
-Register::Register(AST* result): begin({"UNKNOWN", -1, -1}), end({"UNKNOWN", -1, -1})  {
+Register::Register(AST* result): begin({"UNKNOWN", -1, -1}), end({"UNKNOWN", -1, -1}) {
     this->result = result;
     this->isSuc = true;
 }
@@ -125,6 +121,9 @@ Register Parser::makeValue() {
         return {new SelfChangeNode(tmp.result, op == "++", true, begin, end)};
     }
 
+    if (equal(TT_KEY) && equal("new"))
+        return makeNew();
+
     if (equal(TT_STRING))
         return makeString();
 
@@ -175,7 +174,7 @@ Register Parser::makeValue() {
         test(tmp);
         setError(tmp, equal(")") && equal(TT_OP), "SyntaxError: Want a ')'");
         advance(SYN_VALUE);
-        return makeElementGetN(tmp.result, SYN_VALUE);
+        return makeElementGetN(tmp.result, {}, SYN_VALUE);
     }
 
     if (equal(TT_CHAR))
@@ -260,17 +259,11 @@ Register Parser::makeExprA() {
 bool Parser::equal(TokenKind kind) { return current.kind == kind; }
 bool Parser::equal(std::string data) { return current.data == data; }
 
-Register Parser::makeElementGetN(AST* name, int ptype) {
+Register Parser::makeElementGetN(AST* name, std::vector<AST*> t_, int ptype) {
     Register res;
     res.ok(name);
-    std::vector<AST*> t;
-    while (current.kind != TT_EOF && (equal("[") || equal("(") || equal(".") || equal("<")) && equal(TT_OP)) {
-        if (equal("<") && equal(TT_OP)) {
-            saveState();
-            TRegister tmp = makeTemplate();
-            if (!tmp.isSuc) { restore(); break; }
-            t = tmp.result;
-        }
+    std::vector<AST*> t = std::move(t_);
+    while (current.kind != TT_EOF) {
         if (equal("[")) {
             Position begin = res.result->begin;
             advance(SYN_VALUE);
@@ -280,15 +273,23 @@ Register Parser::makeElementGetN(AST* name, int ptype) {
             Position end = posEnd();
             advance(SYN_VALUE);
             res.ok(new ElementGet(res.result, tmp.result, begin, end));
+        } else if (equal("<") && equal(TT_OP)) {
+            saveState();
+            TRegister tmp = makeTemplate();
+            if (!tmp.isSuc) { restore(); break; }
+            t = tmp.result;
         } else if (equal("(")) {
             auto tmp = makeCallNodeN(res.result, t, ptype);
             test(tmp);
             res.ok(tmp.result);
-        } else {
-            auto tmp = makeMemberAccessN(res.result, t, ptype);
             t.clear();
+        } else if (equal(".")) {
+            auto tmp = makeMemberAccessN(res.result, {}, ptype);
             test(tmp);
             res.ok(tmp.result);
+            t.clear();
+        } else {
+            break;
         }
     }
     return res;
@@ -319,21 +320,11 @@ void TRegister::fai(std::string error, Position begin, Position end) {
     this->end = end;
 }
 
-Register Parser::makeCallNodeN(AST* name, std::vector<AST*> t, int ptype) {
+Register Parser::makeCallNodeN(AST* name, std::vector<AST*> t_, int ptype) {
     Register res;
     res.ok(name);
-    std::vector<AST*> templates = std::move(t);
-    while (current.kind != TT_EOF && (equal("(") || equal("[") || equal(".") || equal("<")) && equal(TT_OP)) {
-        if (equal("<") && equal(TT_OP)) {
-            saveState();
-            auto tmp = makeTemplate();
-            if (!tmp.isSuc) {
-                templates.clear();
-                restore();
-                break;
-            }
-            templates = tmp.result;
-        }
+    std::vector<AST*> templates = std::move(t_);
+    while (current.kind != TT_EOF) {
         if (equal("(")) {
             Position begin = res.result->begin;
             advance(SYN_CALL);
@@ -352,14 +343,15 @@ Register Parser::makeCallNodeN(AST* name, std::vector<AST*> t, int ptype) {
             res.ok(new Call(res.result, args, templates, begin, end));
             templates.clear();
         } else if (equal("[")) {
-            auto tmp = makeElementGetN(res.result, ptype);
+            auto tmp = makeElementGetN(res.result, {}, ptype);
+            test(tmp);
+            res.ok(tmp.result);
+        } else if (equal(".")) {
+            auto tmp = makeMemberAccessN(res.result, {}, ptype);
             test(tmp);
             res.ok(tmp.result);
         } else {
-            auto tmp = makeMemberAccessN(res.result, templates, SYN_VALUE);
-            templates.clear();
-            test(tmp);
-            res.ok(tmp.result);
+            break;
         }
     }
     return res;
@@ -369,7 +361,7 @@ Register Parser::makeId(int ptype) {
     auto tmp = makeMemberAccess(ptype);
     test(tmp);
     TRegister t;
-    if (equal("<")) {
+    if (tmp.result->kind == AST::AST_ID && equal("<") && equal(TT_OP)) {
         saveState();
         t = makeTemplate();
         if (!t.isSuc) restore();
@@ -377,21 +369,21 @@ Register Parser::makeId(int ptype) {
     if (equal(TT_OP) && equal("("))
         return makeCallNodeN(tmp.result, t.result, ptype);
     if (equal(TT_OP) && equal("["))
-        return makeElementGetN(tmp.result, ptype);
+        return makeElementGetN(tmp.result, t.result, ptype);
     return tmp;
 }
 
 Register Parser::makeElementGet(int ptype) {
     auto tmp = makeMemberAccess(ptype);
     test(tmp);
-    return makeElementGetN(tmp.result, ptype);
+    return makeElementGetN(tmp.result, {}, ptype);
 }
 
 Register Parser::makeCallNode() {
     auto tmp = makeMemberAccess(SYN_VALUE);
     test(tmp);
     TRegister temp;
-    if (equal("<") && equal(TT_OP)) {
+    if (tmp.result->kind == AST::AST_ID && equal("<") && equal(TT_OP)) {
         saveState();
         temp = makeTemplate();
         if (!temp.isSuc) restore();
@@ -405,49 +397,28 @@ Register Parser::makeMemberAccess(int ptype) {
     Position begin = posBegin();
     Position end = posEnd();
     std::string tmp = current.data;
-    TRegister t;
     advance(ptype);
-    if (equal("<") && equal(TT_OP)) {
-        saveState();
-        t = makeTemplate();
-        if (!t.isSuc) {
-            t.result.clear();
-            restore();
-        }
-    }
-    return makeMemberAccessN(new Id(tmp, begin, end), t.result, ptype);
+    return makeMemberAccessN(new Id(tmp, begin, end), {}, ptype);
 }
 
 Register Parser::makeMemberAccessN(AST* name, std::vector<AST*> t_, int ptype) {
     Register res;
     res.ok(name);
-    std::vector<AST*> t = std::move(t_);
-    while (current.kind != TT_EOF && (equal(".") || equal("<"))) {
-        if (equal("<") && equal(TT_OP)) {
-            saveState();
-            TRegister tmp = makeTemplate();
-            if (!tmp.isSuc) {
-                restore();
-                break;
-            }
-            t = tmp.result;
-            continue;
-        }
+    while (current.kind != TT_EOF && equal(".")) {
         Position begin = res.result->begin;
         advance(ptype);
         setError(res, equal(TT_ID), "SyntaxError: want a id node, but found '" + current.data + "'");
         std::string tmp = current.data;
         Position end = posEnd();
         advance(ptype);
-        res.ok(new MemberAccess(res.result, tmp, t, begin, end));
-        t.clear();
+        res.ok(new MemberAccess(res.result, tmp, {}, begin, end));
     }
     return res;
 }
 
 Register Parser::makeFunction() {
     Position begin = posBegin();
-    advance(); // skip 'fn'
+    advance();
     Register body, retType;
     std::string funcName;
     bool isNative = false;
@@ -522,6 +493,8 @@ Register Parser::makeStmt() {
         return makeSwitch();
     if (equal(TT_KEY) && equal("fn"))
         return makeFunction();
+    if (equal(TT_KEY) && equal("class"))
+        return makeClass();
     if (equal(TT_KEY) && equal("interface"))
         return makeInterface();
     if (equal(TT_KEY) && equal("if"))
@@ -721,7 +694,7 @@ TRegister Parser::makeTemplate() {
 
 Register Parser::makeVarDefGrp() {
     Position begin = posBegin();
-    advance();    // skip 'let'
+    advance();
     Register res;
     std::vector<AST*> vars;
     while (current.kind != TT_EOF && !(equal(";") && equal(TT_OP))) {
@@ -761,10 +734,7 @@ Register Parser::makeVarDefine() {
 
 Register Parser::makeFor() {
     Position begin = posBegin();
-    Register init;
-    Register cond;
-    Register chang;
-    Register body;
+    Register init, cond, chang, body;
 
     advance();
     setError(init, equal("(") && equal(TT_OP), "SyntaxError: want a '('");
@@ -889,7 +859,7 @@ Register Parser::makeCase() {
 
 Register Parser::makeFunctionTag(AccessType at) {
     Position begin = posBegin();
-    advance(); // skip 'fn'
+    advance();
     Register res;
     setError(res, equal(TT_ID), "SyntaxError: want a id");
     std::string name = current.data;
@@ -985,5 +955,111 @@ Register Parser::makeSwitch() {
     setError(res, equal("}") && equal(TT_OP), "SyntaxError: want a '}'");
     advance();
     res.ok(new Switch(res.result, cases, begin, end));
+    return res;
+}
+
+Register Parser::makeClass() {
+    auto begin = posBegin();
+    Register res;
+    setError(res, equal("class") && equal(TT_KEY), "SyntaxError: want a 'class'");
+    advance();
+    std::string name, extend;
+    std::vector<std::string> impls;
+    std::vector<std::string> temp;
+    setError(res, equal(TT_ID), "SyntaxError: want a id");
+    name = current.data;
+    advance();
+    if (equal("<") && equal(TT_OP)) {
+        advance(SYN_TYPE);
+        while (current.kind != TT_EOF && !(equal(">") && equal(TT_OP))) {
+            setError(res, equal(TT_ID), "SyntaxError: want a id");
+            temp.push_back(current.data);
+            advance();
+            if (equal(">") && equal(TT_OP)) break;
+            setError(res, equal(",") && equal(TT_ID), "SyntaxError: want a ','");
+            advance();
+        }
+        setError(res, equal(">") && equal(TT_OP), "SyntaxError: want a '>'");
+        advance();
+    }
+
+    if (equal("extend")) {
+        advance();
+        setError(res, equal(TT_ID), "SyntaxError: want a id");
+        extend = current.data;
+        advance();
+    }
+    if (equal("implement")) {
+        advance();
+        while (current.kind != TT_EOF && !(equal("{") && equal(TT_OP))) {
+            setError(res, equal(TT_ID), "SyntaxError: want a id");
+            impls.push_back(current.data);
+            advance();
+            if (equal("{") && equal(TT_OP)) break;
+            setError(res, equal(",") && equal(TT_OP), "SyntaxError: want a ,");
+            advance();
+        }
+    }
+
+    std::vector<AST*> fields;
+    std::vector<AST*> methods;
+    setError(res, equal("{") && equal(TT_OP), "SyntaxError: want a '{'");
+    advance();
+    while (current.kind != TT_EOF && !(equal(TT_OP) && equal("}"))) {
+        if (!(equal(TT_KEY) && equal("fn"))) {
+            Register tmp = makeVarDefine();
+            test(tmp);
+            fields.push_back(tmp.result);
+            setError(res, equal(";") && equal(TT_OP), "SyntaxError: want a ';'");
+            advance();
+        } else {
+            Register tmp = makeFunction();
+            test(tmp);
+            methods.push_back(tmp.result);
+        }
+    }
+    setError(res, equal("}") && equal(TT_OP), "SyntaxError: want a '}'");
+    advance();
+    auto end = posEnd();
+    res.ok(new Class(name, fields, methods, extend, impls, temp, begin, end));
+    return res;
+}
+
+Register Parser::makeNew() {
+    std::string name;
+    TRegister temps;
+    std::vector<AST*> initArgs;
+
+    Position begin = posBegin();
+    Register res;
+    setError(res, equal(TT_KEY) && equal("new"), "SyntaxError: want a 'new'");
+    advance();
+
+    setError(res, equal(TT_ID), "SyntaxError: want a id");
+    name = current.data;
+    advance();
+
+    if (equal("<") && equal(TT_OP)) {
+        temps = makeTemplate();
+        if (!temps.isSuc)
+            return {temps.error, posBegin(), posEnd()};
+    }
+
+    if (equal("(") && equal(TT_OP)) {
+        advance();
+        while (current.kind != TT_EOF && !(equal(")") && equal(TT_OP))) {
+            auto tmp = makeExpr();
+            test(tmp);
+            initArgs.push_back(tmp.result);
+            if (equal(")") && equal(TT_OP)) break;
+            setError(res, equal(",") && equal(TT_OP), "SyntaxError: want a ','");
+            advance();
+        }
+        setError(res, equal(")") && equal(TT_OP), "SyntaxError: want a ')'");
+        advance();
+    }
+
+    auto end = posEnd();
+    res.ok(new NewClass(name, initArgs, temps.result, begin, end));
     return res;
 }

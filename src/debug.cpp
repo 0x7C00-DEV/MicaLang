@@ -308,5 +308,53 @@ void showAST(AST* tree, int indent, const std::string& fo, const std::string& eo
             std::cout << printIndent(indent) << "}" << eo;
             break;
         }
+        case AST::AST_CLASS: {
+            auto tmp = (Class*) tree;
+            std::cout << printIndent(indent) << fo << "Class <" << tmp->name << "> {\n";
+            if (!tmp->extend.empty()) std::cout << printIndent(indent+1) << "EXTEND: " << tmp->extend << ",\n";
+            if (!tmp->impls.empty()) {
+                std::cout << printIndent(indent+1) << "IMPL: [ ";
+                for (const auto& i : tmp->impls) std::cout << i << ", ";
+                std::cout << printIndent(indent+1) << "],\n";
+            }
+            if (!tmp->templates.empty()) {
+                std::cout << printIndent(indent+1) << "TEMP: [ ";
+                for (const auto& i : tmp->templates) std::cout << i << ", ";
+                std::cout << printIndent(indent+1) << "],\n";
+            }
+            if (!tmp->fields.empty()) {
+                std::cout << printIndent(indent+1) << "FIELDS: [\n";
+                for (auto i : tmp->fields)
+                    showAST(i, indent+2, "", ",\n");
+                std::cout << printIndent(indent+1) << "],\n";
+            }
+            if (!tmp->methods.empty()) {
+                std::cout << printIndent(indent+1) << "METHODS: [\n";
+                for (auto i : tmp->methods)
+                    showAST(i, indent+2, "", ",\n");
+                std::cout << printIndent(indent+1) << "]\n";
+            }
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
+        case AST::AST_NEW_CLASS: {
+            auto tmp = (NewClass*) tree;
+            std::cout << printIndent(indent) << fo << "NewClass {\n";
+            std::cout << printIndent(indent+1) << "NAME: " << tmp->className << ",\n";
+            if (!tmp->initArgs.empty()) {
+                std::cout << printIndent(indent+1) << "ARGS: [ \n";
+                for (auto i : tmp->initArgs)
+                    showAST(i, indent+2, "", ",\n");
+                std::cout << printIndent(indent+1) << "],\n";
+            }
+            if (!tmp->ttypes.empty()) {
+                std::cout << printIndent(indent+1) << "TEMP: [\n";
+                for (int i=0; i<tmp->ttypes.size(); ++i)
+                    showAST(tmp->ttypes[i], indent+2, std::to_string(i)+": ", ",\n");
+                std::cout << printIndent(indent+1) << "],\n";
+            }
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
     }
 }

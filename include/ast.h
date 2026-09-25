@@ -18,7 +18,8 @@ struct AST {
         AST_MEMBER_ACCESS, AST_ID, AST_BOOL, AST_NULL, AST_THREE_OP, AST_SELF_CHANGE,
         AST_ASSIGN_NODE, AST_RETURN, AST_CONTINUE, AST_BREAK, AST_GOTO, AST_BLOCK,
         AST_FOR, AST_WHILE, AST_DO_WHILE, AST_SWITCH, AST_TYPE, AST_VAR_DEF, AST_VAR_DEF_GRP,
-        AST_CASE, AST_LABEL, AST_IF, AST_FUNC_DEF, AST_INTERFACE, AST_FUNC_TAG
+        AST_CASE, AST_LABEL, AST_IF, AST_FUNC_DEF, AST_INTERFACE, AST_FUNC_TAG, AST_CLASS,
+        AST_NEW_CLASS
     } kind;
 
     explicit AST(TKind kind, Position begin, Position end): begin(std::move(begin)), end(std::move(end)) {
@@ -27,6 +28,42 @@ struct AST {
 };
 
 enum AccessType { APUBLIC, APRIVATE, APROTECTED };
+
+struct NewClass : AST {
+    std::string className;
+    std::vector<AST*> initArgs;
+    std::vector<AST*> ttypes;
+    NewClass(std::string className, std::vector<AST*> initArgs, std::vector<AST*> ttypes, Position begin, Position end) : AST(AST_NEW_CLASS, begin, end) {
+        this->className = className;
+        this->initArgs = initArgs;
+        this->ttypes = ttypes;
+    } 
+};
+
+struct Class : AST {
+    std::string name;
+    std::vector<AST*> fields;
+    std::vector<std::string> templates;
+    std::vector<AST*> methods;
+    std::string extend;
+    std::vector<std::string> impls;
+
+    Class(std::string name, 
+        std::vector<AST*> fields, 
+        std::vector<AST*> methods, 
+        std::string extend, 
+        std::vector<std::string> impls, 
+        std::vector<std::string> templates,
+         Position begin, Position end)
+        :AST(AST_CLASS, std::move(begin), std::move(end)) {
+            this->name = name;
+            this->fields = fields;
+            this->methods = methods;
+            this->extend = extend;
+            this->impls = impls;
+            this->templates = templates;
+        }
+};
 
 struct Interface : AST {
     std::string name;

@@ -14,8 +14,10 @@ add_executable(MicaLang main.cpp
         src/debug.cpp
         include/position.h
         src/position.cpp
-        include/resolve.h
-        src/resolve.cpp
         include/makeError.h
         src/makeError.cpp
-        src/asm.cpp)
+        src/asm.cpp
+        include/vm.h
+        src/vm.cpp
+        include/value.h
+        src/value.cpp)

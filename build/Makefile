@@ -159,6 +159,30 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+src/asm.obj: src/asm.cpp.obj
+.PHONY : src/asm.obj
+
+# target to build an object file
+src/asm.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/asm.cpp.obj
+.PHONY : src/asm.cpp.obj
+
+src/asm.i: src/asm.cpp.i
+.PHONY : src/asm.i
+
+# target to preprocess a source file
+src/asm.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/asm.cpp.i
+.PHONY : src/asm.cpp.i
+
+src/asm.s: src/asm.cpp.s
+.PHONY : src/asm.s
+
+# target to generate assembly for a file
+src/asm.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/asm.cpp.s
+.PHONY : src/asm.cpp.s
+
 src/debug.obj: src/debug.cpp.obj
 .PHONY : src/debug.obj
 
@@ -279,30 +303,6 @@ src/position.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/position.cpp.s
 .PHONY : src/position.cpp.s
 
-src/resolve.obj: src/resolve.cpp.obj
-.PHONY : src/resolve.obj
-
-# target to build an object file
-src/resolve.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/resolve.cpp.obj
-.PHONY : src/resolve.cpp.obj
-
-src/resolve.i: src/resolve.cpp.i
-.PHONY : src/resolve.i
-
-# target to preprocess a source file
-src/resolve.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/resolve.cpp.i
-.PHONY : src/resolve.cpp.i
-
-src/resolve.s: src/resolve.cpp.s
-.PHONY : src/resolve.s
-
-# target to generate assembly for a file
-src/resolve.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/resolve.cpp.s
-.PHONY : src/resolve.cpp.s
-
 src/token.obj: src/token.cpp.obj
 .PHONY : src/token.obj
 
@@ -327,6 +327,54 @@ src/token.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/token.cpp.s
 .PHONY : src/token.cpp.s
 
+src/value.obj: src/value.cpp.obj
+.PHONY : src/value.obj
+
+# target to build an object file
+src/value.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/value.cpp.obj
+.PHONY : src/value.cpp.obj
+
+src/value.i: src/value.cpp.i
+.PHONY : src/value.i
+
+# target to preprocess a source file
+src/value.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/value.cpp.i
+.PHONY : src/value.cpp.i
+
+src/value.s: src/value.cpp.s
+.PHONY : src/value.s
+
+# target to generate assembly for a file
+src/value.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/value.cpp.s
+.PHONY : src/value.cpp.s
+
+src/vm.obj: src/vm.cpp.obj
+.PHONY : src/vm.obj
+
+# target to build an object file
+src/vm.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/vm.cpp.obj
+.PHONY : src/vm.cpp.obj
+
+src/vm.i: src/vm.cpp.i
+.PHONY : src/vm.i
+
+# target to preprocess a source file
+src/vm.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/vm.cpp.i
+.PHONY : src/vm.cpp.i
+
+src/vm.s: src/vm.cpp.s
+.PHONY : src/vm.s
+
+# target to generate assembly for a file
+src/vm.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/vm.cpp.s
+.PHONY : src/vm.cpp.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -340,6 +388,9 @@ help:
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
+	@echo ... src/asm.obj
+	@echo ... src/asm.i
+	@echo ... src/asm.s
 	@echo ... src/debug.obj
 	@echo ... src/debug.i
 	@echo ... src/debug.s
@@ -355,12 +406,15 @@ help:
 	@echo ... src/position.obj
 	@echo ... src/position.i
 	@echo ... src/position.s
-	@echo ... src/resolve.obj
-	@echo ... src/resolve.i
-	@echo ... src/resolve.s
 	@echo ... src/token.obj
 	@echo ... src/token.i
 	@echo ... src/token.s
+	@echo ... src/value.obj
+	@echo ... src/value.i
+	@echo ... src/value.s
+	@echo ... src/vm.obj
+	@echo ... src/vm.i
+	@echo ... src/vm.s
 .PHONY : help
 
 
