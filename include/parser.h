@@ -98,6 +98,7 @@ private:
     Register makeMemberAccessN(AST*, std::vector<AST*>, int);
     Register makeId(int);
 
+    Register makeImport();
     Register makeIf();
     Register makeFor();
     Register makeWhile();

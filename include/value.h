@@ -6,10 +6,14 @@
 #define MICALANG_VALUE_H
 #include <cstdint>
 #include <vector>
+#include <windows.h>
+#include <imagehlp.h>
 #include <iostream>
 #include <unordered_map>
 #include "asm.h"
 
+struct Frame;
+struct Module;
 struct Function;
 struct Obj;
 
@@ -54,17 +58,28 @@ struct ObjString : ObjArray {
     }
 };
 
+
+
 struct Program {
     std::vector<Function*> funcs;
     std::vector<MicaValue> constPools;
 };
 
-struct Module {
-    std::string moduleName;
-    std::vector<Function*> funcs;
-    std::vector<MicaValue> globalConstPool;
-    std::vector<MicaValue> globalVars;
+
+
+struct Environment {
+    Module* mainModule;
+    std::vector<Module*> modules;
+    std::vector<Frame*> callChain;
+    Frame* getCTask();
+    void loadModule(Program*, std::string);
 };
+
+
+
+using MicaCFunction = MicaValue(Environment*, std::vector<MicaValue>);
+
+std::vector<MicaCFunction*> loadMicaFunctions(const char*);
 
 struct Frame {
     int pc=0;
@@ -75,14 +90,8 @@ struct Frame {
     Module* module;
     Frame(Function*, Frame*);
     Instr getInstr();
-};
 
-struct Environment {
-    Module* mainModule;
-    std::vector<Module*> modules;
-    std::vector<Frame*> callChain;
-    Frame* getCTask();
-    void loadModule(Program*, std::string);
+    void __call__(Environment*, std::vector<MicaValue>);
 };
 
 struct Function : Obj {
@@ -90,7 +99,29 @@ struct Function : Obj {
     std::vector<Instr> ins;
     std::vector<MicaValue> constants;
     std::string name;
-    Function(): Obj(FUNCTION) {}
+    MicaCFunction* __native__;
+    bool isNative;
+
+
+
+    Function(): Obj(FUNCTION) {
+        isNative = false;
+    }
+
+    Function(MicaCFunction* n): Obj(FUNCTION) {
+        __native__ = n;
+        isNative = true;
+    }
+};
+
+struct Module {
+    std::string moduleName;
+    std::vector<MicaValue> globalConstPool;
+    std::vector<MicaValue> globalVars;
+    std::vector<Function*> funcs;
+
+    Module();
+    Module(std::string);
 };
 
 struct ObjClass : Obj {

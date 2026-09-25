@@ -304,6 +304,32 @@ TRegister::TRegister(std::string error, Position begin, Position end) : begin(be
     this->error = error;
 }
 
+
+Register Parser::makeImport() {
+    Register res;
+    std::string path, align;
+    auto begin = posBegin();
+    setError(res, equal(TT_KEY)&&equal("import"), "SyntaxError: want a 'import'");
+    advance();
+
+    setError(res, equal(TT_STRING), "SyntaxError: want a string");
+    path = current.data;
+    advance();
+
+    setError(res, equal(TT_KEY)&&equal("as"), "SyntaxError: want a 'as'");
+    advance();
+
+    setError(res, equal(TT_ID), "SyntaxError: want a id");
+    align = current.data;
+    advance();
+
+    setError(res, equal(";")&&equal(TT_OP), "SyntaxError: want a ';'");
+    advance();
+    auto end = posEnd();
+    res.ok(new Import(path, align, begin, end));
+    return res;
+}
+
 TRegister::TRegister(std::vector<AST*> suc) : begin({"UNKNOWN", -1, -1}), end({"UNKNOWN", -1, -1}) {
     this->result = suc;
     this->isSuc = true;
@@ -497,6 +523,8 @@ Register Parser::makeStmt() {
         return makeClass();
     if (equal(TT_KEY) && equal("interface"))
         return makeInterface();
+    if (equal(TT_KEY)&&equal("import"))
+        return makeImport();
     if (equal(TT_KEY) && equal("if"))
         return makeIf();
     if (equal(TT_OP) && equal("{"))

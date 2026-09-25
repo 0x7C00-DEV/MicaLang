@@ -7,6 +7,8 @@
 #include "include/vm.h"
 #include "include/debug.h"
 
+#pragma comment(lib, "imagehlp.lib")
+
 std::string loadFile(std::string path) {
     std::ifstream ifs(path);
     std::string res, buffer;

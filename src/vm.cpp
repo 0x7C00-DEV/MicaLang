@@ -142,10 +142,14 @@ void VM::loadModuleMember(int a , int b) {
 
 void VM::callFunction(Function* func, std::vector<MicaValue> args) {
     auto f = new Frame(func, (env.callChain.empty())? nullptr : env.getCTask());
-    f->localVar.resize(args.size()+10);
-    for (int i=0; i<args.size(); ++i)
-        f->localVar[i] = args[i];
-    env.callChain.push_back(f);
+    if (!func->isNative) {
+        f->localVar.resize(args.size()+10);
+        for (int i=0; i<args.size(); ++i)
+            f->localVar[i] = args[i];
+        env.callChain.push_back(f);
+    } else {
+        f->__call__(&env, args);
+    }
 }
 
 void VM::jmp(int a, int b) {

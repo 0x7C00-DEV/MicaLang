@@ -356,5 +356,10 @@ void showAST(AST* tree, int indent, const std::string& fo, const std::string& eo
             std::cout << printIndent(indent) << "}" << eo;
             break;
         }
+        case AST::AST_IMPORT: {
+            auto import_ = (Import*) tree;
+            std::cout << printIndent(indent) << fo << "Import[" << import_->path << ", " << import_->align << "]" << eo;
+            break;
+        }
     }
 }

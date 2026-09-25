@@ -19,7 +19,7 @@ struct AST {
         AST_ASSIGN_NODE, AST_RETURN, AST_CONTINUE, AST_BREAK, AST_GOTO, AST_BLOCK,
         AST_FOR, AST_WHILE, AST_DO_WHILE, AST_SWITCH, AST_TYPE, AST_VAR_DEF, AST_VAR_DEF_GRP,
         AST_CASE, AST_LABEL, AST_IF, AST_FUNC_DEF, AST_INTERFACE, AST_FUNC_TAG, AST_CLASS,
-        AST_NEW_CLASS
+        AST_NEW_CLASS, AST_IMPORT
     } kind;
 
     explicit AST(TKind kind, Position begin, Position end): begin(std::move(begin)), end(std::move(end)) {
@@ -28,6 +28,15 @@ struct AST {
 };
 
 enum AccessType { APUBLIC, APRIVATE, APROTECTED };
+
+struct Import : AST {
+    std::string path;
+    std::string align;
+    Import(std::string path, std::string align, Position begin, Position end): AST(AST_IMPORT, begin, end) {
+        this->path = path;
+        this->align = align;
+    }
+};
 
 struct NewClass : AST {
     std::string className;
