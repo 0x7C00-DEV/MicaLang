@@ -183,6 +183,30 @@ src/asm.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/asm.cpp.s
 .PHONY : src/asm.cpp.s
 
+src/compiler.obj: src/compiler.cpp.obj
+.PHONY : src/compiler.obj
+
+# target to build an object file
+src/compiler.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/compiler.cpp.obj
+.PHONY : src/compiler.cpp.obj
+
+src/compiler.i: src/compiler.cpp.i
+.PHONY : src/compiler.i
+
+# target to preprocess a source file
+src/compiler.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/compiler.cpp.i
+.PHONY : src/compiler.cpp.i
+
+src/compiler.s: src/compiler.cpp.s
+.PHONY : src/compiler.s
+
+# target to generate assembly for a file
+src/compiler.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/compiler.cpp.s
+.PHONY : src/compiler.cpp.s
+
 src/debug.obj: src/debug.cpp.obj
 .PHONY : src/debug.obj
 
@@ -391,6 +415,9 @@ help:
 	@echo ... src/asm.obj
 	@echo ... src/asm.i
 	@echo ... src/asm.s
+	@echo ... src/compiler.obj
+	@echo ... src/compiler.i
+	@echo ... src/compiler.s
 	@echo ... src/debug.obj
 	@echo ... src/debug.i
 	@echo ... src/debug.s

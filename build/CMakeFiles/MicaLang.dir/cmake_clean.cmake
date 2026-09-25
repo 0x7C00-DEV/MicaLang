@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/MicaLang.dir/main.cpp.obj.d"
   "CMakeFiles/MicaLang.dir/src/asm.cpp.obj"
   "CMakeFiles/MicaLang.dir/src/asm.cpp.obj.d"
+  "CMakeFiles/MicaLang.dir/src/compiler.cpp.obj"
+  "CMakeFiles/MicaLang.dir/src/compiler.cpp.obj.d"
   "CMakeFiles/MicaLang.dir/src/debug.cpp.obj"
   "CMakeFiles/MicaLang.dir/src/debug.cpp.obj.d"
   "CMakeFiles/MicaLang.dir/src/lexer.cpp.obj"

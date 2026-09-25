@@ -12,11 +12,11 @@ Instr decodeInstr(int);
 int codingInstr(Instr);
 
 enum Assembly {
-    BIN_OPER=1,
-    JMP,
-    JMPF,
-    JMPT,
-    CALL,
+    BIN_OPER=1, // V1 = operator
+    JMP, // V1 = TARGET
+    JMPF, // V1 = TARGET
+    JMPT, // V1 = TARGET
+    CALL, // Function object at stack top, V1 = ArgSize
     LOAD_GVAR,
     STORE_GVAR,
     LOAD_SVAR,
@@ -35,14 +35,29 @@ enum Assembly {
     MEM_SET,
     EL_GET,
     EL_SET,
-    NEW_ARR
+    LOAD_MODULE_MEMBER,
+    NEW_ARR,
 };
 
 enum BINOP {
-    BADD=1, BSUB, BDIV, BMUL,
-    BSHL, BSHR, BBAND, BBOR, BXOR,
+    BADD=1, 
+    BSUB, 
+    BDIV, 
+    BMUL,
+    BSHL, 
+    BSHR, 
+    BBAND, 
+    BBOR, 
+    BXOR,
     BMOD,
-    BEQ, BNEQ, BAND, BOR, BEQORBIG, BEQORLESS, BBIG, BLESS
+    BEQ,
+    BNEQ, 
+    BAND, 
+    BOR, 
+    BEQORBIG, 
+    BEQORLESS, 
+    BBIG, 
+    BLESS
 };
 
 #endif 

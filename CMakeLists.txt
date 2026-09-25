@@ -20,4 +20,6 @@ add_executable(MicaLang main.cpp
         include/vm.h
         src/vm.cpp
         include/value.h
-        src/value.cpp)
+        src/value.cpp
+        include/compiler.h
+        src/compiler.cpp)

@@ -10,6 +10,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/Lenovo/CLionProjects/MicaLang/main.cpp" "CMakeFiles/MicaLang.dir/main.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/main.cpp.obj.d"
   "C:/Users/Lenovo/CLionProjects/MicaLang/src/asm.cpp" "CMakeFiles/MicaLang.dir/src/asm.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/asm.cpp.obj.d"
+  "C:/Users/Lenovo/CLionProjects/MicaLang/src/compiler.cpp" "CMakeFiles/MicaLang.dir/src/compiler.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/compiler.cpp.obj.d"
   "C:/Users/Lenovo/CLionProjects/MicaLang/src/debug.cpp" "CMakeFiles/MicaLang.dir/src/debug.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/debug.cpp.obj.d"
   "C:/Users/Lenovo/CLionProjects/MicaLang/src/lexer.cpp" "CMakeFiles/MicaLang.dir/src/lexer.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/lexer.cpp.obj.d"
   "C:/Users/Lenovo/CLionProjects/MicaLang/src/makeError.cpp" "CMakeFiles/MicaLang.dir/src/makeError.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/makeError.cpp.obj.d"
