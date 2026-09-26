@@ -56,10 +56,10 @@ RM = "F:\Program Files\JetBrains\CLion 2026.2.0.1\bin\cmake\win\x64\bin\cmake.ex
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\Lenovo\CLionProjects\MicaLang
+CMAKE_SOURCE_DIR = C:\Users\Lenovo\Desktop\MicaLang
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\Lenovo\CLionProjects\MicaLang\build
+CMAKE_BINARY_DIR = C:\Users\Lenovo\Desktop\MicaLang\build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -86,16 +86,16 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Lenovo\CLionProjects\MicaLang\build\CMakeFiles C:\Users\Lenovo\CLionProjects\MicaLang\build\\CMakeFiles\progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles C:\Users\Lenovo\Desktop\MicaLang\build\\CMakeFiles\progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Lenovo\CLionProjects\MicaLang\build\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles 0
 .PHONY : all
 
 # The main codegen target
 codegen: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Lenovo\CLionProjects\MicaLang\build\CMakeFiles C:\Users\Lenovo\CLionProjects\MicaLang\build\\CMakeFiles\progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles C:\Users\Lenovo\Desktop\MicaLang\build\\CMakeFiles\progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 codegen
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Lenovo\CLionProjects\MicaLang\build\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles 0
 .PHONY : codegen
 
 # The main clean target
@@ -254,6 +254,30 @@ src/lexer.s: src/lexer.cpp.s
 src/lexer.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/lexer.cpp.s
 .PHONY : src/lexer.cpp.s
+
+src/loader.obj: src/loader.cpp.obj
+.PHONY : src/loader.obj
+
+# target to build an object file
+src/loader.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/loader.cpp.obj
+.PHONY : src/loader.cpp.obj
+
+src/loader.i: src/loader.cpp.i
+.PHONY : src/loader.i
+
+# target to preprocess a source file
+src/loader.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/loader.cpp.i
+.PHONY : src/loader.cpp.i
+
+src/loader.s: src/loader.cpp.s
+.PHONY : src/loader.s
+
+# target to generate assembly for a file
+src/loader.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/loader.cpp.s
+.PHONY : src/loader.cpp.s
 
 src/makeError.obj: src/makeError.cpp.obj
 .PHONY : src/makeError.obj
@@ -424,6 +448,9 @@ help:
 	@echo ... src/lexer.obj
 	@echo ... src/lexer.i
 	@echo ... src/lexer.s
+	@echo ... src/loader.obj
+	@echo ... src/loader.i
+	@echo ... src/loader.s
 	@echo ... src/makeError.obj
 	@echo ... src/makeError.i
 	@echo ... src/makeError.s

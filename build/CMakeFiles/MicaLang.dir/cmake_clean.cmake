@@ -9,6 +9,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/MicaLang.dir/src/debug.cpp.obj.d"
   "CMakeFiles/MicaLang.dir/src/lexer.cpp.obj"
   "CMakeFiles/MicaLang.dir/src/lexer.cpp.obj.d"
+  "CMakeFiles/MicaLang.dir/src/loader.cpp.obj"
+  "CMakeFiles/MicaLang.dir/src/loader.cpp.obj.d"
   "CMakeFiles/MicaLang.dir/src/makeError.cpp.obj"
   "CMakeFiles/MicaLang.dir/src/makeError.cpp.obj.d"
   "CMakeFiles/MicaLang.dir/src/parser.cpp.obj"

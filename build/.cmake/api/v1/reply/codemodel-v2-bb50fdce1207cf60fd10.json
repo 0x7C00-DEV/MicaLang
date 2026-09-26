@@ -40,7 +40,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "MicaLang::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-MicaLang-Debug-dc21c78972e35832ca6c.json",
+					"jsonFile" : "target-MicaLang-Debug-09ae55fb4db7b8b5601e.json",
 					"name" : "MicaLang",
 					"projectIndex" : 0
 				}
@@ -50,8 +50,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/Lenovo/CLionProjects/MicaLang/build",
-		"source" : "C:/Users/Lenovo/CLionProjects/MicaLang"
+		"build" : "C:/Users/Lenovo/Desktop/MicaLang/build",
+		"source" : "C:/Users/Lenovo/Desktop/MicaLang"
 	},
 	"version" : 
 	{

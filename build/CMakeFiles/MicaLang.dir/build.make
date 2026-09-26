@@ -52,10 +52,10 @@ RM = "F:\Program Files\JetBrains\CLion 2026.2.0.1\bin\cmake\win\x64\bin\cmake.ex
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\Lenovo\CLionProjects\MicaLang
+CMAKE_SOURCE_DIR = C:\Users\Lenovo\Desktop\MicaLang
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\Lenovo\CLionProjects\MicaLang\build
+CMAKE_BINARY_DIR = C:\Users\Lenovo\Desktop\MicaLang\build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/MicaLang.dir/depend.make
@@ -72,158 +72,172 @@ CMakeFiles/MicaLang.dir/codegen:
 .PHONY : CMakeFiles/MicaLang.dir/codegen
 
 CMakeFiles/MicaLang.dir/main.cpp.obj: CMakeFiles/MicaLang.dir/flags.make
-CMakeFiles/MicaLang.dir/main.cpp.obj: C:/Users/Lenovo/CLionProjects/MicaLang/main.cpp
+CMakeFiles/MicaLang.dir/main.cpp.obj: C:/Users/Lenovo/Desktop/MicaLang/main.cpp
 CMakeFiles/MicaLang.dir/main.cpp.obj: CMakeFiles/MicaLang.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\CLionProjects\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/MicaLang.dir/main.cpp.obj"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/main.cpp.obj -MF CMakeFiles\MicaLang.dir\main.cpp.obj.d -o CMakeFiles\MicaLang.dir\main.cpp.obj -c C:\Users\Lenovo\CLionProjects\MicaLang\main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/MicaLang.dir/main.cpp.obj"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/main.cpp.obj -MF CMakeFiles\MicaLang.dir\main.cpp.obj.d -o CMakeFiles\MicaLang.dir\main.cpp.obj -c C:\Users\Lenovo\Desktop\MicaLang\main.cpp
 
 CMakeFiles/MicaLang.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicaLang.dir/main.cpp.i"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\CLionProjects\MicaLang\main.cpp > CMakeFiles\MicaLang.dir\main.cpp.i
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\Desktop\MicaLang\main.cpp > CMakeFiles\MicaLang.dir\main.cpp.i
 
 CMakeFiles/MicaLang.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/main.cpp.s"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\CLionProjects\MicaLang\main.cpp -o CMakeFiles\MicaLang.dir\main.cpp.s
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\main.cpp -o CMakeFiles\MicaLang.dir\main.cpp.s
 
 CMakeFiles/MicaLang.dir/src/token.cpp.obj: CMakeFiles/MicaLang.dir/flags.make
-CMakeFiles/MicaLang.dir/src/token.cpp.obj: C:/Users/Lenovo/CLionProjects/MicaLang/src/token.cpp
+CMakeFiles/MicaLang.dir/src/token.cpp.obj: C:/Users/Lenovo/Desktop/MicaLang/src/token.cpp
 CMakeFiles/MicaLang.dir/src/token.cpp.obj: CMakeFiles/MicaLang.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\CLionProjects\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/MicaLang.dir/src/token.cpp.obj"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/token.cpp.obj -MF CMakeFiles\MicaLang.dir\src\token.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\token.cpp.obj -c C:\Users\Lenovo\CLionProjects\MicaLang\src\token.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/MicaLang.dir/src/token.cpp.obj"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/token.cpp.obj -MF CMakeFiles\MicaLang.dir\src\token.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\token.cpp.obj -c C:\Users\Lenovo\Desktop\MicaLang\src\token.cpp
 
 CMakeFiles/MicaLang.dir/src/token.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicaLang.dir/src/token.cpp.i"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\CLionProjects\MicaLang\src\token.cpp > CMakeFiles\MicaLang.dir\src\token.cpp.i
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\Desktop\MicaLang\src\token.cpp > CMakeFiles\MicaLang.dir\src\token.cpp.i
 
 CMakeFiles/MicaLang.dir/src/token.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/src/token.cpp.s"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\CLionProjects\MicaLang\src\token.cpp -o CMakeFiles\MicaLang.dir\src\token.cpp.s
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\src\token.cpp -o CMakeFiles\MicaLang.dir\src\token.cpp.s
 
 CMakeFiles/MicaLang.dir/src/lexer.cpp.obj: CMakeFiles/MicaLang.dir/flags.make
-CMakeFiles/MicaLang.dir/src/lexer.cpp.obj: C:/Users/Lenovo/CLionProjects/MicaLang/src/lexer.cpp
+CMakeFiles/MicaLang.dir/src/lexer.cpp.obj: C:/Users/Lenovo/Desktop/MicaLang/src/lexer.cpp
 CMakeFiles/MicaLang.dir/src/lexer.cpp.obj: CMakeFiles/MicaLang.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\CLionProjects\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/MicaLang.dir/src/lexer.cpp.obj"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/lexer.cpp.obj -MF CMakeFiles\MicaLang.dir\src\lexer.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\lexer.cpp.obj -c C:\Users\Lenovo\CLionProjects\MicaLang\src\lexer.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/MicaLang.dir/src/lexer.cpp.obj"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/lexer.cpp.obj -MF CMakeFiles\MicaLang.dir\src\lexer.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\lexer.cpp.obj -c C:\Users\Lenovo\Desktop\MicaLang\src\lexer.cpp
 
 CMakeFiles/MicaLang.dir/src/lexer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicaLang.dir/src/lexer.cpp.i"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\CLionProjects\MicaLang\src\lexer.cpp > CMakeFiles\MicaLang.dir\src\lexer.cpp.i
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\Desktop\MicaLang\src\lexer.cpp > CMakeFiles\MicaLang.dir\src\lexer.cpp.i
 
 CMakeFiles/MicaLang.dir/src/lexer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/src/lexer.cpp.s"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\CLionProjects\MicaLang\src\lexer.cpp -o CMakeFiles\MicaLang.dir\src\lexer.cpp.s
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\src\lexer.cpp -o CMakeFiles\MicaLang.dir\src\lexer.cpp.s
 
 CMakeFiles/MicaLang.dir/src/parser.cpp.obj: CMakeFiles/MicaLang.dir/flags.make
-CMakeFiles/MicaLang.dir/src/parser.cpp.obj: C:/Users/Lenovo/CLionProjects/MicaLang/src/parser.cpp
+CMakeFiles/MicaLang.dir/src/parser.cpp.obj: C:/Users/Lenovo/Desktop/MicaLang/src/parser.cpp
 CMakeFiles/MicaLang.dir/src/parser.cpp.obj: CMakeFiles/MicaLang.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\CLionProjects\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/MicaLang.dir/src/parser.cpp.obj"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/parser.cpp.obj -MF CMakeFiles\MicaLang.dir\src\parser.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\parser.cpp.obj -c C:\Users\Lenovo\CLionProjects\MicaLang\src\parser.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/MicaLang.dir/src/parser.cpp.obj"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/parser.cpp.obj -MF CMakeFiles\MicaLang.dir\src\parser.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\parser.cpp.obj -c C:\Users\Lenovo\Desktop\MicaLang\src\parser.cpp
 
 CMakeFiles/MicaLang.dir/src/parser.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicaLang.dir/src/parser.cpp.i"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\CLionProjects\MicaLang\src\parser.cpp > CMakeFiles\MicaLang.dir\src\parser.cpp.i
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\Desktop\MicaLang\src\parser.cpp > CMakeFiles\MicaLang.dir\src\parser.cpp.i
 
 CMakeFiles/MicaLang.dir/src/parser.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/src/parser.cpp.s"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\CLionProjects\MicaLang\src\parser.cpp -o CMakeFiles\MicaLang.dir\src\parser.cpp.s
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\src\parser.cpp -o CMakeFiles\MicaLang.dir\src\parser.cpp.s
 
 CMakeFiles/MicaLang.dir/src/debug.cpp.obj: CMakeFiles/MicaLang.dir/flags.make
-CMakeFiles/MicaLang.dir/src/debug.cpp.obj: C:/Users/Lenovo/CLionProjects/MicaLang/src/debug.cpp
+CMakeFiles/MicaLang.dir/src/debug.cpp.obj: C:/Users/Lenovo/Desktop/MicaLang/src/debug.cpp
 CMakeFiles/MicaLang.dir/src/debug.cpp.obj: CMakeFiles/MicaLang.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\CLionProjects\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/MicaLang.dir/src/debug.cpp.obj"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/debug.cpp.obj -MF CMakeFiles\MicaLang.dir\src\debug.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\debug.cpp.obj -c C:\Users\Lenovo\CLionProjects\MicaLang\src\debug.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/MicaLang.dir/src/debug.cpp.obj"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/debug.cpp.obj -MF CMakeFiles\MicaLang.dir\src\debug.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\debug.cpp.obj -c C:\Users\Lenovo\Desktop\MicaLang\src\debug.cpp
 
 CMakeFiles/MicaLang.dir/src/debug.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicaLang.dir/src/debug.cpp.i"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\CLionProjects\MicaLang\src\debug.cpp > CMakeFiles\MicaLang.dir\src\debug.cpp.i
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\Desktop\MicaLang\src\debug.cpp > CMakeFiles\MicaLang.dir\src\debug.cpp.i
 
 CMakeFiles/MicaLang.dir/src/debug.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/src/debug.cpp.s"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\CLionProjects\MicaLang\src\debug.cpp -o CMakeFiles\MicaLang.dir\src\debug.cpp.s
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\src\debug.cpp -o CMakeFiles\MicaLang.dir\src\debug.cpp.s
 
 CMakeFiles/MicaLang.dir/src/position.cpp.obj: CMakeFiles/MicaLang.dir/flags.make
-CMakeFiles/MicaLang.dir/src/position.cpp.obj: C:/Users/Lenovo/CLionProjects/MicaLang/src/position.cpp
+CMakeFiles/MicaLang.dir/src/position.cpp.obj: C:/Users/Lenovo/Desktop/MicaLang/src/position.cpp
 CMakeFiles/MicaLang.dir/src/position.cpp.obj: CMakeFiles/MicaLang.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\CLionProjects\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/MicaLang.dir/src/position.cpp.obj"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/position.cpp.obj -MF CMakeFiles\MicaLang.dir\src\position.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\position.cpp.obj -c C:\Users\Lenovo\CLionProjects\MicaLang\src\position.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/MicaLang.dir/src/position.cpp.obj"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/position.cpp.obj -MF CMakeFiles\MicaLang.dir\src\position.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\position.cpp.obj -c C:\Users\Lenovo\Desktop\MicaLang\src\position.cpp
 
 CMakeFiles/MicaLang.dir/src/position.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicaLang.dir/src/position.cpp.i"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\CLionProjects\MicaLang\src\position.cpp > CMakeFiles\MicaLang.dir\src\position.cpp.i
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\Desktop\MicaLang\src\position.cpp > CMakeFiles\MicaLang.dir\src\position.cpp.i
 
 CMakeFiles/MicaLang.dir/src/position.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/src/position.cpp.s"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\CLionProjects\MicaLang\src\position.cpp -o CMakeFiles\MicaLang.dir\src\position.cpp.s
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\src\position.cpp -o CMakeFiles\MicaLang.dir\src\position.cpp.s
 
 CMakeFiles/MicaLang.dir/src/makeError.cpp.obj: CMakeFiles/MicaLang.dir/flags.make
-CMakeFiles/MicaLang.dir/src/makeError.cpp.obj: C:/Users/Lenovo/CLionProjects/MicaLang/src/makeError.cpp
+CMakeFiles/MicaLang.dir/src/makeError.cpp.obj: C:/Users/Lenovo/Desktop/MicaLang/src/makeError.cpp
 CMakeFiles/MicaLang.dir/src/makeError.cpp.obj: CMakeFiles/MicaLang.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\CLionProjects\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/MicaLang.dir/src/makeError.cpp.obj"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/makeError.cpp.obj -MF CMakeFiles\MicaLang.dir\src\makeError.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\makeError.cpp.obj -c C:\Users\Lenovo\CLionProjects\MicaLang\src\makeError.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/MicaLang.dir/src/makeError.cpp.obj"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/makeError.cpp.obj -MF CMakeFiles\MicaLang.dir\src\makeError.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\makeError.cpp.obj -c C:\Users\Lenovo\Desktop\MicaLang\src\makeError.cpp
 
 CMakeFiles/MicaLang.dir/src/makeError.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicaLang.dir/src/makeError.cpp.i"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\CLionProjects\MicaLang\src\makeError.cpp > CMakeFiles\MicaLang.dir\src\makeError.cpp.i
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\Desktop\MicaLang\src\makeError.cpp > CMakeFiles\MicaLang.dir\src\makeError.cpp.i
 
 CMakeFiles/MicaLang.dir/src/makeError.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/src/makeError.cpp.s"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\CLionProjects\MicaLang\src\makeError.cpp -o CMakeFiles\MicaLang.dir\src\makeError.cpp.s
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\src\makeError.cpp -o CMakeFiles\MicaLang.dir\src\makeError.cpp.s
 
 CMakeFiles/MicaLang.dir/src/asm.cpp.obj: CMakeFiles/MicaLang.dir/flags.make
-CMakeFiles/MicaLang.dir/src/asm.cpp.obj: C:/Users/Lenovo/CLionProjects/MicaLang/src/asm.cpp
+CMakeFiles/MicaLang.dir/src/asm.cpp.obj: C:/Users/Lenovo/Desktop/MicaLang/src/asm.cpp
 CMakeFiles/MicaLang.dir/src/asm.cpp.obj: CMakeFiles/MicaLang.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\CLionProjects\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/MicaLang.dir/src/asm.cpp.obj"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/asm.cpp.obj -MF CMakeFiles\MicaLang.dir\src\asm.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\asm.cpp.obj -c C:\Users\Lenovo\CLionProjects\MicaLang\src\asm.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/MicaLang.dir/src/asm.cpp.obj"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/asm.cpp.obj -MF CMakeFiles\MicaLang.dir\src\asm.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\asm.cpp.obj -c C:\Users\Lenovo\Desktop\MicaLang\src\asm.cpp
 
 CMakeFiles/MicaLang.dir/src/asm.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicaLang.dir/src/asm.cpp.i"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\CLionProjects\MicaLang\src\asm.cpp > CMakeFiles\MicaLang.dir\src\asm.cpp.i
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\Desktop\MicaLang\src\asm.cpp > CMakeFiles\MicaLang.dir\src\asm.cpp.i
 
 CMakeFiles/MicaLang.dir/src/asm.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/src/asm.cpp.s"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\CLionProjects\MicaLang\src\asm.cpp -o CMakeFiles\MicaLang.dir\src\asm.cpp.s
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\src\asm.cpp -o CMakeFiles\MicaLang.dir\src\asm.cpp.s
 
 CMakeFiles/MicaLang.dir/src/vm.cpp.obj: CMakeFiles/MicaLang.dir/flags.make
-CMakeFiles/MicaLang.dir/src/vm.cpp.obj: C:/Users/Lenovo/CLionProjects/MicaLang/src/vm.cpp
+CMakeFiles/MicaLang.dir/src/vm.cpp.obj: C:/Users/Lenovo/Desktop/MicaLang/src/vm.cpp
 CMakeFiles/MicaLang.dir/src/vm.cpp.obj: CMakeFiles/MicaLang.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\CLionProjects\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/MicaLang.dir/src/vm.cpp.obj"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/vm.cpp.obj -MF CMakeFiles\MicaLang.dir\src\vm.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\vm.cpp.obj -c C:\Users\Lenovo\CLionProjects\MicaLang\src\vm.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/MicaLang.dir/src/vm.cpp.obj"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/vm.cpp.obj -MF CMakeFiles\MicaLang.dir\src\vm.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\vm.cpp.obj -c C:\Users\Lenovo\Desktop\MicaLang\src\vm.cpp
 
 CMakeFiles/MicaLang.dir/src/vm.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicaLang.dir/src/vm.cpp.i"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\CLionProjects\MicaLang\src\vm.cpp > CMakeFiles\MicaLang.dir\src\vm.cpp.i
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\Desktop\MicaLang\src\vm.cpp > CMakeFiles\MicaLang.dir\src\vm.cpp.i
 
 CMakeFiles/MicaLang.dir/src/vm.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/src/vm.cpp.s"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\CLionProjects\MicaLang\src\vm.cpp -o CMakeFiles\MicaLang.dir\src\vm.cpp.s
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\src\vm.cpp -o CMakeFiles\MicaLang.dir\src\vm.cpp.s
 
 CMakeFiles/MicaLang.dir/src/value.cpp.obj: CMakeFiles/MicaLang.dir/flags.make
-CMakeFiles/MicaLang.dir/src/value.cpp.obj: C:/Users/Lenovo/CLionProjects/MicaLang/src/value.cpp
+CMakeFiles/MicaLang.dir/src/value.cpp.obj: C:/Users/Lenovo/Desktop/MicaLang/src/value.cpp
 CMakeFiles/MicaLang.dir/src/value.cpp.obj: CMakeFiles/MicaLang.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\CLionProjects\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/MicaLang.dir/src/value.cpp.obj"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/value.cpp.obj -MF CMakeFiles\MicaLang.dir\src\value.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\value.cpp.obj -c C:\Users\Lenovo\CLionProjects\MicaLang\src\value.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/MicaLang.dir/src/value.cpp.obj"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/value.cpp.obj -MF CMakeFiles\MicaLang.dir\src\value.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\value.cpp.obj -c C:\Users\Lenovo\Desktop\MicaLang\src\value.cpp
 
 CMakeFiles/MicaLang.dir/src/value.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicaLang.dir/src/value.cpp.i"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\CLionProjects\MicaLang\src\value.cpp > CMakeFiles\MicaLang.dir\src\value.cpp.i
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\Desktop\MicaLang\src\value.cpp > CMakeFiles\MicaLang.dir\src\value.cpp.i
 
 CMakeFiles/MicaLang.dir/src/value.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/src/value.cpp.s"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\CLionProjects\MicaLang\src\value.cpp -o CMakeFiles\MicaLang.dir\src\value.cpp.s
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\src\value.cpp -o CMakeFiles\MicaLang.dir\src\value.cpp.s
 
 CMakeFiles/MicaLang.dir/src/compiler.cpp.obj: CMakeFiles/MicaLang.dir/flags.make
-CMakeFiles/MicaLang.dir/src/compiler.cpp.obj: C:/Users/Lenovo/CLionProjects/MicaLang/src/compiler.cpp
+CMakeFiles/MicaLang.dir/src/compiler.cpp.obj: C:/Users/Lenovo/Desktop/MicaLang/src/compiler.cpp
 CMakeFiles/MicaLang.dir/src/compiler.cpp.obj: CMakeFiles/MicaLang.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\CLionProjects\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/MicaLang.dir/src/compiler.cpp.obj"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/compiler.cpp.obj -MF CMakeFiles\MicaLang.dir\src\compiler.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\compiler.cpp.obj -c C:\Users\Lenovo\CLionProjects\MicaLang\src\compiler.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/MicaLang.dir/src/compiler.cpp.obj"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/compiler.cpp.obj -MF CMakeFiles\MicaLang.dir\src\compiler.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\compiler.cpp.obj -c C:\Users\Lenovo\Desktop\MicaLang\src\compiler.cpp
 
 CMakeFiles/MicaLang.dir/src/compiler.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicaLang.dir/src/compiler.cpp.i"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\CLionProjects\MicaLang\src\compiler.cpp > CMakeFiles\MicaLang.dir\src\compiler.cpp.i
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\Desktop\MicaLang\src\compiler.cpp > CMakeFiles\MicaLang.dir\src\compiler.cpp.i
 
 CMakeFiles/MicaLang.dir/src/compiler.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/src/compiler.cpp.s"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\CLionProjects\MicaLang\src\compiler.cpp -o CMakeFiles\MicaLang.dir\src\compiler.cpp.s
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\src\compiler.cpp -o CMakeFiles\MicaLang.dir\src\compiler.cpp.s
+
+CMakeFiles/MicaLang.dir/src/loader.cpp.obj: CMakeFiles/MicaLang.dir/flags.make
+CMakeFiles/MicaLang.dir/src/loader.cpp.obj: C:/Users/Lenovo/Desktop/MicaLang/src/loader.cpp
+CMakeFiles/MicaLang.dir/src/loader.cpp.obj: CMakeFiles/MicaLang.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/MicaLang.dir/src/loader.cpp.obj"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/loader.cpp.obj -MF CMakeFiles\MicaLang.dir\src\loader.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\loader.cpp.obj -c C:\Users\Lenovo\Desktop\MicaLang\src\loader.cpp
+
+CMakeFiles/MicaLang.dir/src/loader.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicaLang.dir/src/loader.cpp.i"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\Desktop\MicaLang\src\loader.cpp > CMakeFiles\MicaLang.dir\src\loader.cpp.i
+
+CMakeFiles/MicaLang.dir/src/loader.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/src/loader.cpp.s"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\src\loader.cpp -o CMakeFiles\MicaLang.dir\src\loader.cpp.s
 
 # Object files for target MicaLang
 MicaLang_OBJECTS = \
@@ -237,7 +251,8 @@ MicaLang_OBJECTS = \
 "CMakeFiles/MicaLang.dir/src/asm.cpp.obj" \
 "CMakeFiles/MicaLang.dir/src/vm.cpp.obj" \
 "CMakeFiles/MicaLang.dir/src/value.cpp.obj" \
-"CMakeFiles/MicaLang.dir/src/compiler.cpp.obj"
+"CMakeFiles/MicaLang.dir/src/compiler.cpp.obj" \
+"CMakeFiles/MicaLang.dir/src/loader.cpp.obj"
 
 # External object files for target MicaLang
 MicaLang_EXTERNAL_OBJECTS =
@@ -253,11 +268,12 @@ MicaLang.exe: CMakeFiles/MicaLang.dir/src/asm.cpp.obj
 MicaLang.exe: CMakeFiles/MicaLang.dir/src/vm.cpp.obj
 MicaLang.exe: CMakeFiles/MicaLang.dir/src/value.cpp.obj
 MicaLang.exe: CMakeFiles/MicaLang.dir/src/compiler.cpp.obj
+MicaLang.exe: CMakeFiles/MicaLang.dir/src/loader.cpp.obj
 MicaLang.exe: CMakeFiles/MicaLang.dir/build.make
 MicaLang.exe: CMakeFiles/MicaLang.dir/linkLibs.rsp
 MicaLang.exe: CMakeFiles/MicaLang.dir/objects1.rsp
 MicaLang.exe: CMakeFiles/MicaLang.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\Lenovo\CLionProjects\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable MicaLang.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking CXX executable MicaLang.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\MicaLang.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -269,6 +285,6 @@ CMakeFiles/MicaLang.dir/clean:
 .PHONY : CMakeFiles/MicaLang.dir/clean
 
 CMakeFiles/MicaLang.dir/depend:
-	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\Users\Lenovo\CLionProjects\MicaLang C:\Users\Lenovo\CLionProjects\MicaLang C:\Users\Lenovo\CLionProjects\MicaLang\build C:\Users\Lenovo\CLionProjects\MicaLang\build C:\Users\Lenovo\CLionProjects\MicaLang\build\CMakeFiles\MicaLang.dir\DependInfo.cmake "--color=$(COLOR)" MicaLang
+	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\Users\Lenovo\Desktop\MicaLang C:\Users\Lenovo\Desktop\MicaLang C:\Users\Lenovo\Desktop\MicaLang\build C:\Users\Lenovo\Desktop\MicaLang\build C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles\MicaLang.dir\DependInfo.cmake "--color=$(COLOR)" MicaLang
 .PHONY : CMakeFiles/MicaLang.dir/depend
 

@@ -11,6 +11,7 @@
 #include <iostream>
 #include <unordered_map>
 #include "asm.h"
+#include "config.h"
 
 struct Frame;
 struct Module;
@@ -40,6 +41,7 @@ struct MicaValue {
 };
 
 struct Obj {
+    Obj* next = nullptr;
     enum ObjTP { NORMAL, FUNCTION } tp;
     Obj(ObjTP tp) {
         this->tp = tp;
@@ -58,24 +60,21 @@ struct ObjString : ObjArray {
     }
 };
 
-
-
 struct Program {
     std::vector<Function*> funcs;
     std::vector<MicaValue> constPools;
 };
 
-
-
 struct Environment {
     Module* mainModule;
     std::vector<Module*> modules;
     std::vector<Frame*> callChain;
+    Obj* heapHead = nullptr;
+    Obj* heapEnd = nullptr;
+    Obj* malloc(Obj::ObjTP);
     Frame* getCTask();
-    void loadModule(Program*, std::string);
+    Module* loadModule(Program*, std::string);
 };
-
-
 
 using MicaCFunction = MicaValue(Environment*, std::vector<MicaValue>);
 
@@ -102,8 +101,6 @@ struct Function : Obj {
     MicaCFunction* __native__;
     bool isNative;
 
-
-
     Function(): Obj(FUNCTION) {
         isNative = false;
     }
@@ -121,7 +118,10 @@ struct Module {
     std::vector<Function*> funcs;
 
     Module();
+
+#ifdef SUPDLL
     Module(std::string);
+#endif
 };
 
 struct ObjClass : Obj {
@@ -134,6 +134,8 @@ struct ObjClass : Obj {
 struct ObjInstance : Obj {
     ObjClass* cls;
     std::unordered_map<std::string, MicaValue> fields;
+    MicaValue getField(std::string);
+    void setField(std::string, MicaValue);
 };
 
 #endif //MICALANG_VALUE_H

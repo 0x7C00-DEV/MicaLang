@@ -1,6 +1,7 @@
 //
 // Created by Lenovo on 2026/9/24.
 //
+#include "../include/loader.h"
 #include "../include/vm.h"
 
 static double asDouble(const MicaValue& v) {
@@ -33,7 +34,6 @@ void VM::executeLoop() {
     while (!env.callChain.empty())
         execute(env.getCTask()->getInstr());
 }
-
 
 void VM::initVec() {
     IVEC[BIN_OPER] = &VM::binOp;
@@ -135,9 +135,47 @@ void VM::binOp(int a, int b) {
     push((this->*(BINOP[a]))(l, r));
 }
 
+void VM::start0(std::string moduleName, std::string funcName, std::vector<MicaValue> args) {
+    bool mf=false;
+    for (auto i : env.modules)
+        if (i->moduleName == moduleName) {
+            mf=true;
+            for (auto j : i->funcs)
+                if (j->name == funcName) {
+                    callFunction(j, args);
+                    return;
+                }
+        }
+    if (!mf) {
+        std::cout << "Module '" << moduleName << "' not found\n";
+        exit(-1);
+    }
+    std::cout << "Function '" << funcName << "' not found\n";
+    exit(-1);
+}
+
+void VM::start0(std::string path) {
+    ProgramLoader loader(path);
+    env.mainModule = env.loadModule(loader.getData(), "Main");
+    start0("Main", "main", {});
+    start0("Main", "@init", {});
+}
 
 void VM::loadModuleMember(int a , int b) {
-
+    auto path_ = pop();
+    auto align_ = pop();
+    std::string path, align;
+    if (path_.kind != MicaValue::OBJ || align_.kind != MicaValue::OBJ) {
+        E:
+        std::cerr << "not a string object\n";
+        exit(-1);
+    }
+    if (path_.obj->tp != Obj::NORMAL || align_.obj->tp != Obj::NORMAL)
+        goto E;
+    for (auto i : ((ObjArray*)path_.obj)->elements) path += i.c;
+    for (auto i : ((ObjArray*)align_.obj)->elements) align += i.c;
+    ProgramLoader loader(path);
+    env.loadModule(loader.getData(), align);
 }
 
 void VM::callFunction(Function* func, std::vector<MicaValue> args) {
@@ -193,31 +231,69 @@ void VM::call(int a, int b) {
     callFunction(fn, args);
 }
 
-void VM::loadGVar(int a, int b) {}
+void VM::loadGVar(int a, int b) {
+    push(accessGlobalVar(a));
+}
 
 void VM::storeGVar(int a, int b) {
     setGlobalVar(a);
 }
 
-void VM::loadSVar(int a, int b) {}
+void VM::loadSVar(int a, int b) {
+    push(accessSubVar(a));
+}
 
 void VM::storeSVar(int a, int b) {
     setSubVar(a);
 }
 
-void VM::loadGCst(int a, int b) {}
+void VM::loadGCst(int a, int b) {
+    push(loadGlobalConst(a));
+}
 
-void VM::loadSCst(int a, int b) {}
+void VM::loadSCst(int a, int b) {
+    push(loadSubConst(a));
+}
 
-void VM::imm(int a, int b) {}
+void VM::imm(int a, int b) {
+    push(MicaValue::Int(a));
+}
 
-void VM::pop_(int a, int b) {}
+void VM::pop_(int a, int b) {
+    pop();
+}
 
-void VM::bnot(int a, int b) {}
+void VM::bnot(int a, int b) {
+    auto tmp = pop();
+    if (tmp.kind != MicaValue::BOOL) {
+        std::cout << "Not a boolean\n";
+        exit(-1);
+    }
+    push(MicaValue::Bool(!tmp.b));
+}
 
-void VM::bitnot(int a, int b) {}
+void VM::bitnot(int a, int b) {
+    auto tmp = pop();
+    if (tmp.kind != MicaValue::INT) {
+        std::cout << "Not a integer\n";
+        exit(-1);
+    }
+    push(MicaValue::Int(~tmp.i));
+}
 
-void VM::neg(int a, int b) {}
+void VM::neg(int a, int b) {
+    auto tmp = pop();
+    if (tmp.kind == MicaValue::FLOAT) {
+        push(MicaValue::Float(-tmp.f));
+        return;
+    }
+    if (tmp.kind == MicaValue::INT) {
+        push(MicaValue::Int(-tmp.i));
+        return;
+    }
+    std::cerr << "unsuppose operator symbol '-'\n";
+    exit(-1);
+}
 
 void VM::ret(int a, int b) {
     auto retVal = pop();
@@ -226,20 +302,57 @@ void VM::ret(int a, int b) {
     env.callChain.pop_back();
 }
 
-void VM::newObj(int a, int b) {}
+void VM::newObj(int a, int b) {
+    ObjClass* cls = (ObjClass*) loadGlobalConst(a).obj;
+    ObjInstance* ins = (ObjInstance*) env.malloc(Obj::NORMAL);
+    ins->cls = cls;
+    for (auto i : cls->fields)
+        ins->fields[i] = MicaValue::Null();
+    push(MicaValue::Object(ins));
+}
 
-void VM::dup(int a, int b) {}
+void VM::dup(int a, int b) {
+    push(env.getCTask()->mstack[env.getCTask()->mstack.size()-1-a]);
+}
 
-void VM::memGet(int a, int b) {}
+void VM::memGet(int a, int b) {
+    std::string fieldName;
+    auto fieName = loadSubConst(a);
+    for (auto i : ((ObjArray*)fieName.obj)->elements)
+        fieldName += i.c;
+    auto obj = pop();
+    push(((ObjInstance*)obj.obj)->getField(fieldName));
+}
 
-void VM::memSet(int a, int b) {}
+void VM::memSet(int a, int b) {
+    std::string fieldName;
+    auto fieName = loadSubConst(a);
+    for (auto i : ((ObjArray*)fieName.obj)->elements)
+        fieldName += i.c;
+    auto value = pop();
+    auto obj = pop();
+    ((ObjInstance*)obj.obj)->setField(fieldName, value);
+}
 
-void VM::elGet(int a, int b) {}
+void VM::elGet(int a, int b) {
+    auto obj = pop();
+    auto pos = pop();
+    push(((ObjArray*)obj.obj)->elements[pos.i]);
+}
 
-void VM::elSet(int a, int b) {}
+void VM::elSet(int a, int b) {
+    // STACK: [val, pos, obj]
+    auto obj = pop();
+    auto pos = pop();
+    auto val = pop();
+    ((ObjArray*)obj.obj)->elements[pos.i] = val;
+}
 
-void VM::newArr(int a, int b) {}
-
+void VM::newArr(int a, int b) {
+    auto size = pop();
+    auto tmp = (ObjArray*) env.malloc(Obj::NORMAL);
+    tmp->elements.resize(size.i);
+}
 
 MicaValue VM::accessSubVar(int address /*模块内索引*/) {
     return env.getCTask()->localVar[address];

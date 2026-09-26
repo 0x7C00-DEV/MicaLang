@@ -18,13 +18,15 @@ class VM {
 public:
     VM(std::string);
     VM(Module*, std::string, std::vector<MicaValue>);
+    void start0(std::string);
+    void start0(std::string, std::string, std::vector<MicaValue>);
     void initVec();
     void execute(int);
     void execute(Instr);
     void executeLoop();
     Function* lookFunction(std::string);
-private:
     Environment env;
+private:
     CALT IVEC[NEW_ARR+1];
     BOP  BINOP[BLESS+1];
     void push(MicaValue);

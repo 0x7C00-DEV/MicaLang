@@ -22,4 +22,7 @@ add_executable(MicaLang main.cpp
         include/value.h
         src/value.cpp
         include/compiler.h
-        src/compiler.cpp)
+        src/compiler.cpp
+        include/loader.h
+        src/loader.cpp
+        include/config.h)
