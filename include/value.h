@@ -12,7 +12,6 @@
 #include <unordered_map>
 #include "asm.h"
 #include "config.h"
-#include "value.h"
 
 class VM;
 struct Frame;

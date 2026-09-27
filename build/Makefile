@@ -351,6 +351,30 @@ src/position.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/position.cpp.s
 .PHONY : src/position.cpp.s
 
+src/resolve.obj: src/resolve.cpp.obj
+.PHONY : src/resolve.obj
+
+# target to build an object file
+src/resolve.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/resolve.cpp.obj
+.PHONY : src/resolve.cpp.obj
+
+src/resolve.i: src/resolve.cpp.i
+.PHONY : src/resolve.i
+
+# target to preprocess a source file
+src/resolve.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/resolve.cpp.i
+.PHONY : src/resolve.cpp.i
+
+src/resolve.s: src/resolve.cpp.s
+.PHONY : src/resolve.s
+
+# target to generate assembly for a file
+src/resolve.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/resolve.cpp.s
+.PHONY : src/resolve.cpp.s
+
 src/token.obj: src/token.cpp.obj
 .PHONY : src/token.obj
 
@@ -460,6 +484,9 @@ help:
 	@echo ... src/position.obj
 	@echo ... src/position.i
 	@echo ... src/position.s
+	@echo ... src/resolve.obj
+	@echo ... src/resolve.i
+	@echo ... src/resolve.s
 	@echo ... src/token.obj
 	@echo ... src/token.i
 	@echo ... src/token.s

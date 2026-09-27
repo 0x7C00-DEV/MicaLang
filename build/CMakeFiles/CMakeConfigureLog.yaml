@@ -81,11 +81,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -149,11 +149,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -275,11 +275,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -379,11 +379,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -483,11 +483,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -587,11 +587,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -691,11 +691,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -795,11 +795,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -899,11 +899,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -1003,11 +1003,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -1107,11 +1107,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -1211,11 +1211,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -1428,11 +1428,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -1877,11 +1877,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -2326,11 +2326,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -2394,11 +2394,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -2865,11 +2865,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -3314,11 +3314,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -3433,11 +3433,11 @@ events:
         - "C:/Program Files/Common Files/Oracle/Java/javapath"
         - "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path"
         - "C:/Program Files (x86)/Common Files/Oracle/Java/javapath"
-        - "C:\\WINDOWS\\system32"
-        - "C:/WINDOWS"
-        - "C:\\WINDOWS\\System32\\Wbem"
-        - "C:/WINDOWS/System32/WindowsPowerShell/v1.0/"
-        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Windows\\system32"
+        - "C:/Windows"
+        - "C:\\Windows\\System32\\Wbem"
+        - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+        - "C:\\Windows\\System32\\OpenSSH\\"
         - "F:/Program Files/Git/cmd"
         - "C:\\Program Files\\dotnet\\"
         - "F:/Program Files/PuTTY/"
@@ -3482,8 +3482,8 @@ events:
     checks:
       - "Detecting C compiler ABI info"
     directories:
-      source: "C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-2p1qig"
-      binary: "C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-2p1qig"
+      source: "C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-x4kdo6"
+      binary: "C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-x4kdo6"
     cmakeVariables:
       CMAKE_CXX_STDLIB_MODULES_JSON: ""
       CMAKE_C_FLAGS: ""
@@ -3493,13 +3493,13 @@ events:
       variable: "CMAKE_C_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-2p1qig'
+        Change Dir: 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-x4kdo6'
         
-        Run Build Command(s): "F:/Program Files/JetBrains/CLion 2026.2.0.1/bin/cmake/win/x64/bin/cmake.exe" -E env VERBOSE=1 F:/develop/Mingw-14.2.0/mingw64/bin/mingw32-make.exe -f Makefile cmTC_1de65/fast
-        F:/develop/Mingw-14.2.0/mingw64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_1de65.dir\\build.make CMakeFiles/cmTC_1de65.dir/build
-        mingw32-make[1]: Entering directory 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-2p1qig'
-        Building C object CMakeFiles/cmTC_1de65.dir/CMakeCCompilerABI.c.obj
-        F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\gcc.exe   -v -o CMakeFiles\\cmTC_1de65.dir\\CMakeCCompilerABI.c.obj -c "F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"
+        Run Build Command(s): "F:/Program Files/JetBrains/CLion 2026.2.0.1/bin/cmake/win/x64/bin/cmake.exe" -E env VERBOSE=1 F:/develop/Mingw-14.2.0/mingw64/bin/mingw32-make.exe -f Makefile cmTC_48a9e/fast
+        F:/develop/Mingw-14.2.0/mingw64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_48a9e.dir\\build.make CMakeFiles/cmTC_48a9e.dir/build
+        mingw32-make[1]: Entering directory 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-x4kdo6'
+        Building C object CMakeFiles/cmTC_48a9e.dir/CMakeCCompilerABI.c.obj
+        F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\gcc.exe   -v -o CMakeFiles\\cmTC_48a9e.dir\\CMakeCCompilerABI.c.obj -c "F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"
         Using built-in specs.
         COLLECT_GCC=F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\gcc.exe
         Target: x86_64-w64-mingw32
@@ -3507,8 +3507,8 @@ events:
         Thread model: win32
         Supported LTO compression algorithms: zlib
         gcc version 14.2.0 (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_1de65.dir\\CMakeCCompilerABI.c.obj' '-c' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_1de65.dir\\'
-         F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/cc1.exe -quiet -v -iprefix F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/ -U_REENTRANT F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles\\cmTC_1de65.dir\\ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=core2 -march=nocona -version -o C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccZ7Ws9d.s
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_48a9e.dir\\CMakeCCompilerABI.c.obj' '-c' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_48a9e.dir\\'
+         F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/cc1.exe -quiet -v -iprefix F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/ -U_REENTRANT F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles\\cmTC_48a9e.dir\\ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=core2 -march=nocona -version -o C:\\Users\\Lenovo\\AppData\\Local\\Temp\\cc4sHOL5.s
         GNU C17 (x86_64-win32-seh-rev1, Built by MinGW-Builds project) version 14.2.0 (x86_64-w64-mingw32)
         	compiled by GNU C version 14.2.0, GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version isl-0.25-GMP
         
@@ -3525,14 +3525,14 @@ events:
          F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/include
         End of search list.
         Compiler executable checksum: 64a31a6ba5c604df620d08f22c4d358b
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_1de65.dir\\CMakeCCompilerABI.c.obj' '-c' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_1de65.dir\\'
-         F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/bin/as.exe -v -o CMakeFiles\\cmTC_1de65.dir\\CMakeCCompilerABI.c.obj C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccZ7Ws9d.s
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_48a9e.dir\\CMakeCCompilerABI.c.obj' '-c' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_48a9e.dir\\'
+         F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/bin/as.exe -v -o CMakeFiles\\cmTC_48a9e.dir\\CMakeCCompilerABI.c.obj C:\\Users\\Lenovo\\AppData\\Local\\Temp\\cc4sHOL5.s
         GNU assembler version 2.43 (x86_64-w64-mingw32) using BFD version (GNU Binutils) 2.43
         COMPILER_PATH=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/;F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/bin/
         LIBRARY_PATH=F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_1de65.dir\\CMakeCCompilerABI.c.obj' '-c' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_1de65.dir\\CMakeCCompilerABI.c.'
-        Linking C executable cmTC_1de65.exe
-        "F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_1de65.dir\\link.txt --verbose=1
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_48a9e.dir\\CMakeCCompilerABI.c.obj' '-c' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_48a9e.dir\\CMakeCCompilerABI.c.'
+        Linking C executable cmTC_48a9e.exe
+        "F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_48a9e.dir\\link.txt --verbose=1
         Using built-in specs.
         COLLECT_GCC=F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\gcc.exe
         COLLECT_LTO_WRAPPER=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe
@@ -3543,16 +3543,16 @@ events:
         gcc version 14.2.0 (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 
         COMPILER_PATH=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/;F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/bin/
         LIBRARY_PATH=F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_1de65.exe' '-mtune=core2' '-march=nocona' '-dumpdir' 'cmTC_1de65.'
-         F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/collect2.exe -plugin F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/liblto_plugin.dll -plugin-opt=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccYiG6Ak.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_eh -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-liconv -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_eh -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=C:/buildroot/x86_64-1420-win32-seh-ucrt-rt_v12-rev1/mingw64 -m i386pep -Bdynamic -o cmTC_1de65.exe F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtbegin.o -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0 -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../.. -v --whole-archive CMakeFiles\\cmTC_1de65.dir/objects.a --no-whole-archive --out-implib libcmTC_1de65.dll.a --major-image-version 0 --minor-image-version 0 -lmingw32 -lgcc -lgcc_eh -lmingwex -lmsvcrt -lkernel32 -ladvapi32 -lshell32 -luser32 -lkernel32 -liconv -lmingw32 -lgcc -lgcc_eh -lmingwex -lmsvcrt -lkernel32 F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtend.o
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_48a9e.exe' '-mtune=core2' '-march=nocona' '-dumpdir' 'cmTC_48a9e.'
+         F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/collect2.exe -plugin F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/liblto_plugin.dll -plugin-opt=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\cciooUeh.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_eh -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-liconv -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_eh -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=C:/buildroot/x86_64-1420-win32-seh-ucrt-rt_v12-rev1/mingw64 -m i386pep -Bdynamic -o cmTC_48a9e.exe F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtbegin.o -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0 -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../.. -v --whole-archive CMakeFiles\\cmTC_48a9e.dir/objects.a --no-whole-archive --out-implib libcmTC_48a9e.dll.a --major-image-version 0 --minor-image-version 0 -lmingw32 -lgcc -lgcc_eh -lmingwex -lmsvcrt -lkernel32 -ladvapi32 -lshell32 -luser32 -lkernel32 -liconv -lmingw32 -lgcc -lgcc_eh -lmingwex -lmsvcrt -lkernel32 F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtend.o
         collect2 version 14.2.0
-        F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe -plugin F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/liblto_plugin.dll -plugin-opt=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccYiG6Ak.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_eh -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-liconv -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_eh -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=C:/buildroot/x86_64-1420-win32-seh-ucrt-rt_v12-rev1/mingw64 -m i386pep -Bdynamic -o cmTC_1de65.exe F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtbegin.o -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0 -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../.. -v --whole-archive CMakeFiles\\cmTC_1de65.dir/objects.a --no-whole-archive --out-implib libcmTC_1de65.dll.a --major-image-version 0 --minor-image-version 0 -lmingw32 -lgcc -lgcc_eh -lmingwex -lmsvcrt -lkernel32 -ladvapi32 -lshell32 -luser32 -lkernel32 -liconv -lmingw32 -lgcc -lgcc_eh -lmingwex -lmsvcrt -lkernel32 F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtend.o
+        F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe -plugin F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/liblto_plugin.dll -plugin-opt=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\cciooUeh.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_eh -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-liconv -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_eh -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=C:/buildroot/x86_64-1420-win32-seh-ucrt-rt_v12-rev1/mingw64 -m i386pep -Bdynamic -o cmTC_48a9e.exe F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtbegin.o -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0 -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../.. -v --whole-archive CMakeFiles\\cmTC_48a9e.dir/objects.a --no-whole-archive --out-implib libcmTC_48a9e.dll.a --major-image-version 0 --minor-image-version 0 -lmingw32 -lgcc -lgcc_eh -lmingwex -lmsvcrt -lkernel32 -ladvapi32 -lshell32 -luser32 -lkernel32 -liconv -lmingw32 -lgcc -lgcc_eh -lmingwex -lmsvcrt -lkernel32 F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtend.o
         GNU ld (GNU Binutils) 2.43
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_1de65.exe' '-mtune=core2' '-march=nocona' '-dumpdir' 'cmTC_1de65.'
-        "F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_1de65.dir/objects.a
-        F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\ar.exe qc CMakeFiles\\cmTC_1de65.dir/objects.a @CMakeFiles\\cmTC_1de65.dir\\objects1.rsp
-        F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\gcc.exe -v -Wl,-v -Wl,--whole-archive CMakeFiles\\cmTC_1de65.dir/objects.a -Wl,--no-whole-archive -o cmTC_1de65.exe -Wl,--out-implib,libcmTC_1de65.dll.a -Wl,--major-image-version,0,--minor-image-version,0
-        mingw32-make[1]: Leaving directory 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-2p1qig'
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_48a9e.exe' '-mtune=core2' '-march=nocona' '-dumpdir' 'cmTC_48a9e.'
+        "F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_48a9e.dir/objects.a
+        F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\ar.exe qc CMakeFiles\\cmTC_48a9e.dir/objects.a @CMakeFiles\\cmTC_48a9e.dir\\objects1.rsp
+        F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\gcc.exe -v -Wl,-v -Wl,--whole-archive CMakeFiles\\cmTC_48a9e.dir/objects.a -Wl,--no-whole-archive -o cmTC_48a9e.exe -Wl,--out-implib,libcmTC_48a9e.dll.a -Wl,--major-image-version,0,--minor-image-version,0
+        mingw32-make[1]: Leaving directory 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-x4kdo6'
         
       exitCode: 0
   -
@@ -3585,13 +3585,13 @@ events:
       Parsed C implicit link information:
         link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
         linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)))("|,| |$)]
-        ignore line: [Change Dir: 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-2p1qig']
+        ignore line: [Change Dir: 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-x4kdo6']
         ignore line: []
-        ignore line: [Run Build Command(s): "F:/Program Files/JetBrains/CLion 2026.2.0.1/bin/cmake/win/x64/bin/cmake.exe" -E env VERBOSE=1 F:/develop/Mingw-14.2.0/mingw64/bin/mingw32-make.exe -f Makefile cmTC_1de65/fast]
-        ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_1de65.dir\\build.make CMakeFiles/cmTC_1de65.dir/build]
-        ignore line: [mingw32-make[1]: Entering directory 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-2p1qig']
-        ignore line: [Building C object CMakeFiles/cmTC_1de65.dir/CMakeCCompilerABI.c.obj]
-        ignore line: [F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\gcc.exe   -v -o CMakeFiles\\cmTC_1de65.dir\\CMakeCCompilerABI.c.obj -c "F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"]
+        ignore line: [Run Build Command(s): "F:/Program Files/JetBrains/CLion 2026.2.0.1/bin/cmake/win/x64/bin/cmake.exe" -E env VERBOSE=1 F:/develop/Mingw-14.2.0/mingw64/bin/mingw32-make.exe -f Makefile cmTC_48a9e/fast]
+        ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_48a9e.dir\\build.make CMakeFiles/cmTC_48a9e.dir/build]
+        ignore line: [mingw32-make[1]: Entering directory 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-x4kdo6']
+        ignore line: [Building C object CMakeFiles/cmTC_48a9e.dir/CMakeCCompilerABI.c.obj]
+        ignore line: [F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\gcc.exe   -v -o CMakeFiles\\cmTC_48a9e.dir\\CMakeCCompilerABI.c.obj -c "F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c"]
         ignore line: [Using built-in specs.]
         ignore line: [COLLECT_GCC=F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\gcc.exe]
         ignore line: [Target: x86_64-w64-mingw32]
@@ -3599,8 +3599,8 @@ events:
         ignore line: [Thread model: win32]
         ignore line: [Supported LTO compression algorithms: zlib]
         ignore line: [gcc version 14.2.0 (x86_64-win32-seh-rev1  Built by MinGW-Builds project) ]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_1de65.dir\\CMakeCCompilerABI.c.obj' '-c' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_1de65.dir\\']
-        ignore line: [ F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/cc1.exe -quiet -v -iprefix F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/ -U_REENTRANT F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles\\cmTC_1de65.dir\\ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=core2 -march=nocona -version -o C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccZ7Ws9d.s]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_48a9e.dir\\CMakeCCompilerABI.c.obj' '-c' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_48a9e.dir\\']
+        ignore line: [ F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/cc1.exe -quiet -v -iprefix F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/ -U_REENTRANT F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\share\\cmake-4.3\\Modules\\CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles\\cmTC_48a9e.dir\\ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=core2 -march=nocona -version -o C:\\Users\\Lenovo\\AppData\\Local\\Temp\\cc4sHOL5.s]
         ignore line: [GNU C17 (x86_64-win32-seh-rev1  Built by MinGW-Builds project) version 14.2.0 (x86_64-w64-mingw32)]
         ignore line: [	compiled by GNU C version 14.2.0  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version isl-0.25-GMP]
         ignore line: []
@@ -3617,8 +3617,8 @@ events:
         ignore line: [ F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/include]
         ignore line: [End of search list.]
         ignore line: [Compiler executable checksum: 64a31a6ba5c604df620d08f22c4d358b]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_1de65.dir\\CMakeCCompilerABI.c.obj' '-c' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_1de65.dir\\']
-        ignore line: [ F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/bin/as.exe -v -o CMakeFiles\\cmTC_1de65.dir\\CMakeCCompilerABI.c.obj C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccZ7Ws9d.s]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_48a9e.dir\\CMakeCCompilerABI.c.obj' '-c' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_48a9e.dir\\']
+        ignore line: [ F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/bin/as.exe -v -o CMakeFiles\\cmTC_48a9e.dir\\CMakeCCompilerABI.c.obj C:\\Users\\Lenovo\\AppData\\Local\\Temp\\cc4sHOL5.s]
         ignore line: [GNU assembler version 2.43 (x86_64-w64-mingw32) using BFD version (GNU Binutils) 2.43]
         ignore line: [COMPILER_PATH=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/]
         ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/]
@@ -3629,9 +3629,9 @@ events:
         ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib/]
         ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/]
         ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_1de65.dir\\CMakeCCompilerABI.c.obj' '-c' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_1de65.dir\\CMakeCCompilerABI.c.']
-        ignore line: [Linking C executable cmTC_1de65.exe]
-        ignore line: ["F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_1de65.dir\\link.txt --verbose=1]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_48a9e.dir\\CMakeCCompilerABI.c.obj' '-c' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_48a9e.dir\\CMakeCCompilerABI.c.']
+        ignore line: [Linking C executable cmTC_48a9e.exe]
+        ignore line: ["F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_48a9e.dir\\link.txt --verbose=1]
         ignore line: [Using built-in specs.]
         ignore line: [COLLECT_GCC=F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\gcc.exe]
         ignore line: [COLLECT_LTO_WRAPPER=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe]
@@ -3649,13 +3649,13 @@ events:
         ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib/]
         ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/]
         ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_1de65.exe' '-mtune=core2' '-march=nocona' '-dumpdir' 'cmTC_1de65.']
-        link line: [ F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/collect2.exe -plugin F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/liblto_plugin.dll -plugin-opt=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccYiG6Ak.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_eh -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-liconv -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_eh -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=C:/buildroot/x86_64-1420-win32-seh-ucrt-rt_v12-rev1/mingw64 -m i386pep -Bdynamic -o cmTC_1de65.exe F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtbegin.o -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0 -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../.. -v --whole-archive CMakeFiles\\cmTC_1de65.dir/objects.a --no-whole-archive --out-implib libcmTC_1de65.dll.a --major-image-version 0 --minor-image-version 0 -lmingw32 -lgcc -lgcc_eh -lmingwex -lmsvcrt -lkernel32 -ladvapi32 -lshell32 -luser32 -lkernel32 -liconv -lmingw32 -lgcc -lgcc_eh -lmingwex -lmsvcrt -lkernel32 F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtend.o]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_48a9e.exe' '-mtune=core2' '-march=nocona' '-dumpdir' 'cmTC_48a9e.']
+        link line: [ F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/collect2.exe -plugin F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/liblto_plugin.dll -plugin-opt=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\cciooUeh.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_eh -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-liconv -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_eh -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=C:/buildroot/x86_64-1420-win32-seh-ucrt-rt_v12-rev1/mingw64 -m i386pep -Bdynamic -o cmTC_48a9e.exe F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtbegin.o -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0 -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../.. -v --whole-archive CMakeFiles\\cmTC_48a9e.dir/objects.a --no-whole-archive --out-implib libcmTC_48a9e.dll.a --major-image-version 0 --minor-image-version 0 -lmingw32 -lgcc -lgcc_eh -lmingwex -lmsvcrt -lkernel32 -ladvapi32 -lshell32 -luser32 -lkernel32 -liconv -lmingw32 -lgcc -lgcc_eh -lmingwex -lmsvcrt -lkernel32 F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtend.o]
           arg [F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/collect2.exe] ==> ignore
           arg [-plugin] ==> ignore
           arg [F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/liblto_plugin.dll] ==> ignore
           arg [-plugin-opt=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe] ==> ignore
-          arg [-plugin-opt=-fresolution=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccYiG6Ak.res] ==> ignore
+          arg [-plugin-opt=-fresolution=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\cciooUeh.res] ==> ignore
           arg [-plugin-opt=-pass-through=-lmingw32] ==> ignore
           arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
           arg [-plugin-opt=-pass-through=-lgcc_eh] ==> ignore
@@ -3678,7 +3678,7 @@ events:
           arg [i386pep] ==> ignore
           arg [-Bdynamic] ==> search dynamic
           arg [-o] ==> ignore
-          arg [cmTC_1de65.exe] ==> ignore
+          arg [cmTC_48a9e.exe] ==> ignore
           arg [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o] ==> obj [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o]
           arg [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtbegin.o] ==> obj [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtbegin.o]
           arg [-LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0] ==> dir [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0]
@@ -3689,10 +3689,10 @@ events:
           arg [-LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../..] ==> dir [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../..]
           arg [-v] ==> ignore
           arg [--whole-archive] ==> ignore
-          arg [CMakeFiles\\cmTC_1de65.dir/objects.a] ==> ignore
+          arg [CMakeFiles\\cmTC_48a9e.dir/objects.a] ==> ignore
           arg [--no-whole-archive] ==> ignore
           arg [--out-implib] ==> ignore
-          arg [libcmTC_1de65.dll.a] ==> ignore
+          arg [libcmTC_48a9e.dll.a] ==> ignore
           arg [--major-image-version] ==> ignore
           arg [0] ==> ignore
           arg [--minor-image-version] ==> ignore
@@ -3774,8 +3774,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-xe75kt"
-      binary: "C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-xe75kt"
+      source: "C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-vrgqlr"
+      binary: "C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-vrgqlr"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -3786,13 +3786,13 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-xe75kt'
+        Change Dir: 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-vrgqlr'
         
-        Run Build Command(s): "F:/Program Files/JetBrains/CLion 2026.2.0.1/bin/cmake/win/x64/bin/cmake.exe" -E env VERBOSE=1 F:/develop/Mingw-14.2.0/mingw64/bin/mingw32-make.exe -f Makefile cmTC_edeaf/fast
-        F:/develop/Mingw-14.2.0/mingw64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_edeaf.dir\\build.make CMakeFiles/cmTC_edeaf.dir/build
-        mingw32-make[1]: Entering directory 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-xe75kt'
-        Building CXX object CMakeFiles/cmTC_edeaf.dir/CMakeCXXCompilerABI.cpp.obj
-        F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -v -o CMakeFiles\\cmTC_edeaf.dir\\CMakeCXXCompilerABI.cpp.obj -c "F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\share\\cmake-4.3\\Modules\\CMakeCXXCompilerABI.cpp"
+        Run Build Command(s): "F:/Program Files/JetBrains/CLion 2026.2.0.1/bin/cmake/win/x64/bin/cmake.exe" -E env VERBOSE=1 F:/develop/Mingw-14.2.0/mingw64/bin/mingw32-make.exe -f Makefile cmTC_c1922/fast
+        F:/develop/Mingw-14.2.0/mingw64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_c1922.dir\\build.make CMakeFiles/cmTC_c1922.dir/build
+        mingw32-make[1]: Entering directory 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-vrgqlr'
+        Building CXX object CMakeFiles/cmTC_c1922.dir/CMakeCXXCompilerABI.cpp.obj
+        F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -v -o CMakeFiles\\cmTC_c1922.dir\\CMakeCXXCompilerABI.cpp.obj -c "F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\share\\cmake-4.3\\Modules\\CMakeCXXCompilerABI.cpp"
         Using built-in specs.
         COLLECT_GCC=F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe
         Target: x86_64-w64-mingw32
@@ -3800,8 +3800,8 @@ events:
         Thread model: win32
         Supported LTO compression algorithms: zlib
         gcc version 14.2.0 (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_edeaf.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_edeaf.dir\\'
-         F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/cc1plus.exe -quiet -v -iprefix F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/ -U_REENTRANT F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\share\\cmake-4.3\\Modules\\CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles\\cmTC_edeaf.dir\\ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=core2 -march=nocona -version -o C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccYGDT0z.s
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_c1922.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_c1922.dir\\'
+         F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/cc1plus.exe -quiet -v -iprefix F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/ -U_REENTRANT F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\share\\cmake-4.3\\Modules\\CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles\\cmTC_c1922.dir\\ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=core2 -march=nocona -version -o C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccbUtJ3l.s
         GNU C++17 (x86_64-win32-seh-rev1, Built by MinGW-Builds project) version 14.2.0 (x86_64-w64-mingw32)
         	compiled by GNU C version 14.2.0, GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version isl-0.25-GMP
         
@@ -3824,14 +3824,14 @@ events:
          F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/include
         End of search list.
         Compiler executable checksum: dd1e8e4454cb75d49fca27134f8c4945
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_edeaf.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_edeaf.dir\\'
-         F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/bin/as.exe -v -o CMakeFiles\\cmTC_edeaf.dir\\CMakeCXXCompilerABI.cpp.obj C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccYGDT0z.s
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_c1922.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_c1922.dir\\'
+         F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/bin/as.exe -v -o CMakeFiles\\cmTC_c1922.dir\\CMakeCXXCompilerABI.cpp.obj C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccbUtJ3l.s
         GNU assembler version 2.43 (x86_64-w64-mingw32) using BFD version (GNU Binutils) 2.43
         COMPILER_PATH=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/;F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/bin/
         LIBRARY_PATH=F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_edeaf.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_edeaf.dir\\CMakeCXXCompilerABI.cpp.'
-        Linking CXX executable cmTC_edeaf.exe
-        "F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_edeaf.dir\\link.txt --verbose=1
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_c1922.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_c1922.dir\\CMakeCXXCompilerABI.cpp.'
+        Linking CXX executable cmTC_c1922.exe
+        "F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_c1922.dir\\link.txt --verbose=1
         Using built-in specs.
         COLLECT_GCC=F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe
         COLLECT_LTO_WRAPPER=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe
@@ -3842,16 +3842,16 @@ events:
         gcc version 14.2.0 (x86_64-win32-seh-rev1, Built by MinGW-Builds project) 
         COMPILER_PATH=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/;F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/bin/
         LIBRARY_PATH=F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/;F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_edeaf.exe' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'cmTC_edeaf.'
-         F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/collect2.exe -plugin F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/liblto_plugin.dll -plugin-opt=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccEWO6mJ.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-liconv -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=C:/buildroot/x86_64-1420-win32-seh-ucrt-rt_v12-rev1/mingw64 -m i386pep -Bdynamic -o cmTC_edeaf.exe F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtbegin.o -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0 -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../.. -v --whole-archive CMakeFiles\\cmTC_edeaf.dir/objects.a --no-whole-archive --out-implib libcmTC_edeaf.dll.a --major-image-version 0 --minor-image-version 0 -lstdc++ -lmingw32 -lgcc_s -lgcc -lmingwex -lmsvcrt -lkernel32 -ladvapi32 -lshell32 -luser32 -lkernel32 -liconv -lmingw32 -lgcc_s -lgcc -lmingwex -lmsvcrt -lkernel32 F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtend.o
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_c1922.exe' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'cmTC_c1922.'
+         F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/collect2.exe -plugin F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/liblto_plugin.dll -plugin-opt=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccTMBaVw.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-liconv -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=C:/buildroot/x86_64-1420-win32-seh-ucrt-rt_v12-rev1/mingw64 -m i386pep -Bdynamic -o cmTC_c1922.exe F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtbegin.o -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0 -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../.. -v --whole-archive CMakeFiles\\cmTC_c1922.dir/objects.a --no-whole-archive --out-implib libcmTC_c1922.dll.a --major-image-version 0 --minor-image-version 0 -lstdc++ -lmingw32 -lgcc_s -lgcc -lmingwex -lmsvcrt -lkernel32 -ladvapi32 -lshell32 -luser32 -lkernel32 -liconv -lmingw32 -lgcc_s -lgcc -lmingwex -lmsvcrt -lkernel32 F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtend.o
         collect2 version 14.2.0
-        F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe -plugin F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/liblto_plugin.dll -plugin-opt=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccEWO6mJ.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-liconv -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=C:/buildroot/x86_64-1420-win32-seh-ucrt-rt_v12-rev1/mingw64 -m i386pep -Bdynamic -o cmTC_edeaf.exe F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtbegin.o -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0 -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../.. -v --whole-archive CMakeFiles\\cmTC_edeaf.dir/objects.a --no-whole-archive --out-implib libcmTC_edeaf.dll.a --major-image-version 0 --minor-image-version 0 -lstdc++ -lmingw32 -lgcc_s -lgcc -lmingwex -lmsvcrt -lkernel32 -ladvapi32 -lshell32 -luser32 -lkernel32 -liconv -lmingw32 -lgcc_s -lgcc -lmingwex -lmsvcrt -lkernel32 F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtend.o
+        F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe -plugin F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/liblto_plugin.dll -plugin-opt=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccTMBaVw.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-liconv -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=C:/buildroot/x86_64-1420-win32-seh-ucrt-rt_v12-rev1/mingw64 -m i386pep -Bdynamic -o cmTC_c1922.exe F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtbegin.o -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0 -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../.. -v --whole-archive CMakeFiles\\cmTC_c1922.dir/objects.a --no-whole-archive --out-implib libcmTC_c1922.dll.a --major-image-version 0 --minor-image-version 0 -lstdc++ -lmingw32 -lgcc_s -lgcc -lmingwex -lmsvcrt -lkernel32 -ladvapi32 -lshell32 -luser32 -lkernel32 -liconv -lmingw32 -lgcc_s -lgcc -lmingwex -lmsvcrt -lkernel32 F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtend.o
         GNU ld (GNU Binutils) 2.43
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_edeaf.exe' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'cmTC_edeaf.'
-        "F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_edeaf.dir/objects.a
-        F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\ar.exe qc CMakeFiles\\cmTC_edeaf.dir/objects.a @CMakeFiles\\cmTC_edeaf.dir\\objects1.rsp
-        F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe -v -Wl,-v -Wl,--whole-archive CMakeFiles\\cmTC_edeaf.dir/objects.a -Wl,--no-whole-archive -o cmTC_edeaf.exe -Wl,--out-implib,libcmTC_edeaf.dll.a -Wl,--major-image-version,0,--minor-image-version,0
-        mingw32-make[1]: Leaving directory 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-xe75kt'
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_c1922.exe' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'cmTC_c1922.'
+        "F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_c1922.dir/objects.a
+        F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\ar.exe qc CMakeFiles\\cmTC_c1922.dir/objects.a @CMakeFiles\\cmTC_c1922.dir\\objects1.rsp
+        F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe -v -Wl,-v -Wl,--whole-archive CMakeFiles\\cmTC_c1922.dir/objects.a -Wl,--no-whole-archive -o cmTC_c1922.exe -Wl,--out-implib,libcmTC_c1922.dll.a -Wl,--major-image-version,0,--minor-image-version,0
+        mingw32-make[1]: Leaving directory 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-vrgqlr'
         
       exitCode: 0
   -
@@ -3890,13 +3890,13 @@ events:
       Parsed CXX implicit link information:
         link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
         linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)))("|,| |$)]
-        ignore line: [Change Dir: 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-xe75kt']
+        ignore line: [Change Dir: 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-vrgqlr']
         ignore line: []
-        ignore line: [Run Build Command(s): "F:/Program Files/JetBrains/CLion 2026.2.0.1/bin/cmake/win/x64/bin/cmake.exe" -E env VERBOSE=1 F:/develop/Mingw-14.2.0/mingw64/bin/mingw32-make.exe -f Makefile cmTC_edeaf/fast]
-        ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_edeaf.dir\\build.make CMakeFiles/cmTC_edeaf.dir/build]
-        ignore line: [mingw32-make[1]: Entering directory 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-xe75kt']
-        ignore line: [Building CXX object CMakeFiles/cmTC_edeaf.dir/CMakeCXXCompilerABI.cpp.obj]
-        ignore line: [F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -v -o CMakeFiles\\cmTC_edeaf.dir\\CMakeCXXCompilerABI.cpp.obj -c "F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\share\\cmake-4.3\\Modules\\CMakeCXXCompilerABI.cpp"]
+        ignore line: [Run Build Command(s): "F:/Program Files/JetBrains/CLion 2026.2.0.1/bin/cmake/win/x64/bin/cmake.exe" -E env VERBOSE=1 F:/develop/Mingw-14.2.0/mingw64/bin/mingw32-make.exe -f Makefile cmTC_c1922/fast]
+        ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_c1922.dir\\build.make CMakeFiles/cmTC_c1922.dir/build]
+        ignore line: [mingw32-make[1]: Entering directory 'C:/Users/Lenovo/Desktop/MicaLang/build/CMakeFiles/CMakeScratch/TryCompile-vrgqlr']
+        ignore line: [Building CXX object CMakeFiles/cmTC_c1922.dir/CMakeCXXCompilerABI.cpp.obj]
+        ignore line: [F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -v -o CMakeFiles\\cmTC_c1922.dir\\CMakeCXXCompilerABI.cpp.obj -c "F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\share\\cmake-4.3\\Modules\\CMakeCXXCompilerABI.cpp"]
         ignore line: [Using built-in specs.]
         ignore line: [COLLECT_GCC=F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe]
         ignore line: [Target: x86_64-w64-mingw32]
@@ -3904,8 +3904,8 @@ events:
         ignore line: [Thread model: win32]
         ignore line: [Supported LTO compression algorithms: zlib]
         ignore line: [gcc version 14.2.0 (x86_64-win32-seh-rev1  Built by MinGW-Builds project) ]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_edeaf.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_edeaf.dir\\']
-        ignore line: [ F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/cc1plus.exe -quiet -v -iprefix F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/ -U_REENTRANT F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\share\\cmake-4.3\\Modules\\CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles\\cmTC_edeaf.dir\\ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=core2 -march=nocona -version -o C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccYGDT0z.s]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_c1922.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_c1922.dir\\']
+        ignore line: [ F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/cc1plus.exe -quiet -v -iprefix F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/ -U_REENTRANT F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\share\\cmake-4.3\\Modules\\CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles\\cmTC_c1922.dir\\ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=core2 -march=nocona -version -o C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccbUtJ3l.s]
         ignore line: [GNU C++17 (x86_64-win32-seh-rev1  Built by MinGW-Builds project) version 14.2.0 (x86_64-w64-mingw32)]
         ignore line: [	compiled by GNU C version 14.2.0  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version isl-0.25-GMP]
         ignore line: []
@@ -3928,8 +3928,8 @@ events:
         ignore line: [ F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/include]
         ignore line: [End of search list.]
         ignore line: [Compiler executable checksum: dd1e8e4454cb75d49fca27134f8c4945]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_edeaf.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_edeaf.dir\\']
-        ignore line: [ F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/bin/as.exe -v -o CMakeFiles\\cmTC_edeaf.dir\\CMakeCXXCompilerABI.cpp.obj C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccYGDT0z.s]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_c1922.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_c1922.dir\\']
+        ignore line: [ F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/bin/as.exe -v -o CMakeFiles\\cmTC_c1922.dir\\CMakeCXXCompilerABI.cpp.obj C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccbUtJ3l.s]
         ignore line: [GNU assembler version 2.43 (x86_64-w64-mingw32) using BFD version (GNU Binutils) 2.43]
         ignore line: [COMPILER_PATH=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/]
         ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/]
@@ -3940,9 +3940,9 @@ events:
         ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib/]
         ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/]
         ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_edeaf.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_edeaf.dir\\CMakeCXXCompilerABI.cpp.']
-        ignore line: [Linking CXX executable cmTC_edeaf.exe]
-        ignore line: ["F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_edeaf.dir\\link.txt --verbose=1]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles\\cmTC_c1922.dir\\CMakeCXXCompilerABI.cpp.obj' '-c' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'CMakeFiles\\cmTC_c1922.dir\\CMakeCXXCompilerABI.cpp.']
+        ignore line: [Linking CXX executable cmTC_c1922.exe]
+        ignore line: ["F:\\Program Files\\JetBrains\\CLion 2026.2.0.1\\bin\\cmake\\win\\x64\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_c1922.dir\\link.txt --verbose=1]
         ignore line: [Using built-in specs.]
         ignore line: [COLLECT_GCC=F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe]
         ignore line: [COLLECT_LTO_WRAPPER=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe]
@@ -3960,13 +3960,13 @@ events:
         ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib/]
         ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/]
         ignore line: [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_edeaf.exe' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'cmTC_edeaf.']
-        link line: [ F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/collect2.exe -plugin F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/liblto_plugin.dll -plugin-opt=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccEWO6mJ.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-liconv -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=C:/buildroot/x86_64-1420-win32-seh-ucrt-rt_v12-rev1/mingw64 -m i386pep -Bdynamic -o cmTC_edeaf.exe F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtbegin.o -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0 -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../.. -v --whole-archive CMakeFiles\\cmTC_edeaf.dir/objects.a --no-whole-archive --out-implib libcmTC_edeaf.dll.a --major-image-version 0 --minor-image-version 0 -lstdc++ -lmingw32 -lgcc_s -lgcc -lmingwex -lmsvcrt -lkernel32 -ladvapi32 -lshell32 -luser32 -lkernel32 -liconv -lmingw32 -lgcc_s -lgcc -lmingwex -lmsvcrt -lkernel32 F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtend.o]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_c1922.exe' '-shared-libgcc' '-mtune=core2' '-march=nocona' '-dumpdir' 'cmTC_c1922.']
+        link line: [ F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/collect2.exe -plugin F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/liblto_plugin.dll -plugin-opt=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe -plugin-opt=-fresolution=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccTMBaVw.res -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-ladvapi32 -plugin-opt=-pass-through=-lshell32 -plugin-opt=-pass-through=-luser32 -plugin-opt=-pass-through=-lkernel32 -plugin-opt=-pass-through=-liconv -plugin-opt=-pass-through=-lmingw32 -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lmingwex -plugin-opt=-pass-through=-lmsvcrt -plugin-opt=-pass-through=-lkernel32 --sysroot=C:/buildroot/x86_64-1420-win32-seh-ucrt-rt_v12-rev1/mingw64 -m i386pep -Bdynamic -o cmTC_c1922.exe F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtbegin.o -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0 -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib -LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../.. -v --whole-archive CMakeFiles\\cmTC_c1922.dir/objects.a --no-whole-archive --out-implib libcmTC_c1922.dll.a --major-image-version 0 --minor-image-version 0 -lstdc++ -lmingw32 -lgcc_s -lgcc -lmingwex -lmsvcrt -lkernel32 -ladvapi32 -lshell32 -luser32 -lkernel32 -liconv -lmingw32 -lgcc_s -lgcc -lmingwex -lmsvcrt -lkernel32 F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtend.o]
           arg [F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/collect2.exe] ==> ignore
           arg [-plugin] ==> ignore
           arg [F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/liblto_plugin.dll] ==> ignore
           arg [-plugin-opt=F:/develop/Mingw-14.2.0/mingw64/bin/../libexec/gcc/x86_64-w64-mingw32/14.2.0/lto-wrapper.exe] ==> ignore
-          arg [-plugin-opt=-fresolution=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccEWO6mJ.res] ==> ignore
+          arg [-plugin-opt=-fresolution=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\ccTMBaVw.res] ==> ignore
           arg [-plugin-opt=-pass-through=-lmingw32] ==> ignore
           arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
           arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
@@ -3989,7 +3989,7 @@ events:
           arg [i386pep] ==> ignore
           arg [-Bdynamic] ==> search dynamic
           arg [-o] ==> ignore
-          arg [cmTC_edeaf.exe] ==> ignore
+          arg [cmTC_c1922.exe] ==> ignore
           arg [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o] ==> obj [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../x86_64-w64-mingw32/lib/../lib/crt2.o]
           arg [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtbegin.o] ==> obj [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/crtbegin.o]
           arg [-LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0] ==> dir [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0]
@@ -4000,10 +4000,10 @@ events:
           arg [-LF:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../..] ==> dir [F:/develop/Mingw-14.2.0/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../..]
           arg [-v] ==> ignore
           arg [--whole-archive] ==> ignore
-          arg [CMakeFiles\\cmTC_edeaf.dir/objects.a] ==> ignore
+          arg [CMakeFiles\\cmTC_c1922.dir/objects.a] ==> ignore
           arg [--no-whole-archive] ==> ignore
           arg [--out-implib] ==> ignore
-          arg [libcmTC_edeaf.dll.a] ==> ignore
+          arg [libcmTC_c1922.dll.a] ==> ignore
           arg [--major-image-version] ==> ignore
           arg [0] ==> ignore
           arg [--minor-image-version] ==> ignore

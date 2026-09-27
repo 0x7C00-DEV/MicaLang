@@ -70,5 +70,11 @@
   "command": "F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -g -std=gnu++20 -o CMakeFiles\\MicaLang.dir\\src\\loader.cpp.obj -c C:\\Users\\Lenovo\\Desktop\\MicaLang\\src\\loader.cpp",
   "file": "C:/Users/Lenovo/Desktop/MicaLang/src/loader.cpp",
   "output": "CMakeFiles/MicaLang.dir/src/loader.cpp.obj"
+},
+{
+  "directory": "C:/Users/Lenovo/Desktop/MicaLang/build",
+  "command": "F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -g -std=gnu++20 -o CMakeFiles\\MicaLang.dir\\src\\resolve.cpp.obj -c C:\\Users\\Lenovo\\Desktop\\MicaLang\\src\\resolve.cpp",
+  "file": "C:/Users/Lenovo/Desktop/MicaLang/src/resolve.cpp",
+  "output": "CMakeFiles/MicaLang.dir/src/resolve.cpp.obj"
 }
 ]

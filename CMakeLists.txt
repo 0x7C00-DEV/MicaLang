@@ -26,5 +26,5 @@ add_executable(MicaLang main.cpp
         include/loader.h
         src/loader.cpp
         include/config.h
-        include/symbol.h
-        src/symbol.cpp)
+        include/resolve.h
+        src/resolve.cpp)

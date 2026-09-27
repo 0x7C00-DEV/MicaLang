@@ -7,6 +7,7 @@
 #include <complex>
 #include <string>
 #include <utility>
+#include <unordered_map>
 #include "position.h"
 #include <vector>
 
@@ -180,6 +181,8 @@ struct VarDef : AST {
     std::string name;
     AST* type;
     AST* init;
+    int varAddress=0;
+    enum VarType { LOCAL_VAR, GLOBAL_VAR, FUNC_ARGS } kind;
     VarDef(std::string name, AST* type, AST* init, Position begin, Position end): AST(AST_VAR_DEF, begin, end) {
         this->name = name;
         this->type = type;
@@ -254,6 +257,7 @@ struct ThreeOp : AST {
     AST* condition;
     AST* trueValue;
     AST* falseValue;
+    AST* retType = nullptr;
     ThreeOp(AST* condition, AST* trueValue, AST* falseValue, Position begin, Position end): AST(AST_THREE_OP, begin, end) {
         this->condition = condition;
         this->trueValue = trueValue;
@@ -287,6 +291,7 @@ struct Goto : AST {
 };
 
 struct MemberAccess : AST {
+    AST* parentType = nullptr;
     AST* parent;
     std::string member;
     std::vector<AST*> templates;
@@ -300,6 +305,7 @@ struct MemberAccess : AST {
 struct Call : AST {
     std::vector<AST*> args;
     AST* fnid;
+    AST* retType;
     std::vector<AST*> templates;
     Call(AST* fnid, std::vector<AST*> args, std::vector<AST*> templates, Position begin, Position end) : AST(AST_CALL, begin, end) {
         this->fnid = fnid;
@@ -311,6 +317,7 @@ struct Call : AST {
 struct ElementGet : AST {
     AST* address;
     AST* position;
+    AST* retType;
     ElementGet(AST* add, AST* pos, Position begin, Position end): AST(AST_ELEMENT_GET, begin, end) {
         this->address = add;
         this->position = pos;
@@ -320,6 +327,7 @@ struct ElementGet : AST {
 struct BinOpNode : AST {
     AST *left, *right;
     std::string op{};
+    AST* retType;
     BinOpNode(std::string op, AST *left, AST *right, Position begin, Position end): AST(AST_BIN_OP, begin, end) {
         this->op = std::move(op);
         this->left = left;
@@ -353,6 +361,7 @@ struct Array : AST {
 
 struct Neg : AST {
     AST* value;
+    AST* retType;
     explicit Neg(AST* value, Position begin, Position end): AST(AST_NEG, begin, end) {
         this->value = value;
     }
@@ -362,6 +371,7 @@ struct AssignNode : AST {
     std::string op;
     AST* src;
     AST* dst;
+    AST* retType;
     AssignNode(std::string oper, AST* tdst, AST* tsrc, Position begin, Position end): AST(AST_ASSIGN_NODE, begin, end) {
         if (oper != "=") {
             op = oper.substr(0, oper.find('='));
@@ -399,6 +409,7 @@ struct SelfChangeNode : AST {
     bool incOrDec; // true -> inc, false -> dec
     bool isPre; // true -> pre, false -> no pre
     AST* expand;
+    AST* retType;
     SelfChangeNode(AST* value, bool incOrDec, bool isPre, Position begin, Position end): AST(AST_SELF_CHANGE, begin, end) {
         this->value = value;
         this->incOrDec = incOrDec;
