@@ -23,7 +23,15 @@ Frame* Environment::getCTask() {
     return callChain.back();
 }
 
-Module* Environment::loadModule(Program* md, std::string name) {
+
+void Environment::registModule(std::string path, std::string align, Module* module) {
+    ptoa[path] = align;
+    atop[align] = path;
+    isImport[align] = module;
+}
+
+Module* Environment::loadModule(VM* vm, Program* md, std::string name, std::string path) {
+    if (isImport.find(name) != isImport.end()) return isImport[name];
     Module* module = new Module();
     module->moduleName = name;
     module->globalConstPool = md->constPools;
@@ -31,24 +39,28 @@ Module* Environment::loadModule(Program* md, std::string name) {
         i->module = module;
         module->funcs.push_back(i);
     }
-    VM vm(module, "@init", {});
+    registModule(path, name, module);
     modules.push_back(module);
+    if (!module->isReady)
+        vm->initModule(module);
     return module;
 }
 
-Obj* Environment::malloc(Obj::ObjTP tp) {
-    Obj* obj = new Obj(tp);
+void Environment::addObject(Obj* obj) {
     if (!heapHead) {
-        heapEnd = heapHead = obj;
-        return obj;
+        heapHead = heapEnd = obj;
+        return;
     }
     heapEnd->next = obj;
     heapEnd = heapEnd->next;
-    return obj;
 }
 
 Instr Frame::getInstr() {
     return fn->ins[pc++];
+}
+
+ObjInstance::ObjInstance(): Obj(INITED_OBJECT) {
+
 }
 
 #ifdef SUPDLL
@@ -74,17 +86,22 @@ std::vector<MicaCFunction*> loadMicaFunctions(const char* dllPath) {
 }
 #endif
 
-Module::Module() {
+Module::Module() : Obj(MODULE) {
 
 }
 
+ObjClass::ObjClass(std::string name): Obj(USER_DEFING_CLASS) {
+    this->name = name;
+}
+
 #ifdef SUPDLL
-Module::Module(std::string path) {
+Module::Module(std::string path): Obj(MODULE) {
     std::vector<MicaCFunction*> tmp = loadMicaFunctions(path.c_str());
     for (auto i : tmp) funcs.push_back(new Function(i));
 }
 #endif
 
 void Frame::__call__(Environment* env, std::vector<MicaValue> args) {
-    caller->mstack.push_back(fn->__native__(env, args));
+    auto tmp = fn->__native__(env, args);
+    if (caller) caller->mstack.push_back(tmp);
 }

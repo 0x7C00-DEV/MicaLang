@@ -20,10 +20,12 @@ public:
     VM(Module*, std::string, std::vector<MicaValue>);
     void start0(std::string);
     void start0(std::string, std::string, std::vector<MicaValue>);
+    void initModule(Module*);
+    void importModule(int , int);
     void initVec();
     void execute(int);
     void execute(Instr);
-    void executeLoop();
+    void executeLoop(int);
     Function* lookFunction(std::string);
     Environment env;
 private:
@@ -44,6 +46,7 @@ private:
     void loadSCst(int, int);
     void imm(int, int);
     void pop_(int, int);
+    void loadModule(int, int);
     void bnot(int, int);
     void bitnot(int, int);
     void neg(int, int);

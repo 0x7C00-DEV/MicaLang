@@ -23,6 +23,8 @@ enum Assembly {
     STORE_SVAR,
     LOAD_GCST,
     LOAD_SCST,
+    IMPORT_MODULE,
+    LOAD_MODULE,
     IMM,
     POP,
     BNOT,

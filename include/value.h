@@ -12,7 +12,9 @@
 #include <unordered_map>
 #include "asm.h"
 #include "config.h"
+#include "value.h"
 
+class VM;
 struct Frame;
 struct Module;
 struct Function;
@@ -42,21 +44,9 @@ struct MicaValue {
 
 struct Obj {
     Obj* next = nullptr;
-    enum ObjTP { NORMAL, FUNCTION } tp;
+    enum ObjTP { USER_DEFING_CLASS, INITED_OBJECT, FUNCTION, MODULE } tp;
     Obj(ObjTP tp) {
         this->tp = tp;
-    }
-};
-
-struct ObjArray : Obj {
-    std::vector<MicaValue> elements;
-    ObjArray(): Obj(NORMAL) {}
-};
-
-struct ObjString : ObjArray {
-    ObjString(std::string str) {
-        for (auto i : str)
-            elements.push_back(MicaValue::Char(i));
     }
 };
 
@@ -68,12 +58,16 @@ struct Program {
 struct Environment {
     Module* mainModule;
     std::vector<Module*> modules;
+    std::unordered_map<std::string, Module*> isImport;
+    std::unordered_map<std::string, std::string> ptoa, atop;
+
     std::vector<Frame*> callChain;
     Obj* heapHead = nullptr;
     Obj* heapEnd = nullptr;
-    Obj* malloc(Obj::ObjTP);
+    void addObject(Obj*);
     Frame* getCTask();
-    Module* loadModule(Program*, std::string);
+    void registModule(std::string, std::string, Module*);
+    Module* loadModule(VM*, Program*, std::string, std::string);
 };
 
 using MicaCFunction = MicaValue(Environment*, std::vector<MicaValue>);
@@ -111,7 +105,8 @@ struct Function : Obj {
     }
 };
 
-struct Module {
+struct Module : Obj {
+    bool isReady=false;
     std::string moduleName;
     std::vector<MicaValue> globalConstPool;
     std::vector<MicaValue> globalVars;
@@ -129,6 +124,7 @@ struct ObjClass : Obj {
     ObjClass* super;
     std::unordered_map<std::string, MicaValue> methods;
     std::vector<std::string> fields;
+    ObjClass(std::string);
 };
 
 struct ObjInstance : Obj {
@@ -136,6 +132,19 @@ struct ObjInstance : Obj {
     std::unordered_map<std::string, MicaValue> fields;
     MicaValue getField(std::string);
     void setField(std::string, MicaValue);
+    ObjInstance();
+};
+
+struct ObjArray : ObjClass {
+    std::vector<MicaValue> elements;
+    ObjArray(): ObjClass("Array") {}
+};
+
+struct ObjString : ObjArray {
+    ObjString(std::string str) {
+        for (auto i : str)
+            elements.push_back(MicaValue::Char(i));
+    }
 };
 
 #endif //MICALANG_VALUE_H

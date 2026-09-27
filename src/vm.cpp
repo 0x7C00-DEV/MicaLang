@@ -26,13 +26,34 @@ VM::VM(Module* module, std::string func, std::vector<MicaValue> args) {
         std::cout << "Function not found in module '" << module->moduleName << "'\n";
         exit(-1);
     }
+    int base = env.callChain.size();
     callFunction(tmp, args);
-    executeLoop();
+    executeLoop(base);
 }
 
-void VM::executeLoop() {
-    while (!env.callChain.empty())
+void VM::executeLoop(int base) {
+    while (env.callChain.size() > base)
         execute(env.getCTask()->getInstr());
+}
+
+void VM::initModule(Module* module) {
+    module->isReady = true;
+    auto base = env.callChain.size();
+    start0(module->moduleName, "@init", {});
+    executeLoop(base);
+}
+
+void VM::importModule(int a, int b) {
+    auto modulePath_ = loadSubConst(a);
+    auto moduleAlign_ = loadSubConst(b);
+    std::string path, align;
+    for (auto i : ((ObjArray*)modulePath_.obj)->elements)
+        path += i.c;
+    for (auto i : ((ObjArray*)moduleAlign_.obj)->elements)
+        align += i.c;
+    ProgramLoader loader(path);
+    auto p = loader.getData();
+    env.loadModule(this, p, align, path);
 }
 
 void VM::initVec() {
@@ -41,10 +62,12 @@ void VM::initVec() {
     IVEC[JMPF] = &VM::jmpf;
     IVEC[JMPT] = &VM::jmpt;
     IVEC[CALL] = &VM::call;
+    IVEC[IMPORT_MODULE] = &VM::importModule;
     IVEC[LOAD_GVAR] = &VM::loadGVar;
     IVEC[STORE_GVAR] = &VM::storeGVar;
     IVEC[LOAD_SVAR] = &VM::loadSVar;
     IVEC[STORE_SVAR] = &VM::storeSVar;
+    IVEC[LOAD_MODULE] = &VM::loadModule;
     IVEC[LOAD_GCST] = &VM::loadGCst;
     IVEC[LOAD_SCST] = &VM::loadSCst;
     IVEC[IMM] = &VM::imm;
@@ -81,7 +104,6 @@ void VM::initVec() {
     BINOP[BBIG] = &VM::BBIG__;
     BINOP[BLESS] = &VM::BLESS__;
 }
-
 
 void VM::setGlobalVar(int address) {
     auto val = pop();
@@ -156,26 +178,44 @@ void VM::start0(std::string moduleName, std::string funcName, std::vector<MicaVa
 
 void VM::start0(std::string path) {
     ProgramLoader loader(path);
-    env.mainModule = env.loadModule(loader.getData(), "Main");
+    env.mainModule = env.loadModule(this, loader.getData(), "Main", path);
+    int base = env.callChain.size();
     start0("Main", "main", {});
-    start0("Main", "@init", {});
+    executeLoop(base);
+}
+
+void VM::loadModule(int a, int b) {
+    auto module_ = loadSubConst(a);
+    std::string name ;
+    for (auto i : ((ObjArray*)module_.obj)->elements)
+        name += i.c;
+    for (auto i : env.modules)
+        if (i->moduleName == name) {
+            push(MicaValue::Object(i));
+            return;
+        }
+    std::cout << "module '" << name << "' not found.\n";
+    exit(-1);
 }
 
 void VM::loadModuleMember(int a , int b) {
-    auto path_ = pop();
-    auto align_ = pop();
-    std::string path, align;
-    if (path_.kind != MicaValue::OBJ || align_.kind != MicaValue::OBJ) {
-        E:
-        std::cerr << "not a string object\n";
-        exit(-1);
-    }
-    if (path_.obj->tp != Obj::NORMAL || align_.obj->tp != Obj::NORMAL)
-        goto E;
-    for (auto i : ((ObjArray*)path_.obj)->elements) path += i.c;
-    for (auto i : ((ObjArray*)align_.obj)->elements) align += i.c;
-    ProgramLoader loader(path);
-    env.loadModule(loader.getData(), align);
+    auto module = (Module*) pop().obj;
+    auto name = loadSubConst(a);
+    std::string n;
+    for (auto i : ((ObjArray*)name.obj)->elements)
+        n += i.c;
+    for (auto i : module->funcs)
+        if (i->name == n) {
+            push(MicaValue::Object(i));
+            return;
+        }
+    for (auto i : module->globalConstPool)
+        if (i.kind == MicaValue::OBJ && i.obj->tp == Obj::USER_DEFING_CLASS && ((ObjClass*)i.obj)->name == n) {
+            push(i);
+            return;
+        }
+    std::cout << "Member '" << n << "not found in module '" << module->moduleName << "' \n";
+    exit(-1);
 }
 
 void VM::callFunction(Function* func, std::vector<MicaValue> args) {
@@ -303,8 +343,9 @@ void VM::ret(int a, int b) {
 }
 
 void VM::newObj(int a, int b) {
-    ObjClass* cls = (ObjClass*) loadGlobalConst(a).obj;
-    ObjInstance* ins = (ObjInstance*) env.malloc(Obj::NORMAL);
+    ObjClass* cls = (ObjClass*) pop().obj;
+    ObjInstance* ins = new ObjInstance();
+    env.addObject(ins);
     ins->cls = cls;
     for (auto i : cls->fields)
         ins->fields[i] = MicaValue::Null();
@@ -350,8 +391,11 @@ void VM::elSet(int a, int b) {
 
 void VM::newArr(int a, int b) {
     auto size = pop();
-    auto tmp = (ObjArray*) env.malloc(Obj::NORMAL);
-    tmp->elements.resize(size.i);
+    auto cls = new ObjArray();
+    cls->elements.resize(size.i);
+    auto tmp = new ObjInstance();
+    tmp->cls = cls;
+    push(MicaValue::Object(tmp));
 }
 
 MicaValue VM::accessSubVar(int address /*模块内索引*/) {
