@@ -378,7 +378,8 @@ void VM::memSet(int a, int b) {
 void VM::elGet(int a, int b) {
     auto obj = pop();
     auto pos = pop();
-    push(((ObjArray*)obj.obj)->elements[pos.i]);
+    auto tmp = (ObjArray*)(((ObjInstance*)obj.obj)->cls);
+    push(tmp->elements[pos.i]);
 }
 
 void VM::elSet(int a, int b) {
@@ -386,7 +387,7 @@ void VM::elSet(int a, int b) {
     auto obj = pop();
     auto pos = pop();
     auto val = pop();
-    ((ObjArray*)obj.obj)->elements[pos.i] = val;
+    ((ObjArray*)(((ObjInstance*)obj.obj)->cls))->elements[pos.i] = val;
 }
 
 void VM::newArr(int a, int b) {
@@ -395,6 +396,7 @@ void VM::newArr(int a, int b) {
     cls->elements.resize(size.i);
     auto tmp = new ObjInstance();
     tmp->cls = cls;
+    env.addObject(tmp);
     push(MicaValue::Object(tmp));
 }
 

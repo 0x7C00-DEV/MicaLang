@@ -125,6 +125,7 @@ struct ObjClass : Obj {
     std::unordered_map<std::string, MicaValue> methods;
     std::vector<std::string> fields;
     ObjClass(std::string);
+    MicaValue* findMethod(std::string);
 };
 
 struct ObjInstance : Obj {

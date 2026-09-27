@@ -5,6 +5,7 @@
 #ifndef MICALANG_COMPILER_H
 #define MICALANG_COMPILER_H
 
+
 class Compiler {
 public:
 

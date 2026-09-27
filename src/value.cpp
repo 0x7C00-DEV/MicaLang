@@ -5,12 +5,26 @@
 #include "../include/vm.h"
 
 
+MicaValue* ObjClass::findMethod(std::string _name) {
+    if (methods.find(_name) != methods.end())
+        return &methods[_name];
+    if (super) return super->findMethod(_name);
+    return nullptr;
+}
+
 MicaValue ObjInstance::getField(std::string name) {
-    return {};
+    if (fields.find(name) != fields.end())
+        return fields[name];
+    auto tmp = cls->findMethod(name);
+    if (!tmp) {
+        std::cout << "Error: class '" << cls->name << "' has not field '" << name << "'\n";
+        exit(-1);
+    }
+    return* tmp;
 }
 
 void ObjInstance::setField(std::string name, MicaValue value) {
-    
+    fields[name] = value;
 }
 
 Frame::Frame(Function* fn, Frame* caller) {
@@ -22,7 +36,6 @@ Frame::Frame(Function* fn, Frame* caller) {
 Frame* Environment::getCTask() {
     return callChain.back();
 }
-
 
 void Environment::registModule(std::string path, std::string align, Module* module) {
     ptoa[path] = align;
