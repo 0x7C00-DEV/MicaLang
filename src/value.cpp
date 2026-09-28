@@ -69,7 +69,7 @@ void Environment::addObject(Obj* obj) {
 }
 
 Instr Frame::getInstr() {
-    return fn->ins[pc++];
+    return decodeInstr(fn->ins[pc++]);
 }
 
 ObjInstance::ObjInstance(): Obj(INITED_OBJECT) {

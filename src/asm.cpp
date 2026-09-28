@@ -12,8 +12,17 @@ Instr decodeInstr(int code) {
 int codingInstr(Instr oper) {
     int code = 0;
     code = code 
-        | (oper.op << 26)
-        | (oper.v1 << 13)
-        | oper.v2;
+        |  ((oper.op & 0x3F) << 26)
+        | ((oper.v1 & 0x1FFF) << 13)
+        | oper.v2 & 0x1FFF;
+    return code;
+}
+
+int codingInstr(int op, int v1, int v2) {
+    int code = 0;
+    code = code
+           |  ((op & 0x3F) << 26)
+           | ((v1 & 0x1FFF) << 13)
+           | v2 & 0x1FFF;
     return code;
 }

@@ -10,18 +10,64 @@ BaseType::BaseType(TP tp) {
     baseType = tp;
 }
 
+std::string BaseType::__str__() {
+    return ";";
+}
+
+bool BaseType::operator==(BaseType* other) {
+    return this->__str__() == other->__str__();
+}
+
+bool BaseType::operator!=(BaseType *other) {
+    return !this->operator==(other);
+}
+
 FunctionType::FunctionType(BaseType* retType,
-                           std::vector<BaseType*> varType,
+                           std::vector<BaseType*> templates,
                            std::vector<BaseType*> argsType)
         : BaseType(BT_FUNC) {
     this->retType = retType;
-    this->varTypes = varType;
+    this->templateTypes = templates;
     this->argsType = argsType;
+}
+
+std::string FunctionType::__str__() {
+    // (<templates>;|argTypes;)@retType;
+    std::string res = "(<";
+    for (auto i : templateTypes)
+        res += i->__str__();
+    res += ">|";
+    for (auto i : argsType)
+        res += i->__str__();
+    res += ")@" + retType->__str__() + ";";
+    return res;
 }
 
 TNormalType::TNormalType(Symbol* class_)
         : BaseType(BT_NORMAL) {
     this->class_ = class_;
+}
+
+
+std::string ClassSymbol::getString() {
+    return "$" + name + "/" + clsModule + "/" + std::to_string(clsId);
+}
+
+std::string TNormalType::__str__() {
+    if (class_->kind == Symbol::SYM_CLASS) {
+        auto tmp = ((ClassSymbol *) class_);
+
+        // $NAME/module/id:super; or $NAME/module/id;
+        auto res = tmp->getString();
+        if (tmp->super) res += ":" + tmp->super->getString();
+        return res + ";";
+    } else if (class_->kind == Symbol::SYM_INTERFACE) {
+        auto tmp = ((InterfaceSymbol *) class_);
+        // #NAME/module/id
+        return "#" + tmp->name + "/" + tmp->moduleName + "/" + std::to_string(tmp->interfaceId) + ";";
+    } else {
+        return "ERROR;";
+    }
 }
 
 TArrayType::TArrayType(BaseType* elementType, int size)
@@ -30,10 +76,26 @@ TArrayType::TArrayType(BaseType* elementType, int size)
     this->size = size;
 }
 
+std::string TArrayType::__str__() {
+    // [elementType; size];
+    return "[" + elementType->__str__() + std::to_string(size) + "];";
+}
+
 TTemplateType::TTemplateType(BaseType* rootType, std::vector<BaseType*> vars)
         : BaseType(BT_TEMPLATE) {
     this->rootType = rootType;
     this->vars = vars;
+}
+
+std::string TTemplateType::__str__() {
+    // <rootType;| templates;>;
+    std::string res = "<";
+    res += rootType->__str__() + "|";
+    for (auto i: vars) {
+        res += i->__str__();
+    }
+    res += ">;";
+    return res;
 }
 
 Symbol::Symbol(SymbolKind kind) {
@@ -56,14 +118,19 @@ VarSymbol::VarSymbol(std::string name, BaseType* type, bool isInit, VarKind vkin
 
 ClassSymbol::ClassSymbol(std::string name,
                          ClassSymbol* super,
-                         ClassSymbol* impl,
+                         std::vector<InterfaceSymbol*> impl,
+                         std::string clsModule,
+                         int clsId,
                          std::unordered_map<std::string, Symbol*> members)
         : Symbol(SYM_CLASS) {
     this->name = name;
     this->super = super;
     this->impl = impl;
     this->members = members;
+    this->clsId = clsId;
+    this->clsModule = clsModule;
 }
+
 
 ModuleSymbol::ModuleSymbol(std::string modulePath, std::string reName)
         : Symbol(SYM_MODULE) {
@@ -71,9 +138,10 @@ ModuleSymbol::ModuleSymbol(std::string modulePath, std::string reName)
     this->reName = reName;
 }
 
-Scope::Scope(int scopeId, Scope* parent) {
+Scope::Scope(int scopeId, Scope* parent, ScopeKind scopeKind) {
     this->scopeId = scopeId;
     this->parent = parent;
+    this->scopeKind = scopeKind;
 }
 
 Symbol *Scope::lookupSymbol(std::string name) {
@@ -90,6 +158,26 @@ bool Scope::symbolIsExist(std::string name) {
     return false;
 }
 
+bool Scope::registVar(std::string name, Symbol* sym, int id) {
+    if (symbolIsExist(name)) return false;
+    if (sym->kind != Symbol::SYM_VAR) return false;
+    ((VarSymbol*)sym)->id = id;
+    symbols[name] = sym;
+    return true;
+}
+
+Symbol* Scope::lookupLocalVar(std::string name) {
+    if (!symbolIsExist(name))
+        return nullptr;
+    auto tmp = symbols.find(name);
+    if (tmp != symbols.end()) {
+        if (tmp->second->kind == Symbol::SYM_VAR)
+            return tmp->second;
+        return nullptr;
+    }
+    return parent->lookupLocalVar(name);
+}
+
 bool CodeStruct::registSymbol(std::string symbol, Symbol *value) {
     if (isExist(symbol)) return false;
     current->symbols[symbol] = value;
@@ -104,19 +192,33 @@ Symbol *CodeStruct::lookup(std::string name) {
     return current->lookupSymbol(name);
 }
 
-int CodeStruct::createScope() {
+Scope* CodeStruct::createScope(Scope::ScopeKind kind) {
     ++scopeId;
-    current = new Scope(scopeId, current);
-    return scopeId;
+    current = new Scope(scopeId, current, kind);
+    return current;
 }
 
-bool CodeStruct::leaveScope() {
+Scope* CodeStruct::leaveScope() {
     if (!current->parent)
-        return false;
+        return nullptr;
     current = current->parent;
-    return true;
+    return current;
 }
 
 CodeStruct::CodeStruct() {
-    createScope();
+    createScope(Scope::SGLOBAL);
+}
+
+InterfaceSymbol::InterfaceSymbol(std::string name, std::unordered_map<std::string, FunctionSymbol *> labels) : Symbol(SYM_INTERFACE){
+    this->name = name;
+    this->labels = labels;
+}
+
+ModuleType::ModuleType(std::string reName, std::string path) : BaseType(BT_MODULE){
+    this->reName = reName;
+    this->path = path;
+}
+
+std::string ModuleType::__str__() {
+    return "@Module?" + path + "?" + reName + "?;";
 }

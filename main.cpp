@@ -2,6 +2,7 @@
 #include "fstream"
 #include "include/lexer.h"
 #include "include/makeError.h"
+#include "include/symbol.h"
 #include "include/parser.h"
 #include "include/asm.h"
 #include "include/vm.h"
@@ -44,6 +45,5 @@ void testFile() {
 }
 
 int main() {
-    shell();
     return 0;
 }

@@ -10,6 +10,7 @@ struct Instr {
 Instr decodeInstr(int);
 
 int codingInstr(Instr);
+int codingInstr(int, int, int);
 
 enum Assembly {
     BIN_OPER=1, // V1 = operator

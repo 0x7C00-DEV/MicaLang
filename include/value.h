@@ -88,7 +88,7 @@ struct Frame {
 
 struct Function : Obj {
     Module* module=nullptr;
-    std::vector<Instr> ins;
+    std::vector<int> ins;
     std::vector<MicaValue> constants;
     std::string name;
     MicaCFunction* __native__;
