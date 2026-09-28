@@ -10,7 +10,7 @@
 					"jsonFile" : "directory-.-Debug-f040eec181a89de70dbe.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "4.3"
+						"string" : "3.27"
 					},
 					"projectIndex" : 0,
 					"source" : ".",
@@ -40,7 +40,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "MicaLang::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-MicaLang-Debug-d237284f1a4a6561d4d9.json",
+					"jsonFile" : "target-MicaLang-Debug-4adf62e5be34ed215a0f.json",
 					"name" : "MicaLang",
 					"projectIndex" : 0
 				}

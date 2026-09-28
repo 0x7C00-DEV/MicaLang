@@ -47,10 +47,10 @@ cmake_force:
 SHELL = cmd.exe
 
 # The CMake executable.
-CMAKE_COMMAND = "F:\Program Files\JetBrains\CLion 2026.2.0.1\bin\cmake\win\x64\bin\cmake.exe"
+CMAKE_COMMAND = "F:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe"
 
 # The command to remove a file.
-RM = "F:\Program Files\JetBrains\CLion 2026.2.0.1\bin\cmake\win\x64\bin\cmake.exe" -E rm -f
+RM = "F:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -67,7 +67,7 @@ CMAKE_BINARY_DIR = C:\Users\Lenovo\Desktop\MicaLang\build
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "No interactive CMake dialog available..."
-	"F:\Program Files\JetBrains\CLion 2026.2.0.1\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available."
+	"F:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E echo "No interactive CMake dialog available."
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -77,7 +77,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake to regenerate build system..."
-	"F:\Program Files\JetBrains\CLion 2026.2.0.1\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	"F:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -90,13 +90,6 @@ all: cmake_check_build_system
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 all
 	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles 0
 .PHONY : all
-
-# The main codegen target
-codegen: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles C:\Users\Lenovo\Desktop\MicaLang\build\\CMakeFiles\progress.marks
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 codegen
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles 0
-.PHONY : codegen
 
 # The main clean target
 clean:
@@ -351,29 +344,29 @@ src/position.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/position.cpp.s
 .PHONY : src/position.cpp.s
 
-src/resolve.obj: src/resolve.cpp.obj
-.PHONY : src/resolve.obj
+src/symbol.obj: src/symbol.cpp.obj
+.PHONY : src/symbol.obj
 
 # target to build an object file
-src/resolve.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/resolve.cpp.obj
-.PHONY : src/resolve.cpp.obj
+src/symbol.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/symbol.cpp.obj
+.PHONY : src/symbol.cpp.obj
 
-src/resolve.i: src/resolve.cpp.i
-.PHONY : src/resolve.i
+src/symbol.i: src/symbol.cpp.i
+.PHONY : src/symbol.i
 
 # target to preprocess a source file
-src/resolve.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/resolve.cpp.i
-.PHONY : src/resolve.cpp.i
+src/symbol.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/symbol.cpp.i
+.PHONY : src/symbol.cpp.i
 
-src/resolve.s: src/resolve.cpp.s
-.PHONY : src/resolve.s
+src/symbol.s: src/symbol.cpp.s
+.PHONY : src/symbol.s
 
 # target to generate assembly for a file
-src/resolve.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/resolve.cpp.s
-.PHONY : src/resolve.cpp.s
+src/symbol.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/symbol.cpp.s
+.PHONY : src/symbol.cpp.s
 
 src/token.obj: src/token.cpp.obj
 .PHONY : src/token.obj
@@ -453,7 +446,6 @@ help:
 	@echo ... all (the default if no target is provided)
 	@echo ... clean
 	@echo ... depend
-	@echo ... codegen
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... MicaLang
@@ -484,9 +476,9 @@ help:
 	@echo ... src/position.obj
 	@echo ... src/position.i
 	@echo ... src/position.s
-	@echo ... src/resolve.obj
-	@echo ... src/resolve.i
-	@echo ... src/resolve.s
+	@echo ... src/symbol.obj
+	@echo ... src/symbol.i
+	@echo ... src/symbol.s
 	@echo ... src/token.obj
 	@echo ... src/token.i
 	@echo ... src/token.s

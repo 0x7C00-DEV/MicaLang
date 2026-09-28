@@ -57,10 +57,41 @@ public:
 private:
 	Parser parser;
     CompileEnvironment* env;
+    std::unordered_map<std::string, int> opera;
     CurrentCompileTask* getCurrentTsk();
     Scope* createScope(Scope::ScopeKind);
     void leaveScope();
     void createTask(std::string);
+    void endTask();
+    void emit(std::string, ByteCode, ByteCode, ByteCode);
+    int pushConstL(MicaValue);
+    int pushConstG(MicaValue);
+    void loadConstS(int);
+    void loadConstG(int);
+    std::string getLabel();
+
+    MType* visitBinOpNode(AST*);
+    MType* visitCallNode(AST*);
+    MType* visitElementGet(AST*);
+    MType* visitMemberAccess(AST*);
+    MType* visitFunction(AST*);
+    MType* visitValue(AST*);
+    MType* visitAssign(AST*);
+    MType* visitStmt(AST*);
+    MType* visitFuncTag(AST*);
+    MType* visitTernOp(AST*);
+    MType* visitForLoop(AST*);
+    MType* visitWhileLoop(AST*);
+    MType* visitDoWhile(AST*);
+    MType* visitSwitch(AST*);
+    MType* visitInterface(AST*);
+    MType* visitClass(AST*);
+    MType* visitNewClass(AST*);
+    MType* visitArray(AST*);
+    MType* visitNumber(AST*);
+    MType* visitChar(AST*);
+    MType* visitBool(AST*);
+    MType* visitReturn(AST*);
 };
 
 #endif //MICALANG_COMPILER_H

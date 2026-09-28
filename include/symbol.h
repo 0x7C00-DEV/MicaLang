@@ -12,17 +12,24 @@
 
 struct Symbol;
 
-struct BaseType {
-    enum TP { BT_NORMAL, BT_FUNC, BT_ARRAY, BT_TEMPLATE, BT_MODULE } baseType;
+struct MType {
+    enum TP { BT_BASIC, BT_NORMAL, BT_FUNC, BT_ARRAY, BT_TEMPLATE, BT_MODULE } baseType;
 
-    BaseType(TP tp);
+    MType(TP tp);
     virtual std::string __str__() = 0;
 
-    bool operator==(BaseType*);
-    bool operator!=(BaseType*);
+    bool operator==(MType*);
+    bool operator!=(MType*);
 };
 
-struct ModuleType : BaseType {
+struct BaseType : MType {
+    enum MicaTypes { MINT, MDOUBLE, MCHAR, MBOOL } type;
+    std::string str;
+    std::string __str__() override;
+    BaseType(MicaTypes);
+};
+
+struct ModuleType : MType {
     std::string path;
     std::string reName;
     ModuleType(std::string, std::string);
@@ -30,34 +37,34 @@ struct ModuleType : BaseType {
     std::string __str__() override;
 };
 
-struct FunctionType : BaseType {
-    std::vector<BaseType*> templateTypes;
-    std::vector<BaseType*> argsType;
-    BaseType* retType;
+struct FunctionType : MType {
+    std::vector<MType*> templateTypes;
+    std::vector<MType*> argsType;
+    MType* retType;
     std::string __str__() override;
-    FunctionType(BaseType* retType, std::vector<BaseType*> templates, std::vector<BaseType*> argsType);
+    FunctionType(MType* retType, std::vector<MType*> templates, std::vector<MType*> argsType);
 };
 
-struct TNormalType : BaseType {
+struct TNormalType : MType {
     Symbol* class_;
 
     TNormalType(Symbol* class_);
     std::string __str__() override;
 };
 
-struct TArrayType : BaseType {
-    BaseType* elementType;
+struct TArrayType : MType {
+    MType* elementType;
     int size;
 
-    TArrayType(BaseType* elementType, int size = -1);
+    TArrayType(MType* elementType, int size = -1);
     std::string __str__() override;
 };
 
-struct TTemplateType : BaseType {
-    BaseType* rootType;
-    std::vector<BaseType*> vars;
+struct TTemplateType : MType {
+    MType* rootType;
+    std::vector<MType*> vars;
 
-    TTemplateType(BaseType* rootType, std::vector<BaseType*> vars);
+    TTemplateType(MType* rootType, std::vector<MType*> vars);
     std::string __str__() override;
 };
 
@@ -76,12 +83,12 @@ struct FunctionSymbol : Symbol {
 
 struct VarSymbol : Symbol {
     std::string name;
-    BaseType* type;
+    MType* type;
     int id=0;
     bool isInit = false;
     enum VarKind { Global, Local, Arg } vkind;
 
-    VarSymbol(std::string name, BaseType* type, bool isInit, VarKind vkind);
+    VarSymbol(std::string name, MType* type, bool isInit, VarKind vkind);
 };
 
 struct InterfaceSymbol : Symbol {
@@ -113,7 +120,6 @@ struct ModuleSymbol : Symbol {
     std::string reName;
     std::unordered_map<std::string, ClassSymbol*> cls;
     std::unordered_map<std::string, FunctionSymbol*> funcs;
-    // 规定：模块之间只允许访问类与函数，其他的一律为非法访问。
     ModuleSymbol(std::string , std::string );
 };
 

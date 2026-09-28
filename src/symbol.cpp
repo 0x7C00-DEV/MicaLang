@@ -4,28 +4,28 @@
 
 #include "../include/symbol.h"
 
-// ---------------- BaseType ----------------
+// ---------------- MType ----------------
 
-BaseType::BaseType(TP tp) {
+MType::MType(TP tp) {
     baseType = tp;
 }
 
-std::string BaseType::__str__() {
+std::string MType::__str__() {
     return ";";
 }
 
-bool BaseType::operator==(BaseType* other) {
+bool MType::operator==(MType* other) {
     return this->__str__() == other->__str__();
 }
 
-bool BaseType::operator!=(BaseType *other) {
+bool MType::operator!=(MType *other) {
     return !this->operator==(other);
 }
 
-FunctionType::FunctionType(BaseType* retType,
-                           std::vector<BaseType*> templates,
-                           std::vector<BaseType*> argsType)
-        : BaseType(BT_FUNC) {
+FunctionType::FunctionType(MType* retType,
+                           std::vector<MType*> templates,
+                           std::vector<MType*> argsType)
+        : MType(BT_FUNC) {
     this->retType = retType;
     this->templateTypes = templates;
     this->argsType = argsType;
@@ -44,7 +44,7 @@ std::string FunctionType::__str__() {
 }
 
 TNormalType::TNormalType(Symbol* class_)
-        : BaseType(BT_NORMAL) {
+        : MType(BT_NORMAL) {
     this->class_ = class_;
 }
 
@@ -70,8 +70,8 @@ std::string TNormalType::__str__() {
     }
 }
 
-TArrayType::TArrayType(BaseType* elementType, int size)
-        : BaseType(BT_ARRAY) {
+TArrayType::TArrayType(MType* elementType, int size)
+        : MType(BT_ARRAY) {
     this->elementType = elementType;
     this->size = size;
 }
@@ -81,8 +81,8 @@ std::string TArrayType::__str__() {
     return "[" + elementType->__str__() + std::to_string(size) + "];";
 }
 
-TTemplateType::TTemplateType(BaseType* rootType, std::vector<BaseType*> vars)
-        : BaseType(BT_TEMPLATE) {
+TTemplateType::TTemplateType(MType* rootType, std::vector<MType*> vars)
+        : MType(BT_TEMPLATE) {
     this->rootType = rootType;
     this->vars = vars;
 }
@@ -108,7 +108,7 @@ FunctionSymbol::FunctionSymbol(std::string name, FunctionType* type)
     this->type = type;
 }
 
-VarSymbol::VarSymbol(std::string name, BaseType* type, bool isInit, VarKind vkind)
+VarSymbol::VarSymbol(std::string name, MType* type, bool isInit, VarKind vkind)
         : Symbol(SYM_VAR) {
     this->name = name;
     this->isInit = isInit;
@@ -214,11 +214,33 @@ InterfaceSymbol::InterfaceSymbol(std::string name, std::unordered_map<std::strin
     this->labels = labels;
 }
 
-ModuleType::ModuleType(std::string reName, std::string path) : BaseType(BT_MODULE){
+ModuleType::ModuleType(std::string reName, std::string path) : MType(BT_MODULE){
     this->reName = reName;
     this->path = path;
 }
 
 std::string ModuleType::__str__() {
     return "@Module?" + path + "?" + reName + "?;";
+}
+
+BaseType::BaseType(BaseType::MicaTypes tp) : MType(MType::BT_BASIC){
+    this->type = tp;
+    switch (tp) {
+        case MINT:
+            str = "int";
+            break;
+        case MDOUBLE:
+            str = "double";
+            break;
+        case MCHAR:
+            str = "char";
+            break;
+        case MBOOL:
+            str = "bool";
+            break;
+    }
+}
+
+std::string BaseType::__str__() {
+    return str + ";";
 }

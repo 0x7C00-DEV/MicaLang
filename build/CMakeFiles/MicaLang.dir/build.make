@@ -43,10 +43,10 @@ cmake_force:
 SHELL = cmd.exe
 
 # The CMake executable.
-CMAKE_COMMAND = "F:\Program Files\JetBrains\CLion 2026.2.0.1\bin\cmake\win\x64\bin\cmake.exe"
+CMAKE_COMMAND = "F:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe"
 
 # The command to remove a file.
-RM = "F:\Program Files\JetBrains\CLion 2026.2.0.1\bin\cmake\win\x64\bin\cmake.exe" -E rm -f
+RM = "F:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -239,19 +239,19 @@ CMakeFiles/MicaLang.dir/src/loader.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/src/loader.cpp.s"
 	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\src\loader.cpp -o CMakeFiles\MicaLang.dir\src\loader.cpp.s
 
-CMakeFiles/MicaLang.dir/src/resolve.cpp.obj: CMakeFiles/MicaLang.dir/flags.make
-CMakeFiles/MicaLang.dir/src/resolve.cpp.obj: C:/Users/Lenovo/Desktop/MicaLang/src/resolve.cpp
-CMakeFiles/MicaLang.dir/src/resolve.cpp.obj: CMakeFiles/MicaLang.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/MicaLang.dir/src/resolve.cpp.obj"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/resolve.cpp.obj -MF CMakeFiles\MicaLang.dir\src\resolve.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\resolve.cpp.obj -c C:\Users\Lenovo\Desktop\MicaLang\src\resolve.cpp
+CMakeFiles/MicaLang.dir/src/symbol.cpp.obj: CMakeFiles/MicaLang.dir/flags.make
+CMakeFiles/MicaLang.dir/src/symbol.cpp.obj: C:/Users/Lenovo/Desktop/MicaLang/src/symbol.cpp
+CMakeFiles/MicaLang.dir/src/symbol.cpp.obj: CMakeFiles/MicaLang.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/MicaLang.dir/src/symbol.cpp.obj"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/symbol.cpp.obj -MF CMakeFiles\MicaLang.dir\src\symbol.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\symbol.cpp.obj -c C:\Users\Lenovo\Desktop\MicaLang\src\symbol.cpp
 
-CMakeFiles/MicaLang.dir/src/resolve.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicaLang.dir/src/resolve.cpp.i"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\Desktop\MicaLang\src\resolve.cpp > CMakeFiles\MicaLang.dir\src\resolve.cpp.i
+CMakeFiles/MicaLang.dir/src/symbol.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicaLang.dir/src/symbol.cpp.i"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\Desktop\MicaLang\src\symbol.cpp > CMakeFiles\MicaLang.dir\src\symbol.cpp.i
 
-CMakeFiles/MicaLang.dir/src/resolve.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/src/resolve.cpp.s"
-	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\src\resolve.cpp -o CMakeFiles\MicaLang.dir\src\resolve.cpp.s
+CMakeFiles/MicaLang.dir/src/symbol.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/src/symbol.cpp.s"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\src\symbol.cpp -o CMakeFiles\MicaLang.dir\src\symbol.cpp.s
 
 # Object files for target MicaLang
 MicaLang_OBJECTS = \
@@ -267,7 +267,7 @@ MicaLang_OBJECTS = \
 "CMakeFiles/MicaLang.dir/src/value.cpp.obj" \
 "CMakeFiles/MicaLang.dir/src/compiler.cpp.obj" \
 "CMakeFiles/MicaLang.dir/src/loader.cpp.obj" \
-"CMakeFiles/MicaLang.dir/src/resolve.cpp.obj"
+"CMakeFiles/MicaLang.dir/src/symbol.cpp.obj"
 
 # External object files for target MicaLang
 MicaLang_EXTERNAL_OBJECTS =
@@ -284,7 +284,7 @@ MicaLang.exe: CMakeFiles/MicaLang.dir/src/vm.cpp.obj
 MicaLang.exe: CMakeFiles/MicaLang.dir/src/value.cpp.obj
 MicaLang.exe: CMakeFiles/MicaLang.dir/src/compiler.cpp.obj
 MicaLang.exe: CMakeFiles/MicaLang.dir/src/loader.cpp.obj
-MicaLang.exe: CMakeFiles/MicaLang.dir/src/resolve.cpp.obj
+MicaLang.exe: CMakeFiles/MicaLang.dir/src/symbol.cpp.obj
 MicaLang.exe: CMakeFiles/MicaLang.dir/build.make
 MicaLang.exe: CMakeFiles/MicaLang.dir/linkLibs.rsp
 MicaLang.exe: CMakeFiles/MicaLang.dir/objects1.rsp
