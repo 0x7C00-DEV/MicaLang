@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.3)
+cmake_minimum_required(VERSION 3.27)
 project(MicaLang)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -26,5 +26,5 @@ add_executable(MicaLang main.cpp
         include/loader.h
         src/loader.cpp
         include/config.h
-        include/resolve.h
-        src/resolve.cpp)
+        include/symbol.h
+        src/symbol.cpp)
