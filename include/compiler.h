@@ -47,8 +47,8 @@ struct CurrentCompileTask {
 struct CompileEnvironment {
     CodeStruct cs;
     std::vector<MicaValue> globalConstPool;
-    std::vector<Function*> functions;
     std::vector<CurrentCompileTask*> tasks;
+    int addFunctionValue(Function*);
 };
 
 class Compiler {
@@ -62,7 +62,7 @@ private:
     Scope* createScope(Scope::ScopeKind);
     void leaveScope();
     void createTask(std::string);
-    void endTask();
+    void endTask(bool);
     void emit(std::string, ByteCode, ByteCode, ByteCode);
     int pushConstL(MicaValue);
     int pushConstG(MicaValue);
@@ -70,6 +70,7 @@ private:
     void loadConstG(int);
     std::string getLabel();
 
+    MType* visitBlock(AST*, std::string, std::string);
     MType* visitBinOpNode(AST*);
     MType* visitCallNode(AST*);
     MType* visitElementGet(AST*);
@@ -77,8 +78,9 @@ private:
     MType* visitFunction(AST*);
     MType* visitValue(AST*);
     MType* visitAssign(AST*);
-    MType* visitStmt(AST*);
+    MType* visitStmt(AST*, std::string, std::string);
     MType* visitFuncTag(AST*);
+    MType* visitIf(AST*, std::string, std::string);
     MType* visitTernOp(AST*);
     MType* visitForLoop(AST*);
     MType* visitWhileLoop(AST*);
@@ -92,6 +94,13 @@ private:
     MType* visitChar(AST*);
     MType* visitBool(AST*);
     MType* visitReturn(AST*);
+    MType* visitId(AST*);
+    MType* visitNeg(AST*);
+    MType* visitSelfChange(AST*);
+
+    MType *visitBitNot(AST *pAst);
+
+    MType *visitNot(AST *pAst);
 };
 
 #endif //MICALANG_COMPILER_H

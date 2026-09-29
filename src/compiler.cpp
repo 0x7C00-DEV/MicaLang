@@ -146,6 +146,8 @@ MType* Compiler::visitValue(AST* a) {
         return visitAssign(a);
     if (a->kind == AST::AST_BOOL)
         return visitBool(a);
+    if (a->kind == AST::AST_ID)
+        return visitId(a);
     if (a->kind == AST::AST_CALL)
         return visitCallNode(a);
     if (a->kind == AST::AST_DIGIT)
@@ -156,6 +158,10 @@ MType* Compiler::visitValue(AST* a) {
         return visitChar(a);
     if (a->kind == AST::AST_NEW_CLASS)
         return visitNewClass(a);
+    if (a->kind == AST::AST_NEG)         return visitNeg(a);
+    if (a->kind == AST::AST_BIT_NOT)     return visitBitNot(a);
+    if (a->kind == AST::AST_NOT)         return visitNot(a);
+    if (a->kind == AST::AST_SELF_CHANGE) return visitSelfChange(a);
     std::cout << "not suppose\n";
     return nullptr;
 }
@@ -164,9 +170,11 @@ MType* Compiler::visitAssign(AST* a) {
 
 }
 
-MType* Compiler::visitStmt(AST* a) {
+MType* Compiler::visitStmt(AST* a, std::string begin, std::string end) {
     if (a->kind == AST::AST_FUNC_DEF)
         return visitFunction(a);
+    if (a->kind == AST::AST_IF)
+        return visitIf(a, begin, end);
     if (a->kind == AST::AST_FOR)
         return visitForLoop(a);
     if (a->kind == AST::AST_DO_WHILE)
@@ -180,8 +188,6 @@ MType* Compiler::visitStmt(AST* a) {
     if (a->kind == AST::AST_CLASS)
         return visitClass(a);
     if (a->kind == AST::AST_INTERFACE)
-        return visitClass(a);
-    if (a->kind == AST::AST_INTERFACE)
         return visitInterface(a);
     if (a->kind == AST::AST_FUNC_TAG)
         return visitFuncTag(a);
@@ -193,19 +199,59 @@ MType* Compiler::visitTernOp(AST* a) {
 }
 
 MType* Compiler::visitForLoop(AST* a) {
+    auto tmp = (ForLoop*)a;
+    std::string begin = getLabel();
+    std::string changeLabel = getLabel();
+    std::string end = getLabel();
+    visitValue(tmp->init);
+    emit(begin, NOP, 0, 0);
+    MType* tp = nullptr;
+    if (tmp->condition) {
+        tp = visitValue(tmp->condition);
+        emit("", JMPF, end, 0);
+    }
+    visitBlock(tmp->block, changeLabel, end);
+    emit(changeLabel, NOP, 0, 0);
+    visitValue(tmp->change);
+    emit("", JMP, begin, 0);
+    emit(end, NOP, 0, 0);
 
+    if (tp && tp->__str__() != "bool;") {
+        std::cout << "WARN: want a bool, but get a '"
+                  << tp->__str__() << "'\n";
+    }
+    return nullptr;
 }
 
 MType* Compiler::visitWhileLoop(AST* a) {
-
+    auto tmp = (WhileLoop*) a;
+    std::string begin = getLabel();
+    std::string end = getLabel();
+    emit(begin, NOP, 0, 0);
+    auto tp = visitValue(tmp->condition);
+    emit(getLabel(), JMPF, end, 0);
+    visitBlock(tmp->body, begin, end);
+    emit(getLabel(), JMP, begin, 0);
+    emit(end, NOP, 0,0);
+    if (tp->__str__() != "bool;")
+        std::cout << "warn in visitWhile, want a bool value, but get a '" << tp->__str__() << "'\n";
+    return nullptr;
 }
 
 MType* Compiler::visitDoWhile(AST* a) {
-
+    auto tmp = (DoWhile*) a;
+    std::string begin = getLabel();
+    std::string end = getLabel();
+    emit(begin, NOP, 0, 0);
+    visitBlock(tmp->body, begin, end);
+    auto tp = visitValue(tmp->condition);
+    emit(getLabel(), JMPT, begin, 0);
+    emit(end, NOP, 0, 0);
+    return tp;
 }
 
 MType* Compiler::visitSwitch(AST* a) {
-
+    
 }
 
 MType* Compiler::visitInterface(AST* a) {
@@ -269,14 +315,107 @@ std::string Compiler::getLabel() {
     return getCurrentTsk()->getLabel();
 }
 
-void Compiler::endTask() {
-
+void Compiler::endTask(bool isNative) {
+    auto tmp = getCurrentTsk()->getCompileResult();
+    tmp->isNative = isNative;
+    env->addFunctionValue(tmp);
+    env->tasks.pop_back();
+    env->cs.leaveScope();
 }
 
-MType *Compiler::visitReturn(AST *) {
-    return nullptr;
+MType *Compiler::visitReturn(AST *a) {
+    auto tmp = (Return*)a;
+    MType* tp = new BaseType(BaseType::MVOID);
+    if (tmp->value) {
+        tp = visitValue(tmp->value);
+    } else {
+        emit(getLabel(), LOAD_NULL, 0, 0);
+    }
+    emit(getLabel(), RET, 0, 0);
+    return tp;
 }
 
 MType *Compiler::visitFuncTag(AST *) {
     return nullptr;
+}
+
+MType *Compiler::visitId(AST *a) {
+    auto name = ((Id*)a)->name;
+    auto info = getCurrentTsk()->currentScope->lookupSymbol(name);
+    if (info->kind == Symbol::SYM_VAR) {
+        emit(getLabel(), LOAD_SVAR, ((VarSymbol*)info)->id, 0);
+        return ((VarSymbol*)info)->type;
+    } else if (info->kind == Symbol::SYM_FUNC) {
+        for (int i = 0; i < env->globalConstPool.size(); ++i) {
+            if (env->globalConstPool[i].kind == MicaValue::OBJ && env->globalConstPool[i].obj->tp == Obj::FUNCTION && ((Function*)env->globalConstPool[i].obj)->name == name) {
+                emit(getLabel(), LOAD_GCST, i, 0);
+                return ((FunctionSymbol*)info)->type;
+            }
+        }
+        return nullptr;
+    } else if (info->kind == Symbol::SYM_MODULE) {
+        std::cout << "not suppose\n";
+        exit(-1);
+    } else if (info->kind == Symbol::SYM_CLASS) {
+        for (int i = 0; i < env->globalConstPool.size(); ++i) {
+            if (env->globalConstPool[i].kind == MicaValue::OBJ && env->globalConstPool[i].obj->tp == Obj::USER_DEFING_CLASS && ((ObjClass*)env->globalConstPool[i].obj)->name == name) {
+                emit(getLabel(), LOAD_GCST, i, 0);
+                return new ClassType(name, info);
+            }
+        }
+    }
+    std::cout << "not suppose\n";
+    return nullptr;
+}
+
+MType *Compiler::visitNeg(AST *a) {
+    auto tmp = (Neg*)a;
+    auto val = visitValue(tmp->value);
+    emit(getLabel(), BNEG, 0 , 0);
+    return val;
+}
+
+MType *Compiler::visitSelfChange(AST *) {
+    return nullptr;
+}
+
+MType *Compiler::visitBitNot(AST *pAst) {
+    auto bn = (BitNot*) pAst;
+    auto tmp = visitValue(bn->value);
+    emit(getLabel(), BBNOT, 0, 0);
+    return tmp;
+}
+
+MType *Compiler::visitNot(AST *pAst) {
+    auto bn = (Not*) pAst;
+    auto tmp = visitValue(bn->value);
+    emit(getLabel(), BNOT, 0, 0);
+    return tmp;
+}
+
+MType *Compiler::visitIf(AST *a, std::string begin, std::string end) {
+    createScope(Scope::SNORMAL_BLOCK);
+    auto tmp = (If*)a;
+    std::string if_ = getLabel();
+    std::string ie = getLabel();
+    auto tp = visitValue(tmp->condition);
+    if (tp->__str__() != "bool;")
+        std::cout << "warn in visitIf, want a bool value, but get a '" << tp->__str__() << "'\n";
+    emit(getLabel(), JMPF, if_, 0);
+    visitBlock(tmp->tblock, begin, end);
+    emit(getLabel(), JMP, ie, 0);
+    emit(if_, NOP, 0, 0);
+    visitBlock(tmp->fblock, begin, end);
+    emit(ie, NOP, 0, 0);
+    leaveScope();
+    return nullptr;
+}
+
+MType *Compiler::visitBlock(AST *a, std::string begin, std::string end) {
+    return nullptr;
+}
+
+int CompileEnvironment::addFunctionValue(Function *f) {
+    globalConstPool.push_back(MicaValue::Object(f));
+    return globalConstPool.size()-1;
 }

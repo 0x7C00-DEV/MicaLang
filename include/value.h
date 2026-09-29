@@ -109,7 +109,6 @@ struct Module : Obj {
     std::string moduleName;
     std::vector<MicaValue> globalConstPool;
     std::vector<MicaValue> globalVars;
-    std::vector<Function*> funcs;
 
     Module();
 

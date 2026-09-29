@@ -361,5 +361,19 @@ void showAST(AST* tree, int indent, const std::string& fo, const std::string& eo
             std::cout << printIndent(indent) << fo << "Import[" << import_->path << ", " << import_->align << "]" << eo;
             break;
         }
+        case AST::AST_BIT_NOT: {
+            auto tmp = (BitNot*) tree;
+            std::cout << printIndent(indent) << fo << "BitNot {\n";
+            showAST(tmp->value, indent+1, "VALUE", "\n");
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
+        case AST::AST_NOT: {
+            auto tmp = (Not*) tree;
+            std::cout << printIndent(indent) << fo << "Not {\n";
+            showAST(tmp->value, indent+1, "VALUE", "\n");
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
     }
 }

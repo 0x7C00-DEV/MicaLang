@@ -50,7 +50,7 @@ Module* Environment::loadModule(VM* vm, Program* md, std::string name, std::stri
     module->globalConstPool = md->constPools;
     for (auto i : md->funcs) {
         i->module = module;
-        module->funcs.push_back(i);
+        module->globalConstPool.push_back(MicaValue::Object(i));
     }
     registModule(path, name, module);
     modules.push_back(module);
@@ -110,7 +110,7 @@ ObjClass::ObjClass(std::string name): Obj(USER_DEFING_CLASS) {
 #ifdef SUPDLL
 Module::Module(std::string path): Obj(MODULE) {
     std::vector<MicaCFunction*> tmp = loadMicaFunctions(path.c_str());
-    for (auto i : tmp) funcs.push_back(new Function(i));
+    for (auto i : tmp) globalConstPool.push_back(MicaValue::Object(new Function(i)));
 }
 #endif
 

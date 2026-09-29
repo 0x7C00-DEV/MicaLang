@@ -86,6 +86,14 @@ private:
     MicaValue BEQORLESS__(MicaValue, MicaValue);
     MicaValue BBIG__(MicaValue, MicaValue);
     MicaValue BLESS__(MicaValue, MicaValue);
+
+    void loadNull(int, int);
+
+    void loadTrue(int, int);
+
+    void loadFalse(int, int);
+
+    void nop(int, int);
 };
 
 #endif //MICALANG_VM_HPP

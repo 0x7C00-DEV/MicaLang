@@ -20,7 +20,7 @@ struct AST {
         AST_ASSIGN_NODE, AST_RETURN, AST_CONTINUE, AST_BREAK, AST_GOTO, AST_BLOCK,
         AST_FOR, AST_WHILE, AST_DO_WHILE, AST_SWITCH, AST_TYPE, AST_VAR_DEF, AST_VAR_DEF_GRP,
         AST_CASE, AST_LABEL, AST_IF, AST_FUNC_DEF, AST_INTERFACE, AST_FUNC_TAG, AST_CLASS,
-        AST_NEW_CLASS, AST_IMPORT
+        AST_NEW_CLASS, AST_IMPORT, AST_BIT_NOT, AST_NOT
     } kind;
 
     explicit AST(TKind kind, Position begin, Position end): begin(std::move(begin)), end(std::move(end)) {
@@ -29,6 +29,20 @@ struct AST {
 };
 
 enum AccessType { APUBLIC, APRIVATE, APROTECTED };
+
+struct BitNot : AST {
+    AST* value;
+    BitNot(AST* value, Position begin, Position end): AST(AST_BIT_NOT, begin, end) {
+        this->value = value;
+    }
+};
+
+struct Not : AST {
+    AST* value;
+    Not(AST* value, Position begin, Position end) : AST(AST_NOT, begin, end) {
+        this->value = value;
+    }
+};
 
 struct Import : AST {
     std::string path;

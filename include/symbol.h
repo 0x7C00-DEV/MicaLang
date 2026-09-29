@@ -13,7 +13,7 @@
 struct Symbol;
 
 struct MType {
-    enum TP { BT_BASIC, BT_NORMAL, BT_FUNC, BT_ARRAY, BT_TEMPLATE, BT_MODULE } baseType;
+    enum TP { BT_BASIC, BT_NORMAL, BT_FUNC, BT_ARRAY, BT_TEMPLATE, BT_MODULE, BT_CLASS } baseType;
 
     MType(TP tp);
     virtual std::string __str__() = 0;
@@ -23,7 +23,7 @@ struct MType {
 };
 
 struct BaseType : MType {
-    enum MicaTypes { MINT, MDOUBLE, MCHAR, MBOOL } type;
+    enum MicaTypes { MINT, MDOUBLE, MCHAR, MBOOL, MVOID } type;
     std::string str;
     std::string __str__() override;
     BaseType(MicaTypes);
@@ -113,6 +113,13 @@ struct ClassSymbol : Symbol {
                 std::string clsModule,
                 int clsId,
                 std::unordered_map<std::string, Symbol*> members);
+};
+
+struct ClassType : MType {
+    Symbol* sym;
+    std::string name;
+    std::string __str__() override;
+    ClassType(std::string, Symbol*);
 };
 
 struct ModuleSymbol : Symbol {

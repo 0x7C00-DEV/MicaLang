@@ -9,9 +9,9 @@ static double asDouble(const MicaValue& v) {
 }
 
 Function* VM::lookFunction(std::string name) {
-    for (auto i : env.mainModule->funcs)
-        if (i->name == name)
-            return i;
+    for (auto i : env.mainModule->globalConstPool)
+        if (i.kind == MicaValue::OBJ && i.obj->tp == Obj::FUNCTION && ((Function*)i.obj)->name == name)
+            return (Function*)i.obj;
     return nullptr;
 }
 
@@ -19,8 +19,9 @@ VM::VM(Module* module, std::string func, std::vector<MicaValue> args) {
     initVec();
     env.modules.push_back(module);
     env.mainModule = module;
-    for (auto i : module->funcs)
-        i->module = module;
+    for (auto i : module->globalConstPool)
+        if (i.kind == MicaValue::OBJ && i.obj->tp == Obj::FUNCTION)
+            ((Function*)i.obj)->module = module;
     auto tmp = lookFunction(func);
     if (!tmp) {
         std::cout << "Function not found in module '" << module->moduleName << "'\n";
@@ -81,7 +82,11 @@ void VM::initVec() {
     IVEC[MEM_GET] = &VM::memGet;
     IVEC[MEM_SET] = &VM::memSet;
     IVEC[EL_GET] = &VM::elGet;
+    IVEC[NOP] = &VM::nop;
     IVEC[EL_SET] = &VM::elSet;
+    IVEC[LOAD_TRUE] = &VM::loadTrue;
+    IVEC[LOAD_FALSE] = &VM::loadFalse;
+    IVEC[LOAD_NULL] = &VM::loadNull;
     IVEC[NEW_ARR] = &VM::newArr;
     IVEC[LOAD_MODULE_MEMBER] = &VM::loadModuleMember;
 
@@ -162,9 +167,9 @@ void VM::start0(std::string moduleName, std::string funcName, std::vector<MicaVa
     for (auto i : env.modules)
         if (i->moduleName == moduleName) {
             mf=true;
-            for (auto j : i->funcs)
-                if (j->name == funcName) {
-                    callFunction(j, args);
+            for (auto j : i->globalConstPool)
+                if (j.kind == MicaValue::OBJ && j.obj->tp == Obj::FUNCTION && ((Function*)j.obj)->name == funcName) {
+                    callFunction((Function*)j.obj, args);
                     return;
                 }
         }
@@ -204,16 +209,16 @@ void VM::loadModuleMember(int a , int b) {
     std::string n;
     for (auto i : ((ObjArray*)name.obj)->elements)
         n += i.c;
-    for (auto i : module->funcs)
-        if (i->name == n) {
-            push(MicaValue::Object(i));
-            return;
-        }
-    for (auto i : module->globalConstPool)
-        if (i.kind == MicaValue::OBJ && i.obj->tp == Obj::USER_DEFING_CLASS && ((ObjClass*)i.obj)->name == n) {
+    for (auto i : module->globalConstPool) {
+        if (i.kind == MicaValue::OBJ && i.obj->tp == Obj::FUNCTION && ((Function*)i.obj)->name == n) {
             push(i);
             return;
         }
+        if (i.kind == MicaValue::OBJ && i.obj->tp == Obj::USER_DEFING_CLASS && ((ObjClass *) i.obj)->name == n) {
+            push(i);
+            return;
+        }
+    }
     std::cout << "Member '" << n << "not found in module '" << module->moduleName << "' \n";
     exit(-1);
 }
@@ -591,3 +596,17 @@ MicaValue VM::BLESS__(MicaValue left, MicaValue right) {
     std::cerr << "unsupported operand type(s) for <\n";
     exit(-1);
 }
+
+void VM::loadNull(int, int) {
+    push(MicaValue::Null());
+}
+
+void VM::loadTrue(int, int) {
+    push(MicaValue::Bool(true));
+}
+
+void VM::loadFalse(int, int) {
+    push(MicaValue::Bool(false));
+}
+
+void VM::nop(int, int) {}

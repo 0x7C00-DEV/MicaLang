@@ -226,6 +226,9 @@ std::string ModuleType::__str__() {
 BaseType::BaseType(BaseType::MicaTypes tp) : MType(MType::BT_BASIC){
     this->type = tp;
     switch (tp) {
+        case MVOID:
+            str = "void";
+            break;
         case MINT:
             str = "int";
             break;
@@ -243,4 +246,18 @@ BaseType::BaseType(BaseType::MicaTypes tp) : MType(MType::BT_BASIC){
 
 std::string BaseType::__str__() {
     return str + ";";
+}
+
+ClassType::ClassType(std::string name, Symbol *cls) : MType(MType::BT_CLASS){
+    this->name = name;
+    this->sym = cls;
+}
+
+std::string ClassType::__str__() {
+    auto tmp = ((ClassSymbol *) sym);
+
+    // $NAME/module/id:super; or $NAME/module/id;
+    auto res = tmp->getString();
+    if (tmp->super) res += ":" + tmp->super->getString();
+    return res + ";";
 }

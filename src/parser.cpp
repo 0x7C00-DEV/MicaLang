@@ -111,6 +111,24 @@ Register Parser::makeValue() {
     if (equal(TT_INTEGER) || equal(TT_DOUBLE))
         return makeNumberNode();
 
+    if (equal("~") && equal(TT_OP)) {
+        auto begin = posBegin();
+        advance();
+        auto tmp = makeValue();
+        test(tmp);
+        auto end = posEnd();
+        return Register(new BitNot(tmp.result, begin, end));
+    }
+
+    if (equal("!") && equal(TT_OP)) {
+        auto begin = posBegin();
+        advance();
+        auto tmp = makeValue();
+        test(tmp);
+        auto end = posEnd();
+        return Register(new Not(tmp.result, begin, end));
+    }
+
     if (equal("++") || equal("--")) {
         Position begin = posBegin();
         std::string op = current.data;
@@ -463,6 +481,7 @@ Register Parser::makeFunction() {
             setError(body, equal(TT_ID), "SyntaxError: want a id node");
             templates.push_back(current.data);
             advance(SYN_TYPE);
+            if (equal(">")&& equal(TT_OP)) break;
             setError(body, equal(",") && equal(TT_OP), "SyntaxError: want a ','");
             advance();
         }
