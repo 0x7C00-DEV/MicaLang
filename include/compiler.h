@@ -98,6 +98,8 @@ private:
     MType* visitNeg(AST*);
     MType* visitSelfChange(AST*);
 
+    void storeArray(std::vector<AST*>);
+    void storeString(std::string);
     MType *visitBitNot(AST *pAst);
 
     MType *visitNot(AST *pAst);

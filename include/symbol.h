@@ -103,7 +103,7 @@ struct ClassSymbol : Symbol {
     std::string name;
     ClassSymbol* super;
     std::vector<InterfaceSymbol*> impl;
-    std::unordered_map<std::string, Symbol*> members;
+    std::unordered_map<std::string, MType*> members;
     std::string clsModule;
     int clsId=0;
     std::string getString();
@@ -112,7 +112,7 @@ struct ClassSymbol : Symbol {
                 std::vector<InterfaceSymbol*> impl,
                 std::string clsModule,
                 int clsId,
-                std::unordered_map<std::string, Symbol*> members);
+                std::unordered_map<std::string, MType*> members);
 };
 
 struct ClassType : MType {

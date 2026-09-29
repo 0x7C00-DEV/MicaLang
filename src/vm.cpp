@@ -363,7 +363,7 @@ void VM::dup(int a, int b) {
 
 void VM::memGet(int a, int b) {
     std::string fieldName;
-    auto fieName = loadSubConst(a);
+    auto fieName = pop();
     for (auto i : ((ObjArray*)fieName.obj)->elements)
         fieldName += i.c;
     auto obj = pop();
@@ -372,7 +372,7 @@ void VM::memGet(int a, int b) {
 
 void VM::memSet(int a, int b) {
     std::string fieldName;
-    auto fieName = loadSubConst(a);
+    auto fieName = pop();
     for (auto i : ((ObjArray*)fieName.obj)->elements)
         fieldName += i.c;
     auto value = pop();
@@ -381,8 +381,8 @@ void VM::memSet(int a, int b) {
 }
 
 void VM::elGet(int a, int b) {
-    auto obj = pop();
     auto pos = pop();
+    auto obj = pop();
     auto tmp = (ObjArray*)(((ObjInstance*)obj.obj)->cls);
     push(tmp->elements[pos.i]);
 }
@@ -398,7 +398,7 @@ void VM::elSet(int a, int b) {
 void VM::newArr(int a, int b) {
     auto size = pop();
     auto cls = new ObjArray();
-    cls->elements.resize(size.i);
+    cls->elements.resize(size.i>0? size.i : 100);
     auto tmp = new ObjInstance();
     tmp->cls = cls;
     env.addObject(tmp);

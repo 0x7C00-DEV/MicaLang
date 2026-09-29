@@ -54,7 +54,6 @@ int CurrentCompileTask::pushLocalConst(MicaValue value) {
 CurrentCompileTask::CurrentCompileTask(Scope* current, std::string name) {
     currentScope = functionScope = current;
     this->funcName = name;
-
 }
 
 int CurrentCompileTask::addLocalVar(std::string name, Symbol* sym) {
@@ -114,19 +113,46 @@ CurrentCompileTask *Compiler::getCurrentTsk() {
 }
 
 MType* Compiler::visitBinOpNode(AST* a) {
-
+    auto tmp = (BinOpNode*) a;
+    int op = opera[tmp->op];
+    MType* left = visitValue(tmp->left);
+    MType* right = visitValue(tmp->right);
+    emit(getLabel(), BIN_OPER, op, 0);
+    auto tl = left->__str__();
+    auto tr = right->__str__();
+    if (tl == "double;" || tr == "double;")
+        return new BaseType(BaseType::MDOUBLE);
+    return left;
 } 
 
 MType* Compiler::visitCallNode(AST* a) {
-
+    auto tmp = (Call*) a;
+    std::vector<std::string> argsType;
+    std::vector<std::string> paramType;
+    FunctionType* tp = (FunctionType*)visitValue(tmp->fnid);
+    for (auto i : tp->argsType) argsType.push_back(i->__str__());
+    for (auto i : tmp->args) 
+        paramType.push_back(visitValue(i)->__str__());
+    emit(getLabel(), CALL, 0, 0);
+    return tp->retType;
 }
 
 MType* Compiler::visitElementGet(AST* a) {
-
+    auto arrayId = (ElementGet*)a;
+    TArrayType* tp = (TArrayType*) visitValue(arrayId->address);
+    MType* posType = visitValue(arrayId->position);
+    emit(getLabel(), EL_GET, 0, 0);
+    if (((BaseType*)posType)->type != BaseType::MINT)
+        std::cout << "Warn: " << posType->__str__() << " not int\n";
+    return tp->elementType;
 }
 
 MType* Compiler::visitMemberAccess(AST* a) {
-
+    auto tmp = (MemberAccess*) a;
+    auto parent = visitValue(tmp->parent);
+    storeString(tmp->member);
+    emit(getLabel(), MEM_GET, 0, 0);
+    return ((ClassSymbol*)((ClassType*)parent)->sym)->members[tmp->member];
 }
 
 MType* Compiler::visitFunction(AST* a) {
@@ -195,7 +221,20 @@ MType* Compiler::visitStmt(AST* a, std::string begin, std::string end) {
 }
 
 MType* Compiler::visitTernOp(AST* a) {
-
+    std::string false_ = getLabel();
+    std::string end = getLabel();
+    MType* retTypet,* retTypef;
+    auto tmp = (ThreeOp*)a;
+    auto tp = visitValue(tmp->condition);
+    emit(getLabel(), JMPF, false_, 0);
+    retTypet = visitValue(tmp->trueValue);
+    emit(getLabel(), JMP, end, 0);
+    emit(false_, NOP, 0, 0);
+    retTypef = visitValue(tmp->falseValue);
+    emit(end, NOP, 0, 0);
+    if (retTypef->__str__() != retTypet->__str__())
+        std::cout << "WARN: " << retTypet->__str__() << ", " << retTypef->__str__() << std::endl;
+    return retTypet;
 }
 
 MType* Compiler::visitForLoop(AST* a) {
@@ -251,7 +290,31 @@ MType* Compiler::visitDoWhile(AST* a) {
 }
 
 MType* Compiler::visitSwitch(AST* a) {
-    
+    auto tmp = (Switch*)a;
+    std::string begin = getLabel();
+    std::string end = getLabel();
+    auto tp = visitValue(tmp->value);
+    std::string t = tp->__str__();
+    std::vector<std::string> types;
+    emit(begin, NOP, 0, 0);
+    for (auto i: tmp->cases) {
+        auto su = (Case*) i;
+        if (su->value) {
+            std::string end_ = getLabel();
+            emit(getLabel(), DUP, 0, 0);
+            types.push_back(visitValue(su->value)->__str__());
+            emit(getLabel(), BEQ, 0, 0);
+            emit(getLabel(), JMPF, end_, 0);
+            visitBlock(su->block, begin, end);
+            emit(end_, NOP, 0, 0);
+        } else {
+            visitBlock(su->block, begin, end);
+        }
+    }
+    emit(end, NOP, 0, 0);
+    for (auto i: types)
+        if (i != t) std::cout << "WARN: type '" << t << "' != '" << i << "'\n";
+    return nullptr;
 }
 
 MType* Compiler::visitInterface(AST* a) {
@@ -412,7 +475,19 @@ MType *Compiler::visitIf(AST *a, std::string begin, std::string end) {
 }
 
 MType *Compiler::visitBlock(AST *a, std::string begin, std::string end) {
+    createScope(Scope::SNORMAL_BLOCK);
+    for (auto i:((Block*)a)->codes)
+        visitStmt(i, begin, end);
+    leaveScope();
     return nullptr;
+}
+
+void Compiler::storeArray(std::vector<AST*>) {
+
+}
+
+void Compiler::storeString(std::string) {
+
 }
 
 int CompileEnvironment::addFunctionValue(Function *f) {
