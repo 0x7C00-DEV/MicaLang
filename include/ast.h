@@ -111,7 +111,6 @@ struct Interface : AST {
     }
 };
 
-
 struct Type : AST {
     enum TPKind { TYPE_ARRAY, TYPE_TEMPLATE, TYPE_NORMAL, TYPE_FUNC } tpKind;
     Type(TPKind tp_kind, Position begin, Position end) : AST(AST_TYPE, begin, end), tpKind(tp_kind) {}
@@ -127,7 +126,6 @@ struct FuncType : Type {
         this->templates = templates;
     }
 };
-
 
 struct Func : AST {
     std::string name;
@@ -385,7 +383,6 @@ struct AssignNode : AST {
     std::string op;
     AST* src;
     AST* dst;
-    AST* retType;
     AssignNode(std::string oper, AST* tdst, AST* tsrc, Position begin, Position end): AST(AST_ASSIGN_NODE, begin, end) {
         if (oper != "=") {
             op = oper.substr(0, oper.find('='));

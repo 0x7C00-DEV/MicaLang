@@ -25,15 +25,15 @@ struct Instruction {
     int toIns();
 };
 
-
 struct CurrentCompileTask {
+    std::unordered_map<std::string, MType*> templateTypes;
     std::string funcName;
     std::vector<Instruction> ins;
     std::vector<MicaValue> localConstPool;
     int localVarCnt=0;
     int localLabelCnt=0;
     int pushLocalConst(MicaValue);
-    int addLocalVar(std::string, Symbol*);
+    int addLocalVar(std::string, MType*, bool, VarSymbol::VarKind);
     Symbol* lookupLocalVar(std::string);
     Scope* functionScope;
     Scope* currentScope;
@@ -42,6 +42,7 @@ struct CurrentCompileTask {
     void fullBackLabel();
     void emit(std::string, ByteCode, ByteCode, ByteCode);
     Function* getCompileResult();
+    MType* fnRetTp;
 };
 
 struct CompileEnvironment {
@@ -49,6 +50,18 @@ struct CompileEnvironment {
     std::vector<MicaValue> globalConstPool;
     std::vector<CurrentCompileTask*> tasks;
     int addFunctionValue(Function*);
+};
+
+class AstToMtype {
+public:
+    AstToMtype(CompileEnvironment*);
+    MType* getType(AST*);
+private:
+    CompileEnvironment* env;
+    MType* parseIdNode(AST*);
+    MType* parseArrayType(AST*);
+    MType* parseFuncType(AST*);
+    MType* parseTemplateType(AST*);
 };
 
 class Compiler {
@@ -71,38 +84,38 @@ private:
     std::string getLabel();
 
     MType* visitBlock(AST*, std::string, std::string);
-    MType* visitBinOpNode(AST*);
-    MType* visitCallNode(AST*);
-    MType* visitElementGet(AST*);
-    MType* visitMemberAccess(AST*);
+    MType* visitBinOpNode(AST*, MType*);
+    MType* visitCallNode(AST*, MType*);
+    MType* visitElementGet(AST*, MType*);
+    MType* visitMemberAccess(AST*, MType*);
     MType* visitFunction(AST*);
-    MType* visitValue(AST*);
+    MType* visitValue(AST*, MType*);
     MType* visitAssign(AST*);
     MType* visitStmt(AST*, std::string, std::string);
     MType* visitFuncTag(AST*);
     MType* visitIf(AST*, std::string, std::string);
-    MType* visitTernOp(AST*);
+    MType* visitTernOp(AST*, MType*);
     MType* visitForLoop(AST*);
     MType* visitWhileLoop(AST*);
     MType* visitDoWhile(AST*);
     MType* visitSwitch(AST*);
     MType* visitInterface(AST*);
     MType* visitClass(AST*);
-    MType* visitNewClass(AST*);
-    MType* visitArray(AST*);
+    MType* visitNewClass(AST*, MType*);
+    MType* visitArray(AST*, MType*);
     MType* visitNumber(AST*);
     MType* visitChar(AST*);
     MType* visitBool(AST*);
     MType* visitReturn(AST*);
     MType* visitId(AST*);
-    MType* visitNeg(AST*);
+    MType* visitNeg(AST*, MType*);
     MType* visitSelfChange(AST*);
 
     void storeArray(std::vector<AST*>);
     void storeString(std::string);
-    MType *visitBitNot(AST *pAst);
+    MType *visitBitNot(AST *, MType*);
 
-    MType *visitNot(AST *pAst);
+    MType *visitNot(AST *, MType*);
 };
 
 #endif //MICALANG_COMPILER_H

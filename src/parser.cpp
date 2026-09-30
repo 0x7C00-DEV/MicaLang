@@ -1023,7 +1023,7 @@ Register Parser::makeClass() {
             temp.push_back(current.data);
             advance();
             if (equal(">") && equal(TT_OP)) break;
-            setError(res, equal(",") && equal(TT_ID), "SyntaxError: want a ','");
+            setError(res, equal(TT_OP) && equal(","), "SyntaxError: want a ','");
             advance();
         }
         setError(res, equal(">") && equal(TT_OP), "SyntaxError: want a '>'");

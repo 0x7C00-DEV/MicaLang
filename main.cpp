@@ -45,6 +45,6 @@ void testFile() {
 }
 
 int main() {
-    std::cout << 1.2 * 1 << std::endl;
+    shell();
     return 0;
 }

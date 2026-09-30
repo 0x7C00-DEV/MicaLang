@@ -146,8 +146,5 @@ struct ObjString : ObjArray {
     }
 };
 
-MicaValue makeString(std::string str) {
-    return MicaValue::Object(new ObjString(str));
-}
 
 #endif //MICALANG_VALUE_H

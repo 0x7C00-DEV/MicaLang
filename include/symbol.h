@@ -86,7 +86,7 @@ struct VarSymbol : Symbol {
     MType* type;
     int id=0;
     bool isInit = false;
-    enum VarKind { Global, Local, Arg } vkind;
+    enum VarKind { Global, Local } vkind;
 
     VarSymbol(std::string name, MType* type, bool isInit, VarKind vkind);
 };

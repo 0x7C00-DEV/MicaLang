@@ -3,6 +3,56 @@
 //
 #include "../include/compiler.h"
 
+AstToMtype::AstToMtype(CompileEnvironment* env) {
+    this->env = env;
+}
+
+
+MType* AstToMtype::parseTemplateType(AST* a) {
+    auto tmp = (TemplateType*) a;
+    auto root = getType(tmp->rootType);
+    std::vector<MType*> templ;
+    for (auto i : tmp->subType)
+        templ.push_back(getType(i));
+    return new TTemplateType(root, templ);
+}
+
+MType* AstToMtype::getType(AST* a) {
+    Type* t = (Type*) a;
+    if (t->tpKind == Type::TYPE_ARRAY) return parseArrayType(a); 
+    if (t->tpKind == Type::TYPE_TEMPLATE) return parseTemplateType(a); 
+    if (t->tpKind == Type::TYPE_NORMAL) return parseIdNode(a); 
+    if (t->tpKind == Type::TYPE_FUNC) return parseFuncType(a);
+    printf("WARN: unknown type %d\n", t->tpKind);
+    exit(-1);
+}
+
+MType* AstToMtype::parseIdNode(AST* a) {
+    auto tmp = ((Id*)a)->name;
+    auto t = env->tasks.back()->templateTypes.find(tmp);
+    if (t != env->tasks.back()->templateTypes.end())
+        return t->second;
+    return new ClassType(tmp, env->cs.lookup(tmp));
+}
+
+MType* AstToMtype::parseArrayType(AST* a) {
+    auto tmp = (ArrayType*) a;
+    auto elementType = getType(tmp->elementType);
+    return new TArrayType(elementType);
+}
+
+MType* AstToMtype::parseFuncType(AST* a) {
+    auto tmp = (FuncType*) a;
+    std::vector<MType*> argTypes;
+    for (auto i : tmp->args) argTypes.push_back(getType(i));
+    return new FunctionType(
+        getType(tmp->retType),
+        {},
+        argTypes
+    );
+}
+
+
 ByteCode::ByteCode(int opera) {
     this->opera = opera;
 }
@@ -38,6 +88,7 @@ void CurrentCompileTask::emit(std::string index, ByteCode a, ByteCode b, ByteCod
 }
 
 Function* CurrentCompileTask::getCompileResult() {
+    fullBackLabel();
     Function *fn = new Function;
     for (auto i : ins)
         fn->ins.push_back(i.toIns());
@@ -56,7 +107,8 @@ CurrentCompileTask::CurrentCompileTask(Scope* current, std::string name) {
     this->funcName = name;
 }
 
-int CurrentCompileTask::addLocalVar(std::string name, Symbol* sym) {
+int CurrentCompileTask::addLocalVar(std::string name, MType* type, bool isInit, VarSymbol::VarKind vkind) {
+    auto sym = new VarSymbol(name, type, isInit, vkind);
     if (currentScope->registVar(name, sym, localVarCnt + 1))
         return ++localVarCnt;
     return -1;
@@ -112,11 +164,24 @@ CurrentCompileTask *Compiler::getCurrentTsk() {
     return env->tasks.empty() ? nullptr : env->tasks.back();
 }
 
-MType* Compiler::visitBinOpNode(AST* a) {
+MType* Compiler::visitBinOpNode(AST* a, MType* expect) {
     auto tmp = (BinOpNode*) a;
-    int op = opera[tmp->op];
-    MType* left = visitValue(tmp->left);
-    MType* right = visitValue(tmp->right);
+    auto it = opera.find(tmp->op);
+    if (it == opera.end()) { /* 报错 */ }
+    int op = it->second;
+
+    MType* operandExpect = nullptr;
+    if (op == BEQ || op == BNEQ || op == BAND || op == BOR ||
+        op == BEQORBIG || op == BEQORLESS || op == BBIG || op == BLESS)
+        operandExpect = nullptr;   
+    else if (op == BSHL || op == BSHR || op == BMOD ||
+             op == BBAND || op == BBOR || op == BXOR)
+        operandExpect = new BaseType(BaseType::MINT);
+    else
+        operandExpect = expect;
+
+    MType* left  = visitValue(tmp->left,  operandExpect);
+    MType* right = visitValue(tmp->right, operandExpect);
     emit(getLabel(), BIN_OPER, op, 0);
     auto tl = left->__str__();
     auto tr = right->__str__();
@@ -125,31 +190,31 @@ MType* Compiler::visitBinOpNode(AST* a) {
     return left;
 } 
 
-MType* Compiler::visitCallNode(AST* a) {
+MType* Compiler::visitCallNode(AST* a, MType* expect) {
     auto tmp = (Call*) a;
     std::vector<std::string> argsType;
     std::vector<std::string> paramType;
-    FunctionType* tp = (FunctionType*)visitValue(tmp->fnid);
+    FunctionType* tp = (FunctionType*)visitValue(tmp->fnid, expect);
     for (auto i : tp->argsType) argsType.push_back(i->__str__());
     for (auto i : tmp->args) 
-        paramType.push_back(visitValue(i)->__str__());
-    emit(getLabel(), CALL, 0, 0);
+        paramType.push_back(visitValue(i, expect)->__str__());
+    emit(getLabel(), CALL, (int)tmp->args.size(), 0);
     return tp->retType;
 }
 
-MType* Compiler::visitElementGet(AST* a) {
+MType* Compiler::visitElementGet(AST* a, MType* expect) {
     auto arrayId = (ElementGet*)a;
-    TArrayType* tp = (TArrayType*) visitValue(arrayId->address);
-    MType* posType = visitValue(arrayId->position);
+    TArrayType* tp = (TArrayType*) visitValue(arrayId->address, expect);
+    MType* posType = visitValue(arrayId->position, expect);
     emit(getLabel(), EL_GET, 0, 0);
     if (((BaseType*)posType)->type != BaseType::MINT)
         std::cout << "Warn: " << posType->__str__() << " not int\n";
     return tp->elementType;
 }
 
-MType* Compiler::visitMemberAccess(AST* a) {
+MType* Compiler::visitMemberAccess(AST* a, MType* expect) {
     auto tmp = (MemberAccess*) a;
-    auto parent = visitValue(tmp->parent);
+    auto parent = visitValue(tmp->parent, expect);
     storeString(tmp->member);
     emit(getLabel(), MEM_GET, 0, 0);
     return ((ClassSymbol*)((ClassType*)parent)->sym)->members[tmp->member];
@@ -159,15 +224,15 @@ MType* Compiler::visitFunction(AST* a) {
 
 }
 
-MType* Compiler::visitValue(AST* a) {
+MType* Compiler::visitValue(AST* a, MType* expect) {
     if (a->kind == AST::AST_ARRAY)
-        return visitArray(a);
+        return visitArray(a, expect);
     if (a->kind == AST::AST_BIN_OP)
-        return visitBinOpNode(a);
+        return visitBinOpNode(a, expect);
     if (a->kind == AST::AST_MEMBER_ACCESS)
-        return visitMemberAccess(a);
+        return visitMemberAccess(a, expect);
     if (a->kind == AST::AST_ELEMENT_GET)
-        return visitElementGet(a);
+        return visitElementGet(a, expect);
     if (a->kind == AST::AST_ASSIGN_NODE)
         return visitAssign(a);
     if (a->kind == AST::AST_BOOL)
@@ -175,25 +240,69 @@ MType* Compiler::visitValue(AST* a) {
     if (a->kind == AST::AST_ID)
         return visitId(a);
     if (a->kind == AST::AST_CALL)
-        return visitCallNode(a);
+        return visitCallNode(a, expect);
     if (a->kind == AST::AST_DIGIT)
         return visitNumber(a);
     if (a->kind == AST::AST_THREE_OP)
-        return visitTernOp(a);
+        return visitTernOp(a, expect);
     if (a->kind == AST::AST_CHAR)
         return visitChar(a);
     if (a->kind == AST::AST_NEW_CLASS)
-        return visitNewClass(a);
-    if (a->kind == AST::AST_NEG)         return visitNeg(a);
-    if (a->kind == AST::AST_BIT_NOT)     return visitBitNot(a);
-    if (a->kind == AST::AST_NOT)         return visitNot(a);
+        return visitNewClass(a, expect);
+    if (a->kind == AST::AST_NEG)         return visitNeg(a, expect);
+    if (a->kind == AST::AST_BIT_NOT)     return visitBitNot(a, expect);
+    if (a->kind == AST::AST_NOT)         return visitNot(a, expect);
     if (a->kind == AST::AST_SELF_CHANGE) return visitSelfChange(a);
     std::cout << "not suppose\n";
     return nullptr;
 }
 
 MType* Compiler::visitAssign(AST* a) {
-
+    auto tmp = (AssignNode*)a;
+    auto dst = tmp->dst;
+    auto src = tmp->src;
+    if (dst->kind == AST::AST_ID) {
+        auto tmpx = (Id*) dst;
+        Symbol* s = env->cs.lookup(tmpx->name);
+        if (s->kind != Symbol::SYM_VAR) {
+            std::cout << "ERROR: name '" << tmpx->name << "' not a var\n";
+            exit(-1);
+        }
+        auto temp = (VarSymbol*) s;
+        auto vt = visitValue(src, temp->type)->__str__();
+        auto st = temp->type->__str__();
+        if (st != vt) 
+            std::cout << "WARN: var '" << tmpx->name << "' type is '" << st << "' but value type is '" << vt << "'\n";
+        int oper = (temp->vkind == VarSymbol::Global)? STORE_GVAR : STORE_SVAR;
+        emit(getLabel(), oper, temp->id, 0);
+        return temp->type;
+    }
+    if (dst->kind == AST::AST_ELEMENT_GET) {
+        auto temp = (ElementGet*) dst;
+        auto obj = visitValue(temp->address, nullptr);
+        auto valt = visitValue(src, ((TArrayType*)obj)->elementType);
+        auto pos_ = visitValue(temp->position, new BaseType(BaseType::MINT));
+        emit(getLabel(), EL_SET, 0, 0);
+        if (pos_->__str__() != "int;") std::cout << "WARN: want a int, get '" << pos_->__str__() << "'\n";
+        if (obj->baseType != MType::BT_ARRAY) std::cout << "WARN: not a array\n";
+        if (valt->__str__() != ((TArrayType*)obj)->elementType->__str__())
+            std::cout << "WARN: element type is '" << ((TArrayType*)obj)->elementType->__str__() << "' value type is '" << valt->__str__() << "'\n";
+        return valt;
+    }
+    if (dst->kind == AST::AST_MEMBER_ACCESS) {
+        auto tmpx = (MemberAccess*) dst;
+        MType* parentType = visitValue(tmpx->parent, nullptr);
+        if (parentType->baseType != MType::BT_CLASS) {
+            std::cout << "ERROR: not a class\n"; exit(-1);
+        }
+        MType* memberType = ((ClassSymbol*)((ClassType*)parentType)->sym)->members[tmpx->member];
+        MType* valueType = visitValue(src, memberType);
+        storeString(tmpx->member);
+        emit(getLabel(), MEM_SET, 0, 0);
+        return valueType;
+    }
+    std::cout << "ERROR: unsuppose type '" << dst->kind << "'\n";
+    exit(-1);
 }
 
 MType* Compiler::visitStmt(AST* a, std::string begin, std::string end) {
@@ -217,20 +326,20 @@ MType* Compiler::visitStmt(AST* a, std::string begin, std::string end) {
         return visitInterface(a);
     if (a->kind == AST::AST_FUNC_TAG)
         return visitFuncTag(a);
-    return visitValue(a);
+    return visitValue(a, nullptr);
 }
 
-MType* Compiler::visitTernOp(AST* a) {
+MType* Compiler::visitTernOp(AST* a, MType* expect) {
     std::string false_ = getLabel();
     std::string end = getLabel();
     MType* retTypet,* retTypef;
     auto tmp = (ThreeOp*)a;
-    auto tp = visitValue(tmp->condition);
+    auto tp = visitValue(tmp->condition, expect);
     emit(getLabel(), JMPF, false_, 0);
-    retTypet = visitValue(tmp->trueValue);
+    retTypet = visitValue(tmp->trueValue, expect);
     emit(getLabel(), JMP, end, 0);
     emit(false_, NOP, 0, 0);
-    retTypef = visitValue(tmp->falseValue);
+    retTypef = visitValue(tmp->falseValue, expect);
     emit(end, NOP, 0, 0);
     if (retTypef->__str__() != retTypet->__str__())
         std::cout << "WARN: " << retTypet->__str__() << ", " << retTypef->__str__() << std::endl;
@@ -242,16 +351,16 @@ MType* Compiler::visitForLoop(AST* a) {
     std::string begin = getLabel();
     std::string changeLabel = getLabel();
     std::string end = getLabel();
-    visitValue(tmp->init);
+    visitValue(tmp->init, nullptr);
     emit(begin, NOP, 0, 0);
     MType* tp = nullptr;
     if (tmp->condition) {
-        tp = visitValue(tmp->condition);
+        tp = visitValue(tmp->condition, new BaseType(BaseType::MBOOL));
         emit("", JMPF, end, 0);
     }
     visitBlock(tmp->block, changeLabel, end);
     emit(changeLabel, NOP, 0, 0);
-    visitValue(tmp->change);
+    visitValue(tmp->change, nullptr);
     emit("", JMP, begin, 0);
     emit(end, NOP, 0, 0);
 
@@ -267,7 +376,7 @@ MType* Compiler::visitWhileLoop(AST* a) {
     std::string begin = getLabel();
     std::string end = getLabel();
     emit(begin, NOP, 0, 0);
-    auto tp = visitValue(tmp->condition);
+    auto tp = visitValue(tmp->condition, new BaseType(BaseType::MBOOL));
     emit(getLabel(), JMPF, end, 0);
     visitBlock(tmp->body, begin, end);
     emit(getLabel(), JMP, begin, 0);
@@ -283,7 +392,7 @@ MType* Compiler::visitDoWhile(AST* a) {
     std::string end = getLabel();
     emit(begin, NOP, 0, 0);
     visitBlock(tmp->body, begin, end);
-    auto tp = visitValue(tmp->condition);
+    auto tp = visitValue(tmp->condition, new BaseType(BaseType::MBOOL));
     emit(getLabel(), JMPT, begin, 0);
     emit(end, NOP, 0, 0);
     return tp;
@@ -293,7 +402,7 @@ MType* Compiler::visitSwitch(AST* a) {
     auto tmp = (Switch*)a;
     std::string begin = getLabel();
     std::string end = getLabel();
-    auto tp = visitValue(tmp->value);
+    auto tp = visitValue(tmp->value, nullptr);
     std::string t = tp->__str__();
     std::vector<std::string> types;
     emit(begin, NOP, 0, 0);
@@ -302,8 +411,8 @@ MType* Compiler::visitSwitch(AST* a) {
         if (su->value) {
             std::string end_ = getLabel();
             emit(getLabel(), DUP, 0, 0);
-            types.push_back(visitValue(su->value)->__str__());
-            emit(getLabel(), BEQ, 0, 0);
+            types.push_back(visitValue(su->value, tp)->__str__());
+            emit(getLabel(), BIN_OPER, BEQ, 0);
             emit(getLabel(), JMPF, end_, 0);
             visitBlock(su->block, begin, end);
             emit(end_, NOP, 0, 0);
@@ -311,7 +420,7 @@ MType* Compiler::visitSwitch(AST* a) {
             visitBlock(su->block, begin, end);
         }
     }
-    emit(end, NOP, 0, 0);
+    emit(end, POP, 0, 0);
     for (auto i: types)
         if (i != t) std::cout << "WARN: type '" << t << "' != '" << i << "'\n";
     return nullptr;
@@ -325,12 +434,25 @@ MType* Compiler::visitClass(AST* a) {
 
 }
 
-MType* Compiler::visitNewClass(AST* a) {
+MType* Compiler::visitNewClass(AST* a, MType* expect) {
 
 }
 
-MType* Compiler::visitArray(AST* a) {
-
+MType* Compiler::visitArray(AST* a, MType* type) {
+    auto tmp = (Array*)a;
+    int n = (int)tmp->elements.size();
+    loadConstS(pushConstL(MicaValue::Int(n)));
+    emit(getLabel(), NEW_ARR, 0, 0);   
+    std::vector<MType*> elementTypes;
+    for (int i = 0; i < n; ++i) {
+        emit(getLabel(), DUP, 0, 0); 
+        loadConstS(pushConstL(MicaValue::Int(i)));
+        auto stmp = visitValue(tmp->elements[i], type)->__str__();
+        if(type->__str__() != stmp)
+            std::cout << "WARN: ERROR TYPE: " << stmp << std::endl; 
+        emit(getLabel(), EL_SET, 0, 0);
+    }
+    return new TArrayType(type, n);
 }
 
 MType* Compiler::visitNumber(AST* a) {
@@ -390,7 +512,7 @@ MType *Compiler::visitReturn(AST *a) {
     auto tmp = (Return*)a;
     MType* tp = new BaseType(BaseType::MVOID);
     if (tmp->value) {
-        tp = visitValue(tmp->value);
+        tp = visitValue(tmp->value, getCurrentTsk()->fnRetTp);
     } else {
         emit(getLabel(), LOAD_NULL, 0, 0);
     }
@@ -406,7 +528,8 @@ MType *Compiler::visitId(AST *a) {
     auto name = ((Id*)a)->name;
     auto info = getCurrentTsk()->currentScope->lookupSymbol(name);
     if (info->kind == Symbol::SYM_VAR) {
-        emit(getLabel(), LOAD_SVAR, ((VarSymbol*)info)->id, 0);
+        int oper = (((VarSymbol*)info)->vkind == VarSymbol::Global)? LOAD_GVAR : LOAD_SVAR;
+        emit(getLabel(), oper, ((VarSymbol*)info)->id, 0);
         return ((VarSymbol*)info)->type;
     } else if (info->kind == Symbol::SYM_FUNC) {
         for (int i = 0; i < env->globalConstPool.size(); ++i) {
@@ -431,9 +554,9 @@ MType *Compiler::visitId(AST *a) {
     return nullptr;
 }
 
-MType *Compiler::visitNeg(AST *a) {
+MType *Compiler::visitNeg(AST *a, MType* expect) {
     auto tmp = (Neg*)a;
-    auto val = visitValue(tmp->value);
+    auto val = visitValue(tmp->value, expect);
     emit(getLabel(), BNEG, 0 , 0);
     return val;
 }
@@ -442,16 +565,16 @@ MType *Compiler::visitSelfChange(AST *) {
     return nullptr;
 }
 
-MType *Compiler::visitBitNot(AST *pAst) {
+MType *Compiler::visitBitNot(AST *pAst, MType* expect) {
     auto bn = (BitNot*) pAst;
-    auto tmp = visitValue(bn->value);
+    auto tmp = visitValue(bn->value, expect);
     emit(getLabel(), BBNOT, 0, 0);
     return tmp;
 }
 
-MType *Compiler::visitNot(AST *pAst) {
+MType *Compiler::visitNot(AST *pAst, MType* expect) {
     auto bn = (Not*) pAst;
-    auto tmp = visitValue(bn->value);
+    auto tmp = visitValue(bn->value, expect);
     emit(getLabel(), BNOT, 0, 0);
     return tmp;
 }
@@ -461,14 +584,14 @@ MType *Compiler::visitIf(AST *a, std::string begin, std::string end) {
     auto tmp = (If*)a;
     std::string if_ = getLabel();
     std::string ie = getLabel();
-    auto tp = visitValue(tmp->condition);
+    auto tp = visitValue(tmp->condition, new BaseType(BaseType::MBOOL));
     if (tp->__str__() != "bool;")
         std::cout << "warn in visitIf, want a bool value, but get a '" << tp->__str__() << "'\n";
     emit(getLabel(), JMPF, if_, 0);
     visitBlock(tmp->tblock, begin, end);
     emit(getLabel(), JMP, ie, 0);
     emit(if_, NOP, 0, 0);
-    visitBlock(tmp->fblock, begin, end);
+    if (tmp->fblock) visitBlock(tmp->fblock, begin, end);
     emit(ie, NOP, 0, 0);
     leaveScope();
     return nullptr;

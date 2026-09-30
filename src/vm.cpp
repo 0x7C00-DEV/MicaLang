@@ -388,10 +388,10 @@ void VM::elGet(int a, int b) {
 }
 
 void VM::elSet(int a, int b) {
-    // STACK: [val, pos, obj]
-    auto obj = pop();
+    // STACK: [obj, val, pos]
     auto pos = pop();
     auto val = pop();
+    auto obj = pop();
     ((ObjArray*)(((ObjInstance*)obj.obj)->cls))->elements[pos.i] = val;
 }
 
