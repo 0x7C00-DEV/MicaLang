@@ -70,7 +70,6 @@ ClassSymbol *AstToMtype::findClass(std::string name) {
     return tmp;
 }
 
-
 ByteCode::ByteCode(int opera) {
     this->opera = opera;
 }
@@ -192,7 +191,7 @@ MType* Compiler::visitBinOpNode(AST* a, MType* expect) {
     }
     int op = it->second;
 
-    MType* operandExpect = nullptr;
+    MType* operandExpect;
     if (op == BEQ || op == BNEQ || op == BAND || op == BOR ||
         op == BEQORBIG || op == BEQORLESS || op == BBIG || op == BLESS)
         operandExpect = nullptr;   
@@ -470,11 +469,13 @@ MType* Compiler::visitDoWhile(AST* a) {
     createScope(Scope::SNORMAL_BLOCK);
     auto tmp = (DoWhile*) a;
     std::string begin = getLabel();
-    std::string end = getLabel();
+    std::string cond  = getLabel();
+    std::string end   = getLabel();
     emit(begin, NOP, 0, 0);
-    visitBlock(tmp->body, begin, end);
+    visitBlock(tmp->body, cond, end);  
+    emit(cond, NOP, 0, 0);              
     auto tp = visitValue(tmp->condition, new BaseType(BaseType::MBOOL));
-    emit(getLabel(), JMPT, begin, 0);
+    emit(getLabel(), JMPT, begin, 0);     
     emit(end, NOP, 0, 0);
     leaveScope();
     return tp;
