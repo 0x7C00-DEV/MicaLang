@@ -62,6 +62,16 @@ private:
     MType* parseArrayType(AST*);
     MType* parseFuncType(AST*);
     MType* parseTemplateType(AST*);
+
+    ClassSymbol* findClass(std::string);
+
+    MType* findClassMember(AST*);
+};
+
+struct Vresult {
+    int id;
+    MType* type;
+    std::string name;
 };
 
 class Compiler {
@@ -70,6 +80,7 @@ public:
 private:
 	Parser parser;
     CompileEnvironment* env;
+    AstToMtype* conver;
     std::unordered_map<std::string, int> opera;
     CurrentCompileTask* getCurrentTsk();
     Scope* createScope(Scope::ScopeKind);
@@ -88,6 +99,8 @@ private:
     MType* visitCallNode(AST*, MType*);
     MType* visitElementGet(AST*, MType*);
     MType* visitMemberAccess(AST*, MType*);
+    void visitVarDefineGrp(AST*);
+    Vresult visitVarDefine(AST*);
     MType* visitFunction(AST*);
     MType* visitValue(AST*, MType*);
     MType* visitAssign(AST*);
@@ -103,6 +116,8 @@ private:
     MType* visitClass(AST*);
     MType* visitNewClass(AST*, MType*);
     MType* visitArray(AST*, MType*);
+    void   visitBreak(AST*, std::string, std::string);
+    void   visitContinue(AST*, std::string, std::string);
     MType* visitNumber(AST*);
     MType* visitChar(AST*);
     MType* visitBool(AST*);

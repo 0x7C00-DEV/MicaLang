@@ -19,7 +19,7 @@ MType* AstToMtype::parseTemplateType(AST* a) {
 
 MType* AstToMtype::getType(AST* a) {
     Type* t = (Type*) a;
-    if (t->tpKind == Type::TYPE_ARRAY) return parseArrayType(a); 
+    if (t->tpKind == Type::TYPE_ARRAY) return parseArrayType(a);
     if (t->tpKind == Type::TYPE_TEMPLATE) return parseTemplateType(a); 
     if (t->tpKind == Type::TYPE_NORMAL) return parseIdNode(a); 
     if (t->tpKind == Type::TYPE_FUNC) return parseFuncType(a);
@@ -28,11 +28,8 @@ MType* AstToMtype::getType(AST* a) {
 }
 
 MType* AstToMtype::parseIdNode(AST* a) {
-    auto tmp = ((Id*)a)->name;
-    auto t = env->tasks.back()->templateTypes.find(tmp);
-    if (t != env->tasks.back()->templateTypes.end())
-        return t->second;
-    return new ClassType(tmp, env->cs.lookup(tmp));
+    auto tmp = ((NormalType*)a)->classId;
+    return findClassMember(tmp);
 }
 
 MType* AstToMtype::parseArrayType(AST* a) {
@@ -47,9 +44,30 @@ MType* AstToMtype::parseFuncType(AST* a) {
     for (auto i : tmp->args) argTypes.push_back(getType(i));
     return new FunctionType(
         getType(tmp->retType),
-        {},
         argTypes
     );
+}
+
+MType *AstToMtype::findClassMember(AST *a) {
+    if (a->kind == AST::AST_ID) {
+        auto name = ((Id*)a)->name;
+        if (name == "int") return new BaseType(BaseType::MINT);
+        if (name == "double") return new BaseType(BaseType::MDOUBLE);
+        if (name == "char") return new BaseType(BaseType::MCHAR);
+        if (name == "void") return new BaseType(BaseType::MVOID);
+        if (name == "bool") return new BaseType(BaseType::MBOOL);
+        if (name == "str") return new TArrayType(new BaseType(BaseType::MCHAR));
+        return new ClassType(name, findClass(name));
+    }
+    auto parent = ((MemberAccess*)a)->parent;
+    auto member = ((MemberAccess*)a)->member;
+    return ((ClassSymbol*)((ClassType*)findClassMember(parent))->sym)->members[member];
+}
+
+ClassSymbol *AstToMtype::findClass(std::string name) {
+    auto tmp = (ClassSymbol*)env->cs.lookup(name);
+    if (!tmp) std::cout << "WARN: name '" << name << "' not found\n";
+    return tmp;
 }
 
 
@@ -109,8 +127,8 @@ CurrentCompileTask::CurrentCompileTask(Scope* current, std::string name) {
 
 int CurrentCompileTask::addLocalVar(std::string name, MType* type, bool isInit, VarSymbol::VarKind vkind) {
     auto sym = new VarSymbol(name, type, isInit, vkind);
-    if (currentScope->registVar(name, sym, localVarCnt + 1))
-        return ++localVarCnt;
+    if (currentScope->registVar(name, sym, localVarCnt ))
+        return localVarCnt++;
     return -1;
 }
 
@@ -135,6 +153,7 @@ void Compiler::leaveScope() {
 
 Compiler::Compiler(CompileEnvironment* environment) {
     this->env = environment;
+    conver = new AstToMtype(this->env);
     opera["+"] = BADD;
     opera["-"] = BSUB;
     opera["/"] = BDIV;
@@ -167,7 +186,10 @@ CurrentCompileTask *Compiler::getCurrentTsk() {
 MType* Compiler::visitBinOpNode(AST* a, MType* expect) {
     auto tmp = (BinOpNode*) a;
     auto it = opera.find(tmp->op);
-    if (it == opera.end()) { /* 报错 */ }
+    if (it == opera.end()) {
+        std::cout << "ERROR: operator '" << tmp->op << "' not suppose\n";
+        return nullptr;
+    }
     int op = it->second;
 
     MType* operandExpect = nullptr;
@@ -185,6 +207,8 @@ MType* Compiler::visitBinOpNode(AST* a, MType* expect) {
     emit(getLabel(), BIN_OPER, op, 0);
     auto tl = left->__str__();
     auto tr = right->__str__();
+    if (tmp->op == "==" || tmp->op == "!=" || tmp->op == ">=" || tmp->op == "<=" || tmp->op == ">" || tmp->op == "<")
+        return new BaseType(BaseType::MBOOL);
     if (tl == "double;" || tr == "double;")
         return new BaseType(BaseType::MDOUBLE);
     return left;
@@ -220,8 +244,44 @@ MType* Compiler::visitMemberAccess(AST* a, MType* expect) {
     return ((ClassSymbol*)((ClassType*)parent)->sym)->members[tmp->member];
 }
 
-MType* Compiler::visitFunction(AST* a) {
+void Compiler::visitVarDefineGrp(AST* a) {
+    auto tmp = (VarDefGrp*) a;
+    for (auto i : tmp->vars)
+        visitVarDefine(i);
+}
 
+Vresult Compiler::visitVarDefine(AST* a) {
+    Vresult res;
+    auto tmp = (VarDef*) a;
+    auto tp = conver->getType(tmp->type);
+    int varId = getCurrentTsk()->addLocalVar(tmp->name,
+                                             tp,
+                                             tmp->init!=nullptr,
+                                             getCurrentTsk()->currentScope->scopeKind == Scope::SGLOBAL? VarSymbol::Global : VarSymbol::Local);
+    if (tmp->init) {
+        auto temp = visitValue(tmp->init, tp)->__str__();
+        if (temp != tp->__str__())
+            std::cout << "WARN: type " << temp << ", " << tp->__str__() << std::endl;
+        emit(getLabel(), getCurrentTsk()->currentScope->scopeKind == Scope::SGLOBAL? STORE_GVAR : STORE_SVAR, varId, 0);
+    }
+    res.id = varId;
+    res.name = tmp->name;
+    res.type = tp;
+    return res;
+}
+
+MType* Compiler::visitFunction(AST* a) {
+    auto tmp = (Func*) a;
+    createTask(tmp->name);
+    getCurrentTsk()->fnRetTp = ((FunctionType*)conver->getType(tmp->ftype))->retType;
+    if (!tmp->isNative) {
+        for (int i = 0; i < tmp->args.size(); ++i)
+            Vresult vid = visitVarDefine(tmp->args[i]);
+        visitBlock(tmp->body, "", "");
+    }
+    auto t = conver->getType(tmp->ftype);
+    endTask(tmp->isNative);
+    return t;
 }
 
 MType* Compiler::visitValue(AST* a, MType* expect) {
@@ -308,6 +368,22 @@ MType* Compiler::visitAssign(AST* a) {
 MType* Compiler::visitStmt(AST* a, std::string begin, std::string end) {
     if (a->kind == AST::AST_FUNC_DEF)
         return visitFunction(a);
+    if (a->kind == AST::AST_VAR_DEF_GRP) {
+        visitVarDefineGrp(a);
+        return nullptr;
+    }
+    if (a->kind == AST::AST_VAR_DEF) {
+        visitVarDefine(a);
+        return nullptr;
+    }
+    if (a->kind == AST::AST_CONTINUE) {
+        visitContinue(a, begin, end);
+        return nullptr;
+    }
+    if (a->kind == AST::AST_BREAK) {
+        visitBreak(a, begin, end);
+        return nullptr;
+    }
     if (a->kind == AST::AST_IF)
         return visitIf(a, begin, end);
     if (a->kind == AST::AST_FOR)
@@ -347,6 +423,7 @@ MType* Compiler::visitTernOp(AST* a, MType* expect) {
 }
 
 MType* Compiler::visitForLoop(AST* a) {
+    createScope(Scope::SNORMAL_BLOCK);
     auto tmp = (ForLoop*)a;
     std::string begin = getLabel();
     std::string changeLabel = getLabel();
@@ -368,10 +445,12 @@ MType* Compiler::visitForLoop(AST* a) {
         std::cout << "WARN: want a bool, but get a '"
                   << tp->__str__() << "'\n";
     }
+    leaveScope();
     return nullptr;
 }
 
 MType* Compiler::visitWhileLoop(AST* a) {
+    createScope(Scope::SNORMAL_BLOCK);
     auto tmp = (WhileLoop*) a;
     std::string begin = getLabel();
     std::string end = getLabel();
@@ -383,10 +462,12 @@ MType* Compiler::visitWhileLoop(AST* a) {
     emit(end, NOP, 0,0);
     if (tp->__str__() != "bool;")
         std::cout << "warn in visitWhile, want a bool value, but get a '" << tp->__str__() << "'\n";
+    leaveScope();
     return nullptr;
 }
 
 MType* Compiler::visitDoWhile(AST* a) {
+    createScope(Scope::SNORMAL_BLOCK);
     auto tmp = (DoWhile*) a;
     std::string begin = getLabel();
     std::string end = getLabel();
@@ -395,10 +476,12 @@ MType* Compiler::visitDoWhile(AST* a) {
     auto tp = visitValue(tmp->condition, new BaseType(BaseType::MBOOL));
     emit(getLabel(), JMPT, begin, 0);
     emit(end, NOP, 0, 0);
+    leaveScope();
     return tp;
 }
 
 MType* Compiler::visitSwitch(AST* a) {
+    createScope(Scope::SNORMAL_BLOCK);
     auto tmp = (Switch*)a;
     std::string begin = getLabel();
     std::string end = getLabel();
@@ -409,6 +492,7 @@ MType* Compiler::visitSwitch(AST* a) {
     for (auto i: tmp->cases) {
         auto su = (Case*) i;
         if (su->value) {
+            createScope(Scope::SNORMAL_BLOCK);
             std::string end_ = getLabel();
             emit(getLabel(), DUP, 0, 0);
             types.push_back(visitValue(su->value, tp)->__str__());
@@ -416,6 +500,7 @@ MType* Compiler::visitSwitch(AST* a) {
             emit(getLabel(), JMPF, end_, 0);
             visitBlock(su->block, begin, end);
             emit(end_, NOP, 0, 0);
+            leaveScope();
         } else {
             visitBlock(su->block, begin, end);
         }
@@ -423,6 +508,7 @@ MType* Compiler::visitSwitch(AST* a) {
     emit(end, POP, 0, 0);
     for (auto i: types)
         if (i != t) std::cout << "WARN: type '" << t << "' != '" << i << "'\n";
+    leaveScope();
     return nullptr;
 }
 
@@ -435,6 +521,7 @@ MType* Compiler::visitClass(AST* a) {
 }
 
 MType* Compiler::visitNewClass(AST* a, MType* expect) {
+    auto tmp = (NewClass*) a;
 
 }
 
@@ -442,17 +529,26 @@ MType* Compiler::visitArray(AST* a, MType* type) {
     auto tmp = (Array*)a;
     int n = (int)tmp->elements.size();
     loadConstS(pushConstL(MicaValue::Int(n)));
-    emit(getLabel(), NEW_ARR, 0, 0);   
-    std::vector<MType*> elementTypes;
+    emit(getLabel(), NEW_ARR, 0, 0);
+    MType* elemType = nullptr;
+    if (type) {
+        if (type->baseType != MType::BT_ARRAY) {
+            std::cout << "ERROR: not a array\n";
+            exit(-1);
+        }
+        elemType = ((TArrayType*)type)->elementType;
+    }
     for (int i = 0; i < n; ++i) {
-        emit(getLabel(), DUP, 0, 0); 
+        emit(getLabel(), DUP, 0, 0);
         loadConstS(pushConstL(MicaValue::Int(i)));
-        auto stmp = visitValue(tmp->elements[i], type)->__str__();
-        if(type->__str__() != stmp)
-            std::cout << "WARN: ERROR TYPE: " << stmp << std::endl; 
+        MType* it = visitValue(tmp->elements[i], elemType);
+        if (!elemType) elemType = it;
+        else if (elemType->__str__() != it->__str__())
+            std::cout << "WARN: element type mismatch: "
+                      << it->__str__() << " vs " << elemType->__str__() << "\n";
         emit(getLabel(), EL_SET, 0, 0);
     }
-    return new TArrayType(type, n);
+    return new TArrayType(elemType, n);
 }
 
 MType* Compiler::visitNumber(AST* a) {
@@ -501,6 +597,10 @@ std::string Compiler::getLabel() {
 }
 
 void Compiler::endTask(bool isNative) {
+    if ( !isNative && (getCurrentTsk()->ins.empty() || getCurrentTsk()->ins.back().a.opera != RET)) {
+        emit(getLabel(), LOAD_NULL, 0, 0);
+        emit(getLabel(), RET, 0, 0);
+    }
     auto tmp = getCurrentTsk()->getCompileResult();
     tmp->isNative = isNative;
     env->addFunctionValue(tmp);
@@ -527,6 +627,10 @@ MType *Compiler::visitFuncTag(AST *) {
 MType *Compiler::visitId(AST *a) {
     auto name = ((Id*)a)->name;
     auto info = getCurrentTsk()->currentScope->lookupSymbol(name);
+    if (!info) {
+        std::cout << "ERROR: in visitId, info is nullptr\n";
+        exit(-1);
+    }
     if (info->kind == Symbol::SYM_VAR) {
         int oper = (((VarSymbol*)info)->vkind == VarSymbol::Global)? LOAD_GVAR : LOAD_SVAR;
         emit(getLabel(), oper, ((VarSymbol*)info)->id, 0);
@@ -576,7 +680,7 @@ MType *Compiler::visitNot(AST *pAst, MType* expect) {
     auto bn = (Not*) pAst;
     auto tmp = visitValue(bn->value, expect);
     emit(getLabel(), BNOT, 0, 0);
-    return tmp;
+    return new BaseType(BaseType::MBOOL);
 }
 
 MType *Compiler::visitIf(AST *a, std::string begin, std::string end) {
@@ -611,6 +715,14 @@ void Compiler::storeArray(std::vector<AST*>) {
 
 void Compiler::storeString(std::string) {
 
+}
+
+void Compiler::visitContinue(AST *a, std::string begin, std::string end) {
+    emit(getLabel(), JMP, begin, 0);
+}
+
+void Compiler::visitBreak(AST *a, std::string begin, std::string end) {
+    emit(getLabel(), JMP, end, 0);
 }
 
 int CompileEnvironment::addFunctionValue(Function *f) {

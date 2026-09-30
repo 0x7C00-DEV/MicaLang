@@ -38,11 +38,10 @@ struct ModuleType : MType {
 };
 
 struct FunctionType : MType {
-    std::vector<MType*> templateTypes;
     std::vector<MType*> argsType;
     MType* retType;
     std::string __str__() override;
-    FunctionType(MType* retType, std::vector<MType*> templates, std::vector<MType*> argsType);
+    FunctionType(MType* retType, std::vector<MType*> argsType);
 };
 
 struct TNormalType : MType {

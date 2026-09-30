@@ -23,20 +23,15 @@ bool MType::operator!=(MType *other) {
 }
 
 FunctionType::FunctionType(MType* retType,
-                           std::vector<MType*> templates,
                            std::vector<MType*> argsType)
         : MType(BT_FUNC) {
     this->retType = retType;
-    this->templateTypes = templates;
     this->argsType = argsType;
 }
 
 std::string FunctionType::__str__() {
-    // (<templates>;|argTypes;)@retType;
-    std::string res = "(<";
-    for (auto i : templateTypes)
-        res += i->__str__();
-    res += ">|";
+    // (argTypes;)@retType;
+    std::string res = "(";
     for (auto i : argsType)
         res += i->__str__();
     res += ")@" + retType->__str__() + ";";
