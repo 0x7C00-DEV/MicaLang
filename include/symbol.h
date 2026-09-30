@@ -78,6 +78,7 @@ struct FunctionSymbol : Symbol {
     FunctionType* type;
 
     FunctionSymbol(std::string name, FunctionType* type);
+    std::string getString();
 };
 
 struct VarSymbol : Symbol {
@@ -145,7 +146,9 @@ struct CodeStruct {
     Scope *current= nullptr;
     int scopeId=0;
     CodeStruct();
-    bool registSymbol(std::string, Symbol*);
+    bool registSymbolSub(std::string, Symbol*);
+    bool registSymbolGbl(std::string, Symbol*);
+    Scope* getGlobalScope();
     bool isExist(std::string);
     Symbol* lookup(std::string);
     Scope* createScope(Scope::ScopeKind);

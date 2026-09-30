@@ -269,7 +269,22 @@ Vresult Compiler::visitVarDefine(AST* a) {
     return res;
 }
 
-MType* Compiler::visitFunction(AST* a) {
+
+Function* Compiler::makeFunction(AST* a) {
+    auto tmp = (Func*) a;
+    visitFunction(a, false);
+    if ( !tmp->isNative && (getCurrentTsk()->ins.empty() || getCurrentTsk()->ins.back().a.opera != RET)) {
+        emit(getLabel(), LOAD_NULL, 0, 0);
+        emit(getLabel(), RET, 0, 0);
+    }
+    auto temp = getCurrentTsk()->getCompileResult();
+    temp->isNative = tmp->isNative;
+    env->tasks.pop_back();
+    env->cs.leaveScope();
+    return temp;
+}
+
+MType* Compiler::visitFunction(AST* a, bool autoend) {
     auto tmp = (Func*) a;
     createTask(tmp->name);
     getCurrentTsk()->fnRetTp = ((FunctionType*)conver->getType(tmp->ftype))->retType;
@@ -279,7 +294,7 @@ MType* Compiler::visitFunction(AST* a) {
         visitBlock(tmp->body, "", "");
     }
     auto t = conver->getType(tmp->ftype);
-    endTask(tmp->isNative);
+    if (autoend) endTask(tmp->isNative);
     return t;
 }
 
@@ -366,7 +381,7 @@ MType* Compiler::visitAssign(AST* a) {
 
 MType* Compiler::visitStmt(AST* a, std::string begin, std::string end) {
     if (a->kind == AST::AST_FUNC_DEF)
-        return visitFunction(a);
+        return visitFunction(a, true);
     if (a->kind == AST::AST_VAR_DEF_GRP) {
         visitVarDefineGrp(a);
         return nullptr;
@@ -514,16 +529,86 @@ MType* Compiler::visitSwitch(AST* a) {
 }
 
 MType* Compiler::visitInterface(AST* a) {
-
+    Interface* i = (Interface*)a;
+    std::unordered_map<std::string, FunctionSymbol*> funcs;
+    for (auto j : i->funcs) {
+        auto temp = (Interface::FunctionTag*) j;
+        funcs[temp->name] = new FunctionSymbol(
+            temp->name,
+            (FunctionType*)conver->getType(temp->funcType)
+        );
+    }
+    auto tmp = new InterfaceSymbol(i->name, funcs);
+    tmp->interfaceId = env->interfaceCnt++;
+    env->cs.registSymbolGbl(i->name, tmp);
+    return nullptr;
 }
 
 MType* Compiler::visitClass(AST* a) {
-
+    auto cls = (Class*) a;
+    auto tmp = new ObjClass(cls->name);
+    ClassSymbol* sym = nullptr;
+    ClassSymbol* super = getClassInfo(cls->name);
+    std::vector<InterfaceSymbol*> impls;
+    int clsId = env->classCnt++;
+    for (auto i: cls->impls)
+        impls.push_back(getInterface(i));
+    std::vector<std::string> fields;
+    std::unordered_map<std::string, MicaValue> funcs;
+    std::unordered_map<std::string, MType*> members;
+    for (auto i: cls->methods) {
+        if (i->kind == AST::AST_VAR_DEF_GRP) {
+            auto vdg = (VarDefGrp*)i;
+            for (auto j: vdg->vars) {
+                auto t1 = (VarDef*)j;
+                fields.push_back(t1->name);
+                members[t1->name] = conver->getType(t1->type);
+            }
+        } else if (i->kind == AST::AST_VAR_DEF) {
+            fields.push_back(((VarDef*)i)->name);
+            members[((VarDef*)i)->name] = conver->getType(((VarDef*)i)->type);
+        } else if (i->kind == AST::AST_FUNC_DEF) {
+            auto fn = (Func*) i;
+            members[fn->name] = conver->getType(fn->ftype);
+            funcs[fn->name] = MicaValue::Object(makeFunction(fn));
+        } else {
+            std::cout << "ERROR: unknown tree '" << i->kind << "'\n";
+            exit(-1);
+        }
+    }
+    tmp->fields = fields;
+    tmp->methods = funcs;
+    tmp->super = getClassObject(cls->name);
+    pushConstG(MicaValue::Object(tmp));
+    env->cs.registSymbolGbl(cls->name,
+                            new ClassSymbol(
+                                    cls->name,
+                                    super,
+                                    impls,
+                                    env->moduleName,
+                                    env->classCnt++,
+                                    members
+                                    ));
+    return nullptr;
 }
 
 MType* Compiler::visitNewClass(AST* a, MType* expect) {
     auto tmp = (NewClass*) a;
-
+    int pos = -1;
+    for (int i = 0; i < env->globalConstPool.size(); ++i) {
+        auto k = env->globalConstPool[i];
+        if (k.kind == MicaValue::OBJ && k.obj->tp == Obj::USER_DEFING_CLASS && ((ObjClass*)k.obj)->name == tmp->className) {
+            pos = i;
+            break;
+        }
+    }
+    if (pos == -1) {
+        std::cout << "ERROR: class '" << tmp->className << "' not found \n";
+        exit(-1);
+    }
+    emit(getLabel(), LOAD_GCST, pos, 0);
+    emit(getLabel(), NEW, 0, 0);
+    return new TNormalType(env->cs.lookup(tmp->className));
 }
 
 MType* Compiler::visitArray(AST* a, MType* type) {
@@ -710,12 +795,21 @@ MType *Compiler::visitBlock(AST *a, std::string begin, std::string end) {
     return nullptr;
 }
 
-void Compiler::storeArray(std::vector<AST*>) {
-
+void Compiler::storeArray(std::vector<AST*> array) {
+    emit(getLabel(), NEW_ARR, array.size(), 0);
+    for (int i=0; i<array.size(); ++i) {
+        emit(getLabel(), DUP, 0, 0);
+        visitValue(array[i], nullptr);
+        emit(getLabel(), IMM, i, 0);
+        emit(getLabel(), EL_SET, 0, 0);
+    }
 }
 
-void Compiler::storeString(std::string) {
-
+void Compiler::storeString(std::string str) {
+    std::vector<AST*> carray;
+    for (auto i: str)
+        carray.push_back(new Char(i, {}, {}));
+    storeArray(carray);
 }
 
 void Compiler::visitContinue(AST *a, std::string begin, std::string end) {
@@ -724,6 +818,44 @@ void Compiler::visitContinue(AST *a, std::string begin, std::string end) {
 
 void Compiler::visitBreak(AST *a, std::string begin, std::string end) {
     emit(getLabel(), JMP, end, 0);
+}
+
+int Compiler::getClassId(std::string name) {
+    for (int i = 0; i < env->globalConstPool.size(); ++i) {
+        auto tmp = env->globalConstPool[i];
+        if (tmp.kind == MicaValue::OBJ && tmp.obj->tp == Obj::USER_DEFING_CLASS && ((ObjClass*)tmp.obj)->name == name)
+            return i;
+    }
+    return -1;
+}
+
+ObjClass *Compiler::getClassObject(std::string name) {
+    for (int i = 0; i < env->globalConstPool.size(); ++i) {
+        auto tmp = env->globalConstPool[i];
+        if (tmp.kind == MicaValue::OBJ && tmp.obj->tp == Obj::USER_DEFING_CLASS && ((ObjClass*)tmp.obj)->name == name)
+            return (ObjClass*)tmp.obj;
+    }
+    return nullptr;
+}
+
+ClassSymbol *Compiler::getClassInfo(std::string name) {
+    auto cls = env->cs.lookup(name);
+    if (cls->kind != Symbol::SYM_CLASS) return nullptr;
+    if (((ClassSymbol*)cls)->name != name) return nullptr;
+    return (ClassSymbol*)cls;
+}
+
+InterfaceSymbol *Compiler::getInterface(std::string name) {
+    auto cls = env->cs.lookup(name);
+    if (cls->kind != Symbol::SYM_INTERFACE) return nullptr;
+    if (((InterfaceSymbol*)cls)->name != name) return nullptr;
+    return (InterfaceSymbol*)cls;
+}
+
+int Compiler::getInterfaceId(std::string name) {
+    auto tmp = getInterface(name);
+    if (!tmp) return -1;
+    return tmp->interfaceId;
 }
 
 int CompileEnvironment::addFunctionValue(Function *f) {

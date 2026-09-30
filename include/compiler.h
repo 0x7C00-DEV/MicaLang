@@ -46,6 +46,8 @@ struct CurrentCompileTask {
 };
 
 struct CompileEnvironment {
+    std::string moduleName;
+    int classCnt=0, interfaceCnt=0;
     CodeStruct cs;
     std::vector<MicaValue> globalConstPool;
     std::vector<CurrentCompileTask*> tasks;
@@ -94,6 +96,14 @@ private:
     void loadConstG(int);
     std::string getLabel();
 
+    ClassSymbol* getClassInfo(std::string);
+    ObjClass* getClassObject(std::string);
+    int getClassId(std::string);
+
+    InterfaceSymbol* getInterface(std::string);
+    int getInterfaceId(std::string);
+
+    Function* makeFunction(AST*);
     MType* visitBlock(AST*, std::string, std::string);
     MType* visitBinOpNode(AST*, MType*);
     MType* visitCallNode(AST*, MType*);
@@ -101,7 +111,7 @@ private:
     MType* visitMemberAccess(AST*, MType*);
     void visitVarDefineGrp(AST*);
     Vresult visitVarDefine(AST*);
-    MType* visitFunction(AST*);
+    MType* visitFunction(AST*, bool);
     MType* visitValue(AST*, MType*);
     MType* visitAssign(AST*);
     MType* visitStmt(AST*, std::string, std::string);

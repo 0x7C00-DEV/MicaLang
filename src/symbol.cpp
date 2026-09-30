@@ -22,6 +22,7 @@ bool MType::operator!=(MType *other) {
     return !this->operator==(other);
 }
 
+
 FunctionType::FunctionType(MType* retType,
                            std::vector<MType*> argsType)
         : MType(BT_FUNC) {
@@ -103,6 +104,10 @@ FunctionSymbol::FunctionSymbol(std::string name, FunctionType* type)
     this->type = type;
 }
 
+std::string FunctionSymbol::getString() {
+    return std::string();
+}
+
 VarSymbol::VarSymbol(std::string name, MType* type, bool isInit, VarKind vkind)
         : Symbol(SYM_VAR) {
     this->name = name;
@@ -173,10 +178,17 @@ Symbol* Scope::lookupLocalVar(std::string name) {
     return parent->lookupLocalVar(name);
 }
 
-bool CodeStruct::registSymbol(std::string symbol, Symbol *value) {
+bool CodeStruct::registSymbolSub(std::string symbol, Symbol *value) {
     if (isExist(symbol)) return false;
     current->symbols[symbol] = value;
     return true;
+}
+
+bool CodeStruct::registSymbolGbl(std::string name, Symbol* value) {
+    auto tmp = getGlobalScope();
+    if (tmp->symbolIsExist(name)) return false;
+    tmp->symbols[name] = value;
+    return false;
 }
 
 bool CodeStruct::isExist(std::string name) {
@@ -202,6 +214,14 @@ Scope* CodeStruct::leaveScope() {
 
 CodeStruct::CodeStruct() {
     createScope(Scope::SGLOBAL);
+}
+
+
+
+Scope *CodeStruct::getGlobalScope() {
+    Scope* c = current;
+    while (c->parent) c = c->parent;
+    return c;
 }
 
 InterfaceSymbol::InterfaceSymbol(std::string name, std::unordered_map<std::string, FunctionSymbol *> labels) : Symbol(SYM_INTERFACE){
