@@ -188,7 +188,7 @@ bool CodeStruct::registSymbolGbl(std::string name, Symbol* value) {
     auto tmp = getGlobalScope();
     if (tmp->symbolIsExist(name)) return false;
     tmp->symbols[name] = value;
-    return false;
+    return true;
 }
 
 bool CodeStruct::isExist(std::string name) {

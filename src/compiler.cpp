@@ -626,12 +626,10 @@ MType* Compiler::visitArray(AST* a, MType* type) {
     }
     for (int i = 0; i < n; ++i) {
         emit(getLabel(), DUP, 0, 0);
-        loadConstS(pushConstL(MicaValue::Int(i)));
         MType* it = visitValue(tmp->elements[i], elemType);
+        loadConstS(pushConstL(MicaValue::Int(i)));
         if (!elemType) elemType = it;
-        else if (elemType->__str__() != it->__str__())
-            std::cout << "WARN: element type mismatch: "
-                      << it->__str__() << " vs " << elemType->__str__() << "\n";
+        else if (elemType->__str__() != it->__str__()) std::cout << "WARN: element type mismatch: " << it->__str__() << " vs " << elemType->__str__() << "\n";
         emit(getLabel(), EL_SET, 0, 0);
     }
     return new TArrayType(elemType, n);
