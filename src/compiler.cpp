@@ -546,7 +546,7 @@ MType* Compiler::visitInterface(AST* a) {
 
 MType* Compiler::visitClass(AST* a) {
     auto cls = (Class*) a;
-    auto tmp = new ObjClass(cls->name);
+    auto tmp = new ObjClass(cls->extend);
     ClassSymbol* sym = nullptr;
     ClassSymbol* super = getClassInfo(cls->name);
     std::vector<InterfaceSymbol*> impls;
@@ -586,7 +586,7 @@ MType* Compiler::visitClass(AST* a) {
                                     super,
                                     impls,
                                     env->moduleName,
-                                    env->classCnt++,
+                                    clsId,
                                     members
                                     ));
     return nullptr;
@@ -796,7 +796,8 @@ MType *Compiler::visitBlock(AST *a, std::string begin, std::string end) {
 }
 
 void Compiler::storeArray(std::vector<AST*> array) {
-    emit(getLabel(), NEW_ARR, array.size(), 0);
+    loadConstS(pushConstL(MicaValue::Int(array.size())));
+    emit(getLabel(), NEW_ARR, 0, 0);
     for (int i=0; i<array.size(); ++i) {
         emit(getLabel(), DUP, 0, 0);
         visitValue(array[i], nullptr);
