@@ -304,13 +304,19 @@ Function* Compiler::makeFunction(AST* a) {
 MType* Compiler::visitFunction(AST* a, bool autoend) {
     auto tmp = (Func*) a;
     createTask(tmp->name);
-    getCurrentTsk()->fnRetTp = ((FunctionType*)conver->getType(tmp->ftype))->retType;
+    auto ftp = (FunctionType*)conver->getType(tmp->ftype);
+    getCurrentTsk()->fnRetTp = ftp->retType;
+
+    if (autoend && !env->cs.lookup(tmp->name))
+        env->cs.registSymbolGbl(tmp->name,
+                                new FunctionSymbol(tmp->name, ftp));
+
     if (!tmp->isNative) {
         for (int i = 0; i < tmp->args.size(); ++i)
-            Vresult vid = visitVarDefine(tmp->args[i], false);
+            visitVarDefine(tmp->args[i], false);
         visitBlock(tmp->body, "", "");
     }
-    auto t = conver->getType(tmp->ftype);
+    auto t = ftp;
     if (autoend) endTask(tmp->isNative);
     return t;
 }
@@ -730,13 +736,34 @@ std::string Compiler::getLabel() {
 }
 
 void Compiler::endTask(bool isNative) {
-    if ( !isNative && (getCurrentTsk()->ins.empty() || getCurrentTsk()->ins.back().a.opera != RET)) {
+    if (!isNative && (getCurrentTsk()->ins.empty() ||
+                      getCurrentTsk()->ins.back().a.opera != RET)) {
         emit(getLabel(), LOAD_NULL, 0, 0);
         emit(getLabel(), RET, 0, 0);
     }
-    auto tmp = getCurrentTsk()->getCompileResult();
-    tmp->isNative = isNative;
-    env->addFunctionValue(tmp);
+
+    auto compiled = getCurrentTsk()->getCompileResult();
+    compiled->isNative = isNative;
+    bool filled = false;
+    std::string name = getCurrentTsk()->funcName;
+    auto sym = env->cs.lookup(name);
+    if (sym && sym->kind == Symbol::SYM_FUNC) {
+        auto fsym = (FunctionSymbol*)sym;
+        if (fsym->constPoolIdx >= 0 &&
+            fsym->constPoolIdx < (int)env->globalConstPool.size()) {
+            auto& slot = env->globalConstPool[fsym->constPoolIdx];
+            if (slot.kind == MicaValue::OBJ && slot.obj->tp == Obj::FUNCTION) {
+                auto f = (Function*)slot.obj;
+                f->ins       = compiled->ins;
+                f->constants = compiled->constants;
+                f->isNative  = isNative;
+                filled = true;
+            }
+        }
+    }
+    if (!filled)
+        env->addFunctionValue(compiled);
+
     env->tasks.pop_back();
     env->cs.leaveScope();
 }
@@ -764,30 +791,47 @@ MType *Compiler::visitId(AST *a) {
         std::cout << "ERROR: id '" << name << "' is not found.\n";
         exit(-1);
     }
+
     if (info->kind == Symbol::SYM_VAR) {
-        int oper = (((VarSymbol*)info)->vkind == VarSymbol::Global)? LOAD_GVAR : LOAD_SVAR;
+        int oper = (((VarSymbol*)info)->vkind == VarSymbol::Global)
+                   ? LOAD_GVAR : LOAD_SVAR;
         emit(getLabel(), oper, ((VarSymbol*)info)->id, 0);
         return ((VarSymbol*)info)->type;
-    } else if (info->kind == Symbol::SYM_FUNC) {
-        for (int i = 0; i < env->globalConstPool.size(); ++i) {
-            if (env->globalConstPool[i].kind == MicaValue::OBJ && env->globalConstPool[i].obj->tp == Obj::FUNCTION && ((Function*)env->globalConstPool[i].obj)->name == name) {
-                emit(getLabel(), LOAD_GCST, i, 0);
-                return ((FunctionSymbol*)info)->type;
-            }
+    }
+
+    if (info->kind == Symbol::SYM_FUNC) {
+        auto fsym = (FunctionSymbol*)info;
+        if (fsym->constPoolIdx < 0) {
+            auto placeholder = new Function;
+            placeholder->name = name;
+            fsym->constPoolIdx = env->addFunctionValue(placeholder);
         }
-        return nullptr;
-    } else if (info->kind == Symbol::SYM_MODULE) {
+
+        emit(getLabel(), LOAD_GCST, fsym->constPoolIdx, 0);
+        return fsym->type;
+    }
+
+    if (info->kind == Symbol::SYM_MODULE) {
         std::cout << "ERROR in visitId, member not suppose\n";
         exit(-1);
-    } else if (info->kind == Symbol::SYM_CLASS) {
-        for (int i = 0; i < env->globalConstPool.size(); ++i) {
-            if (env->globalConstPool[i].kind == MicaValue::OBJ && env->globalConstPool[i].obj->tp == Obj::USER_DEFING_CLASS && ((ObjClass*)env->globalConstPool[i].obj)->name == name) {
+    }
+
+    if (info->kind == Symbol::SYM_CLASS) {
+        for (int i = 0; i < (int)env->globalConstPool.size(); ++i) {
+            auto& k = env->globalConstPool[i];
+            if (k.kind == MicaValue::OBJ &&
+                k.obj->tp == Obj::USER_DEFING_CLASS &&
+                ((ObjClass*)k.obj)->name == name) {
                 emit(getLabel(), LOAD_GCST, i, 0);
                 return new ClassType(name, info);
             }
         }
+        std::cout << "ERROR: class '" << name
+                  << "' not found in globalConstPool\n";
+        exit(-1);
     }
-    std::cout << "ERROR: kind '" << info->kind << "' " << "not suppose\n";
+
+    std::cout << "ERROR: kind '" << info->kind << "' not suppose\n";
     return nullptr;
 }
 

@@ -17,6 +17,11 @@ Function* VM::lookFunction(std::string name) {
 
 VM::VM(Module* module) {
     initVec();
+    start(module);
+}
+
+void VM::start(Module * module)
+{
     env.modules.push_back(module);
     env.mainModule = module;
 
@@ -129,6 +134,10 @@ void VM::setSubVar(int address) {
     if (address >= env.getCTask()->localVar.size())
         env.getCTask()->localVar.resize(address+12);
     env.getCTask()->localVar[address] = val;
+}
+
+VM::VM() {
+    initVec();
 }
 
 VM::VM(std::string moduleName) {

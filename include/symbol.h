@@ -77,7 +77,7 @@ struct Symbol {
 struct FunctionSymbol : Symbol {
     std::string name;
     FunctionType* type;
-
+    int constPoolIdx = -1;
     FunctionSymbol(std::string name, FunctionType* type);
     std::string getString();
 };

@@ -1,9 +1,13 @@
-let g:[int] = [1,2,3];
+let g:[int]=[0,0,0,0,0,0];
+
+fn fib(x: int): int {
+    if (x == 1 || x == 0) 
+        return 1;
+    return fib(x-1)+fib(x-2);
+}
 
 fn main(): int {
-    let j:int=0;
-    for (i:int=0; i<2; ++i) {
-        ++g[i];
-    }
+    for (let i:int=0; i<6; ++i)
+        g[i] = fib(i);
     return 0;
 }

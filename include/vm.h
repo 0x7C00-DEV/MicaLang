@@ -16,8 +16,11 @@ using BOP = MicaValue (VM::*) (MicaValue, MicaValue);
 
 class VM {
 public:
+    VM();
     VM(std::string);
     VM(Module*);
+    void addNativeFunction(Function*);
+    void start(Module*);
     void start0(std::string);
     void start0(std::string, std::string, std::vector<MicaValue>);
     void initModule(Module*);
