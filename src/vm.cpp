@@ -20,14 +20,22 @@ VM::VM(Module* module) {
     start(module);
 }
 
-void VM::start(Module * module)
-{
+void VM::start(Module* module) {
     env.modules.push_back(module);
     env.mainModule = module;
 
-    for (auto i : module->globalConstPool)
-        if (i.kind == MicaValue::OBJ && i.obj->tp == Obj::FUNCTION)
+    for (auto& i : module->globalConstPool) {
+        if (i.kind != MicaValue::OBJ) continue;
+
+        if (i.obj->tp == Obj::FUNCTION) {
             ((Function*)i.obj)->module = module;
+        } else if (i.obj->tp == Obj::USER_DEFING_CLASS) {
+            auto cls = (ObjClass*)i.obj;
+            for (auto& [name, mv] : cls->methods)
+                if (mv.kind == MicaValue::OBJ && mv.obj->tp == Obj::FUNCTION)
+                    ((Function*)mv.obj)->module = module;
+        }
+    }
 
     if (!module->isReady)
         initModule(module);
@@ -285,7 +293,7 @@ void VM::call(int a, int b) {
         exit(-1);
     }
     if ((tmp.obj)->tp != Obj::FUNCTION) {
-        std::cout << "Not a function.\n";
+        std::cout << (tmp.obj)->tp << " not a function.\n";
         exit(-1);
     }
     auto fn = (Function*) tmp.obj;
@@ -380,7 +388,8 @@ void VM::dup(int a, int b) {
 void VM::memGet(int a, int b) {
     std::string fieldName;
     auto fieName = pop();
-    for (auto i : ((ObjArray*)fieName.obj)->elements)
+    auto arr = (ObjArray*)(((ObjInstance*)fieName.obj)->cls);
+    for (auto i : arr->elements)
         fieldName += i.c;
     auto obj = pop();
     push(((ObjInstance*)obj.obj)->getField(fieldName));
@@ -389,7 +398,8 @@ void VM::memGet(int a, int b) {
 void VM::memSet(int a, int b) {
     std::string fieldName;
     auto fieName = pop();
-    for (auto i : ((ObjArray*)fieName.obj)->elements)
+    auto arr = (ObjArray*)(((ObjInstance*)fieName.obj)->cls);
+    for (auto i : arr->elements)
         fieldName += i.c;
     auto value = pop();
     auto obj = pop();

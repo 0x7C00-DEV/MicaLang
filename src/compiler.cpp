@@ -203,19 +203,19 @@ MType* Compiler::visitBinOpNode(AST* a, MType* expect) {
     if (tl == "double;" || tr == "double;")
         return new BaseType(BaseType::MDOUBLE);
     return left;
-} 
+}
 
 MType* Compiler::visitCallNode(AST* a, MType* expect) {
     auto tmp = (Call*) a;
-    std::vector<std::string> argsType;
-    std::vector<std::string> paramType;
     FunctionType* tp = (FunctionType*)visitValue(tmp->fnid, expect);
-    if (tmp->fnid->kind == AST::AST_MEMBER_ACCESS) // 对于className.funcName(args)这种的call需要先加载'self'参数
+    int argc = (int)tmp->args.size();
+    if (tmp->fnid->kind == AST::AST_MEMBER_ACCESS) {
         visitValue(((MemberAccess*)tmp->fnid)->parent, nullptr);
-    for (auto i : tp->argsType) argsType.push_back(i->__str__());
-    for (auto i : tmp->args) 
-        paramType.push_back(visitValue(i, expect)->__str__());
-    emit(getLabel(), CALL, (int)tmp->args.size(), 0);
+        argc += 1;
+    }
+    for (auto i : tmp->args)
+        visitValue(i, expect);
+    emit(getLabel(), CALL, argc, 0);
     return tp->retType;
 }
 
@@ -588,71 +588,60 @@ MType* Compiler::visitInterface(AST* a) {
 MType* Compiler::visitClass(AST* a) {
     auto cls = (Class*) a;
     auto tmp = new ObjClass(cls->name);
-    ClassSymbol* sym = nullptr;
     ClassSymbol* super = getClassInfo(cls->extend);
     std::vector<InterfaceSymbol*> impls;
     int clsId = env->classCnt++;
-    for (auto i: cls->impls)
+    for (auto i : cls->impls)
         impls.push_back(getInterface(i));
+
+    auto sym = new ClassSymbol(cls->name, super, impls,
+                               env->moduleName, clsId, {});
+    env->cs.registSymbolGbl(cls->name, sym);
+
     std::vector<std::string> fields;
+    for (auto i : cls->fields) {
+        if (i->kind == AST::AST_VAR_DEF) {
+            auto vd = (VarDef*)i;
+            fields.push_back(vd->name);
+            sym->members[vd->name] = conver->getType(vd->type);
+        } else if (i->kind == AST::AST_VAR_DEF_GRP) {
+            for (auto j : ((VarDefGrp*)i)->vars) {
+                auto vd = (VarDef*)j;
+                fields.push_back(vd->name);
+                sym->members[vd->name] = conver->getType(vd->type);
+            }
+        }
+    }
+
+    for (auto i : cls->methods) {
+        if (i->kind == AST::AST_FUNC_DEF) {
+            auto fn = (Func*)i;
+            sym->members[fn->name] = conver->getType(fn->ftype);
+        }
+    }
+
     std::unordered_map<std::string, MicaValue> funcs;
-    std::unordered_map<std::string, MType*> members;
-    for (auto i: cls->methods) {
-        if (i->kind == AST::AST_VAR_DEF_GRP) {
-            auto vdg = (VarDefGrp*)i;
-            for (auto j: vdg->vars) {
-                auto t1 = (VarDef*)j;
-                members[t1->name] = conver->getType(t1->type);
-            }
-        } else if (i->kind == AST::AST_VAR_DEF) {
-            members[((VarDef*)i)->name] = conver->getType(((VarDef*)i)->type);
-        } else if (i->kind == AST::AST_FUNC_DEF) {
-            auto fn = (Func*) i;
-            members[fn->name] = conver->getType(fn->ftype);
-        } else {
-            std::cout << "ERROR: unknown tree '" << i->kind << "'\n";
-            exit(-1);
-        }
-    }
-    env->cs.registSymbolGbl(cls->name, new ClassSymbol(
-            cls->name,
-            super,
-            impls,
-            env->moduleName,
-            clsId,
-            members
-    ));
-    for (auto i: cls->methods) {
-        if (i->kind == AST::AST_VAR_DEF_GRP) {
-            auto vdg = (VarDefGrp*)i;
-            for (auto j: vdg->vars) {
-                auto t1 = (VarDef*)j;
-                fields.push_back(t1->name);
-            }
-        } else if (i->kind == AST::AST_VAR_DEF) {
-            fields.push_back(((VarDef*)i)->name);
-        } else if (i->kind == AST::AST_FUNC_DEF) {
-            auto fn = (Func*) i;
+    for (auto i : cls->methods) {
+        if (i->kind == AST::AST_FUNC_DEF) {
+            auto fn = (Func*)i;
             funcs[fn->name] = MicaValue::Object(makeFunction(fn));
-        } else {
-            std::cout << "ERROR: unknown tree '" << i->kind << "'\n";
-            exit(-1);
         }
     }
+
     tmp->fields = fields;
     tmp->methods = funcs;
     tmp->super = getClassObject(cls->extend);
     pushConstG(MicaValue::Object(tmp));
-
     return nullptr;
 }
 
 MType* Compiler::visitNewClass(AST* a, MType* expect) {
     auto tmp = (NewClass*) a;
     int pos = -1;
-    for (int i = 0; i < env->globalConstPool.size(); ++i) {
+    for (int i = 0; i < (int)env->globalConstPool.size(); ++i) {
         auto k = env->globalConstPool[i];
-        if (k.kind == MicaValue::OBJ && k.obj->tp == Obj::USER_DEFING_CLASS && ((ObjClass*)k.obj)->name == tmp->className) {
+        if (k.kind == MicaValue::OBJ && k.obj->tp == Obj::USER_DEFING_CLASS &&
+            ((ObjClass*)k.obj)->name == tmp->className) {
             pos = i;
             break;
         }
@@ -661,8 +650,18 @@ MType* Compiler::visitNewClass(AST* a, MType* expect) {
         std::cout << "ERROR: class '" << tmp->className << "' not found \n";
         exit(-1);
     }
-    emit(getLabel(), LOAD_GCST, pos, 0);
-    emit(getLabel(), NEW, 0, 0);
+    emit(getLabel(), LOAD_GCST, pos, 0);   // [class]
+    emit(getLabel(), NEW, 0, 0);           // [obj]
+    if (!tmp->initArgs.empty()) {
+        emit(getLabel(), DUP, 0, 0);       // [obj, obj]
+        storeString("__init__");           // [obj, obj, strArr]
+        emit(getLabel(), MEM_GET, 0, 0);   // [obj, fn]
+        emit(getLabel(), DUP, 1, 0);       // [obj, fn, obj]
+        for (auto i : tmp->initArgs)
+            visitValue(i, nullptr);        // [obj, fn, obj, args...]
+        emit(getLabel(), CALL, (int)tmp->initArgs.size() + 1, 0);  // [obj]
+        emit(getLabel(), POP, 0, 0);
+    }
     return new TNormalType(env->cs.lookup(tmp->className));
 }
 
@@ -938,14 +937,18 @@ ObjClass *Compiler::getClassObject(std::string name) {
 }
 
 ClassSymbol *Compiler::getClassInfo(std::string name) {
+    if (name.empty()) return nullptr;
     auto cls = env->cs.lookup(name);
+    if (!cls) return nullptr;
     if (cls->kind != Symbol::SYM_CLASS) return nullptr;
     if (((ClassSymbol*)cls)->name != name) return nullptr;
     return (ClassSymbol*)cls;
 }
 
 InterfaceSymbol *Compiler::getInterface(std::string name) {
+    if (name.empty()) return nullptr;
     auto cls = env->cs.lookup(name);
+    if (!cls) return nullptr;
     if (cls->kind != Symbol::SYM_INTERFACE) return nullptr;
     if (((InterfaceSymbol*)cls)->name != name) return nullptr;
     return (InterfaceSymbol*)cls;
@@ -961,6 +964,7 @@ Module* Compiler::getProgram(std::string text, std::string fileName) {
     std::vector<Register> tmp = parser.parseCode(text, fileName);
     for (auto i : tmp)
         if (!i.isSuc) std::cout << i.error << std::endl;
+
     std::vector<AST*> Class, globalVar, Fn, Itf, Import;
     for (auto i: tmp) {
         if (i.result->kind == AST::AST_CLASS) Class.push_back(i.result);
@@ -972,9 +976,18 @@ Module* Compiler::getProgram(std::string text, std::string fileName) {
 
     for (auto i : globalVar) declareGlobalVars(i);
 
+    for (auto i : Fn) {
+        auto fn = (Func*)i;
+        if (!env->cs.lookup(fn->name)) {
+            auto ftp = (FunctionType*)conver->getType(fn->ftype);
+            env->cs.registSymbolGbl(fn->name,
+                                    new FunctionSymbol(fn->name, ftp));
+        }
+    }
+
     for (auto i : Class) visitClass(i);
-    for (auto i : Fn) visitFunction(i, true);
-    for (auto i : Itf) visitInterface(i);
+    for (auto i : Fn)    visitFunction(i, true);
+    for (auto i : Itf)   visitInterface(i);
 
     createTask("@init");
     for (auto i : Import) visitModuleImport(i);

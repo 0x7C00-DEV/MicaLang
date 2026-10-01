@@ -74,7 +74,7 @@ TArrayType::TArrayType(MType* elementType, int size)
 
 std::string TArrayType::__str__() {
     // [elementType; size];
-    return "[" + elementType->__str__() + std::to_string(size) + "];";
+    return "[" + elementType->__str__() + "];";
 }
 
 TTemplateType::TTemplateType(MType* rootType, std::vector<MType*> vars)
@@ -215,8 +215,6 @@ Scope* CodeStruct::leaveScope() {
 CodeStruct::CodeStruct() {
     createScope(Scope::SGLOBAL);
 }
-
-
 
 Scope *CodeStruct::getGlobalScope() {
     Scope* c = current;

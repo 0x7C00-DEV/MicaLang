@@ -6,8 +6,20 @@ fn fib(x: int): int {
     return fib(x-1)+fib(x-2);
 }
 
+class Test {
+    x: int;
+    fn __init__(self: Test, x: int): void {
+        self.x = fib(x);
+    }
+
+    fn getX(self: Test): int {
+        return self.x;
+    }
+}
+
 fn main(): int {
-    for (let i:int=0; i<6; ++i)
-        g[i] = fib(i);
+    let tmp: Test = new Test(6);
+    g[0] = tmp.x;
+    g[1] = tmp.getX();
     return 0;
 }
