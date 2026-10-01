@@ -27,7 +27,7 @@ struct MicaValue {
         char c;
         Obj* obj;
     };
-    enum MTP{ INT, FLOAT, BOOL, OBJ, NUL, CHAR } kind;
+    enum MTP{ INT, FLOAT, MBOOL, OBJ, NUL, CHAR } kind;
 
     MicaValue(MTP k): i(0) { kind = k; }
 
@@ -35,7 +35,7 @@ struct MicaValue {
 
     static MicaValue Int(int64_t x)  { MicaValue r{INT}; r.i = x;  r.kind = INT;   return r; }
     static MicaValue Float(double x) { MicaValue r{FLOAT}; r.f = x;  r.kind = FLOAT; return r; }
-    static MicaValue Bool(bool x)    { MicaValue r{BOOL}; r.b = x;  r.kind = BOOL;  return r; }
+    static MicaValue Bool(bool x)    { MicaValue r{MBOOL}; r.b = x;  r.kind = MBOOL;  return r; }
     static MicaValue Null()          { MicaValue r{NUL}; r.i = 0;  r.kind = NUL;   return r; }
     static MicaValue Char(char x)    { MicaValue r{CHAR}; r.c = x;  r.kind = CHAR;   return r; }
     static MicaValue Object(Obj* x)  { MicaValue r{OBJ}; r.obj = x; r.kind = OBJ;  return r; }

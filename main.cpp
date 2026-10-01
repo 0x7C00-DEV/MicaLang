@@ -3,6 +3,7 @@
 #include "include/lexer.h"
 #include "include/makeError.h"
 #include "include/symbol.h"
+#include "include/dis.h"
 #include "include/parser.h"
 #include "include/asm.h"
 #include "include/vm.h"
@@ -35,17 +36,19 @@ void shell() {
 }
 
 void testFile() {
-    Parser p;
-    std::vector<Register> codes = p.parseCode(loadFile(R"(../test/main.mic)"), R"(../test/main.mic)");
-    for (auto i : codes){
-        if (!i.isSuc) {
-            makeError(i);
-        } else 
-            showAST(i.result, 0, "", "\n");
-    }
+    std::string file = R"(C:\Users\Lenovo\Desktop\MicaLang\test\example.mica)";
+    CompileEnvironment* ce = new CompileEnvironment;
+    Compiler compiler(ce);
+    Module* mod = compiler.getProgram(loadFile(file), file);
+    Dis dis(mod);
+    dis.disAll();
+    printf("START_RUNNING:\n");
+    VM vm(mod);
+    printf("END.\nVARS:");
+    vm.dumpGlobalVars();
 }
 
 int main() {
-    shell();
+    testFile();
     return 0;
 }

@@ -224,6 +224,30 @@ src/debug.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/debug.cpp.s
 .PHONY : src/debug.cpp.s
 
+src/dis.obj: src/dis.cpp.obj
+.PHONY : src/dis.obj
+
+# target to build an object file
+src/dis.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/dis.cpp.obj
+.PHONY : src/dis.cpp.obj
+
+src/dis.i: src/dis.cpp.i
+.PHONY : src/dis.i
+
+# target to preprocess a source file
+src/dis.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/dis.cpp.i
+.PHONY : src/dis.cpp.i
+
+src/dis.s: src/dis.cpp.s
+.PHONY : src/dis.s
+
+# target to generate assembly for a file
+src/dis.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/dis.cpp.s
+.PHONY : src/dis.cpp.s
+
 src/lexer.obj: src/lexer.cpp.obj
 .PHONY : src/lexer.obj
 
@@ -461,6 +485,9 @@ help:
 	@echo ... src/debug.obj
 	@echo ... src/debug.i
 	@echo ... src/debug.s
+	@echo ... src/dis.obj
+	@echo ... src/dis.i
+	@echo ... src/dis.s
 	@echo ... src/lexer.obj
 	@echo ... src/lexer.i
 	@echo ... src/lexer.s

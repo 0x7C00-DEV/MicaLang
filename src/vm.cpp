@@ -15,26 +15,33 @@ Function* VM::lookFunction(std::string name) {
     return nullptr;
 }
 
-VM::VM(Module* module, std::string func, std::vector<MicaValue> args) {
+VM::VM(Module* module) {
     initVec();
     env.modules.push_back(module);
     env.mainModule = module;
+
     for (auto i : module->globalConstPool)
         if (i.kind == MicaValue::OBJ && i.obj->tp == Obj::FUNCTION)
             ((Function*)i.obj)->module = module;
-    auto tmp = lookFunction(func);
-    if (!tmp) {
-        std::cout << "Function not found in module '" << module->moduleName << "'\n";
+
+    if (!module->isReady)
+        initModule(module);
+
+    auto mainFn = lookFunction("main");
+    if (!mainFn) {
+        std::cout << "Function 'main' not found in module '"
+                  << module->moduleName << "'\n";
         exit(-1);
     }
     int base = env.callChain.size();
-    callFunction(tmp, args);
+    callFunction(mainFn, {});
     executeLoop(base);
 }
 
 void VM::executeLoop(int base) {
-    while (env.callChain.size() > base)
+    while (env.callChain.size() > base) {
         execute(env.getCTask()->getInstr());
+    }
 }
 
 void VM::initModule(Module* module) {
@@ -241,7 +248,7 @@ void VM::jmp(int a, int b) {
 
 void VM::jmpf(int a, int b) {
     auto v = pop();
-    if (v.kind != MicaValue::BOOL) {
+    if (v.kind != MicaValue::MBOOL) {
         std::cerr << "Not a bool value.\n";
         exit(-1);
     }
@@ -250,7 +257,7 @@ void VM::jmpf(int a, int b) {
 
 void VM::jmpt(int a, int b) {
     auto v = pop();
-    if (v.kind != MicaValue::BOOL) {
+    if (v.kind != MicaValue::MBOOL) {
         std::cerr << "Not a bool value.\n";
         exit(-1);
     }
@@ -310,7 +317,7 @@ void VM::pop_(int a, int b) {
 
 void VM::bnot(int a, int b) {
     auto tmp = pop();
-    if (tmp.kind != MicaValue::BOOL) {
+    if (tmp.kind != MicaValue::MBOOL) {
         std::cout << "Not a boolean\n";
         exit(-1);
     }
@@ -526,7 +533,7 @@ MicaValue VM::BEQ__(MicaValue left, MicaValue right) {
         (right.kind == MicaValue::INT || right.kind == MicaValue::FLOAT)) {
         return MicaValue::Bool(asDouble(left) == asDouble(right));
     }
-    if (left.kind == MicaValue::BOOL && right.kind == MicaValue::BOOL) {
+    if (left.kind == MicaValue::MBOOL && right.kind == MicaValue::MBOOL) {
         return MicaValue::Bool(left.b == right.b);
     }
     std::cerr << "unsupported operand type(s) for ==\n";
@@ -538,7 +545,7 @@ MicaValue VM::BNEQ__(MicaValue left, MicaValue right) {
         (right.kind == MicaValue::INT || right.kind == MicaValue::FLOAT)) {
         return MicaValue::Bool(asDouble(left) != asDouble(right));
     }
-    if (left.kind == MicaValue::BOOL && right.kind == MicaValue::BOOL) {
+    if (left.kind == MicaValue::MBOOL && right.kind == MicaValue::MBOOL) {
         return MicaValue::Bool(left.b != right.b);
     }
     std::cerr << "unsupported operand type(s) for !=\n";
@@ -546,7 +553,7 @@ MicaValue VM::BNEQ__(MicaValue left, MicaValue right) {
 }
 
 MicaValue VM::BAND__(MicaValue left, MicaValue right) {
-    if (left.kind != MicaValue::BOOL || right.kind != MicaValue::BOOL) {
+    if (left.kind != MicaValue::MBOOL || right.kind != MicaValue::MBOOL) {
         std::cerr << "unsupported operand type(s) for &&\n";
         exit(-1);
     }
@@ -554,7 +561,7 @@ MicaValue VM::BAND__(MicaValue left, MicaValue right) {
 }
 
 MicaValue VM::BOR__(MicaValue left, MicaValue right) {
-    if (left.kind != MicaValue::BOOL || right.kind != MicaValue::BOOL) {
+    if (left.kind != MicaValue::MBOOL || right.kind != MicaValue::MBOOL) {
         std::cerr << "unsupported operand type(s) for ||\n";
         exit(-1);
     }
@@ -610,3 +617,32 @@ void VM::loadFalse(int, int) {
 }
 
 void VM::nop(int, int) {}
+
+void VM::dumpGlobalVars() {
+    if (!env.mainModule) return;
+    std::cout << "=== globalVars of '" << env.mainModule->moduleName << "' ===\n";
+    for (int i = 0; i < (int)env.mainModule->globalVars.size(); ++i) {
+        auto v = env.mainModule->globalVars[i];
+        std::cout << "  [" << i << "] kind=" << v.kind;
+        if (v.kind == MicaValue::OBJ && v.obj->tp == Obj::INITED_OBJECT) {
+            auto ins = (ObjInstance*)v.obj;
+            std::cout << " cls=" << ins->cls->name;
+            if (ins->cls->name == "Array") {
+                auto arr = (ObjArray*)ins->cls;
+                std::cout << " = [";
+                for (int k = 0; k < (int)arr->elements.size(); ++k) {
+                    if (k) std::cout << ", ";
+                    auto e = arr->elements[k];
+                    if (e.kind == MicaValue::INT)       std::cout << e.i;
+                    else if (e.kind == MicaValue::FLOAT) std::cout << e.f;
+                    else if (e.kind == MicaValue::MBOOL) std::cout << (e.b ? "true" : "false");
+                    else                                 std::cout << "?kind=" << e.kind;
+                }
+                std::cout << "]";
+            }
+        } else if (v.kind == MicaValue::INT) {
+            std::cout << " = " << v.i;
+        }
+        std::cout << "\n";
+    }
+}

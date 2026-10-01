@@ -1,0 +1,9 @@
+let g:[int] = [1,2,3];
+
+fn main(): int {
+    let j:int=0;
+    for (i:int=0; i<2; ++i) {
+        ++g[i];
+    }
+    return 0;
+}

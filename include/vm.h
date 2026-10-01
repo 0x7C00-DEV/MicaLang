@@ -17,7 +17,7 @@ using BOP = MicaValue (VM::*) (MicaValue, MicaValue);
 class VM {
 public:
     VM(std::string);
-    VM(Module*, std::string, std::vector<MicaValue>);
+    VM(Module*);
     void start0(std::string);
     void start0(std::string, std::string, std::vector<MicaValue>);
     void initModule(Module*);
@@ -28,6 +28,7 @@ public:
     void executeLoop(int);
     Function* lookFunction(std::string);
     Environment env;
+    void dumpGlobalVars();
 private:
     CALT IVEC[NEW_ARR+1];
     BOP  BINOP[BLESS+1];

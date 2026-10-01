@@ -107,6 +107,7 @@ private:
     InterfaceSymbol* getInterface(std::string);
     int getInterfaceId(std::string);
 
+    void declareGlobalVars(AST*);
     Function* makeFunction(AST*);
     MType* visitBlock(AST*, std::string, std::string);
     MType* visitModuleImport(AST*);

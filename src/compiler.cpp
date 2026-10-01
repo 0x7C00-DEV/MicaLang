@@ -270,6 +270,10 @@ Vresult Compiler::visitVarDefine(AST* a, bool isGlobal) {
             std::cout << "WARN: type " << temp << ", " << tp->__str__() << std::endl;
         emit(getLabel(),  STORE_GVAR, varId, 0);
     }
+    res.id = varId;
+    res.name = tmp->name;
+    res.type  = tp;
+    return res;
 }
 
 
@@ -340,7 +344,7 @@ MType* Compiler::visitValue(AST* a, MType* expect) {
     if (a->kind == AST::AST_BIT_NOT)     return visitBitNot(a, expect);
     if (a->kind == AST::AST_NOT)         return visitNot(a, expect);
     if (a->kind == AST::AST_SELF_CHANGE) return visitSelfChange(a);
-    std::cout << "not suppose\n";
+    std::cout << "ERROR: visitValue, kind "<< a->kind << "' not suppose\n";
     return nullptr;
 }
 
@@ -351,6 +355,10 @@ MType* Compiler::visitAssign(AST* a) {
     if (dst->kind == AST::AST_ID) {
         auto tmpx = (Id*) dst;
         Symbol* s = env->cs.lookup(tmpx->name);
+        if (!s) {
+            std::cout << "ERROR: in visitAssign name '" << tmpx->name << "' not found\n";
+            exit(-1);
+        }
         if (s->kind != Symbol::SYM_VAR) {
             std::cout << "ERROR: name '" << tmpx->name << "' not a var\n";
             exit(-1);
@@ -431,7 +439,10 @@ MType* Compiler::visitStmt(AST* a, std::string begin, std::string end) {
         return visitInterface(a);
     if (a->kind == AST::AST_FUNC_TAG)
         return visitFuncTag(a);
-    return visitValue(a, nullptr);
+    MType* t = visitValue(a, nullptr);
+    if (a->kind != AST::AST_ASSIGN_NODE)
+        emit(getLabel(), POP, 0, 0);
+    return t;
 }
 
 MType* Compiler::visitTernOp(AST* a, MType* expect) {
@@ -457,22 +468,31 @@ MType* Compiler::visitForLoop(AST* a) {
     std::string begin = getLabel();
     std::string changeLabel = getLabel();
     std::string end = getLabel();
-    visitValue(tmp->init, nullptr);
+
+    if (tmp->init && tmp->init->kind == AST::AST_BLOCK) {
+        for (auto stmt : ((Block*)tmp->init)->codes)
+            visitStmt(stmt, "", "");
+    }
+
     emit(begin, NOP, 0, 0);
     MType* tp = nullptr;
     if (tmp->condition) {
         tp = visitValue(tmp->condition, new BaseType(BaseType::MBOOL));
         emit("", JMPF, end, 0);
     }
+
     visitBlock(tmp->block, changeLabel, end);
     emit(changeLabel, NOP, 0, 0);
-    visitValue(tmp->change, nullptr);
+
+    if (tmp->change && tmp->change->kind == AST::AST_BLOCK) {
+        for (auto stmt : ((Block*)tmp->change)->codes)
+            visitStmt(stmt, "", "");
+    }
     emit("", JMP, begin, 0);
     emit(end, NOP, 0, 0);
 
     if (tp && tp->__str__() != "bool;") {
-        std::cout << "WARN: want a bool, but get a '"
-                  << tp->__str__() << "'\n";
+        std::cout << "WARN: want a bool, but get a '" << tp->__str__() << "'\n";
     }
     leaveScope();
     return nullptr;
@@ -576,15 +596,37 @@ MType* Compiler::visitClass(AST* a) {
             auto vdg = (VarDefGrp*)i;
             for (auto j: vdg->vars) {
                 auto t1 = (VarDef*)j;
-                fields.push_back(t1->name);
                 members[t1->name] = conver->getType(t1->type);
             }
         } else if (i->kind == AST::AST_VAR_DEF) {
-            fields.push_back(((VarDef*)i)->name);
             members[((VarDef*)i)->name] = conver->getType(((VarDef*)i)->type);
         } else if (i->kind == AST::AST_FUNC_DEF) {
             auto fn = (Func*) i;
             members[fn->name] = conver->getType(fn->ftype);
+        } else {
+            std::cout << "ERROR: unknown tree '" << i->kind << "'\n";
+            exit(-1);
+        }
+    }
+    env->cs.registSymbolGbl(cls->name, new ClassSymbol(
+            cls->name,
+            super,
+            impls,
+            env->moduleName,
+            clsId,
+            members
+    ));
+    for (auto i: cls->methods) {
+        if (i->kind == AST::AST_VAR_DEF_GRP) {
+            auto vdg = (VarDefGrp*)i;
+            for (auto j: vdg->vars) {
+                auto t1 = (VarDef*)j;
+                fields.push_back(t1->name);
+            }
+        } else if (i->kind == AST::AST_VAR_DEF) {
+            fields.push_back(((VarDef*)i)->name);
+        } else if (i->kind == AST::AST_FUNC_DEF) {
+            auto fn = (Func*) i;
             funcs[fn->name] = MicaValue::Object(makeFunction(fn));
         } else {
             std::cout << "ERROR: unknown tree '" << i->kind << "'\n";
@@ -595,14 +637,7 @@ MType* Compiler::visitClass(AST* a) {
     tmp->methods = funcs;
     tmp->super = getClassObject(cls->extend);
     pushConstG(MicaValue::Object(tmp));
-    env->cs.registSymbolGbl(cls->name, new ClassSymbol(
-                                    cls->name,
-                                    super,
-                                    impls,
-                                    env->moduleName,
-                                    clsId,
-                                    members
-                                ));
+
     return nullptr;
 }
 
@@ -726,7 +761,7 @@ MType *Compiler::visitId(AST *a) {
     auto name = ((Id*)a)->name;
     auto info = getCurrentTsk()->currentScope->lookupSymbol(name);
     if (!info) {
-        std::cout << "ERROR: in visitId, info is nullptr\n";
+        std::cout << "ERROR: id '" << name << "' is not found.\n";
         exit(-1);
     }
     if (info->kind == Symbol::SYM_VAR) {
@@ -742,7 +777,7 @@ MType *Compiler::visitId(AST *a) {
         }
         return nullptr;
     } else if (info->kind == Symbol::SYM_MODULE) {
-        std::cout << "not suppose\n";
+        std::cout << "ERROR in visitId, member not suppose\n";
         exit(-1);
     } else if (info->kind == Symbol::SYM_CLASS) {
         for (int i = 0; i < env->globalConstPool.size(); ++i) {
@@ -752,7 +787,7 @@ MType *Compiler::visitId(AST *a) {
             }
         }
     }
-    std::cout << "not suppose\n";
+    std::cout << "ERROR: kind '" << info->kind << "' " << "not suppose\n";
     return nullptr;
 }
 
@@ -763,10 +798,17 @@ MType *Compiler::visitNeg(AST *a, MType* expect) {
     return val;
 }
 
-MType *Compiler::visitSelfChange(AST *) {
-    return nullptr;
+MType *Compiler::visitSelfChange(AST *a) {
+    auto tmp = (SelfChangeNode* )a;
+    auto exp = (AssignNode*)tmp->expand;
+    if (tmp->isPre) {
+        visitAssign(exp);
+        return visitValue(exp->dst, nullptr);
+    }
+    auto temp = visitValue(exp->dst, nullptr);
+    visitAssign(exp);
+    return temp;
 }
-
 MType *Compiler::visitBitNot(AST *pAst, MType* expect) {
     auto bn = (BitNot*) pAst;
     auto tmp = visitValue(bn->value, expect);
@@ -883,28 +925,20 @@ Module* Compiler::getProgram(std::string text, std::string fileName) {
         else if (i.result->kind == AST::AST_INTERFACE) Itf.push_back(i.result);
         else if (i.result->kind == AST::AST_IMPORT) Import.push_back(i.result);
     }
+
+    for (auto i : globalVar) declareGlobalVars(i);
+
     for (auto i : Class) visitClass(i);
     for (auto i : Fn) visitFunction(i, true);
-
     for (auto i : Itf) visitInterface(i);
-    int mainId = -1;
-    for (int j = 0; j < env->globalConstPool.size(); ++j) {
-        auto i = env->globalConstPool[j];
-        if (i.kind == MicaValue::OBJ && i.obj->tp == Obj::FUNCTION && ((Function *) i.obj)->name == "main") {
-            mainId = j;
-            break;
-        }
-    }
+
     createTask("@init");
     for (auto i : Import) visitModuleImport(i);
     for (auto i : globalVar) {
         if (i->kind == AST::AST_VAR_DEF) visitVarDefine(i, true);
         else if (i->kind == AST::AST_VAR_DEF_GRP) visitVarDefineGrp(i, true);
     }
-    if (mainId != -1) {
-        emit(getLabel(), LOAD_GCST, mainId, 0);
-        emit(getLabel(), CALL, 0,0);
-    }
+
     emit(getLabel(), LOAD_NULL, 0, 0);
     emit(getLabel(), RET, 0, 0);
     endTask(false);
@@ -922,10 +956,29 @@ int CurrentCompileTask::addLocalVar(std::string name, MType* type, bool isInit) 
 }
 
 int Compiler::addGlobalVar(std::string name, MType *type, bool isInit) {
+    auto existing = env->cs.getGlobalScope()->symbols.find(name);
+    if (existing != env->cs.getGlobalScope()->symbols.end()
+        && existing->second->kind == Symbol::SYM_VAR) {
+        return ((VarSymbol*)existing->second)->id;
+    }
+
     auto sym = new VarSymbol(name, type, isInit, VarSymbol::Global);
-    if (env->cs.registSymbolGbl(name, sym))
+    if (env->cs.registSymbolGbl(name, sym)) {
+        sym->id = env->cs.globalVarCnt;
         return env->cs.globalVarCnt++;
+    }
     return -1;
+}
+
+void Compiler::declareGlobalVars(AST *a) {
+    if (a->kind == AST::AST_VAR_DEF) {
+        auto vd = (VarDef*)a;
+        auto tp = conver->getType(vd->type);
+        addGlobalVar(vd->name, tp, vd->init != nullptr);
+    } else if (a->kind == AST::AST_VAR_DEF_GRP) {
+        for (auto j : ((VarDefGrp*)a)->vars)
+            declareGlobalVars(j);
+    }
 }
 
 int CompileEnvironment::addFunctionValue(Function *f) {

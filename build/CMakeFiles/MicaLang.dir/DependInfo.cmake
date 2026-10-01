@@ -12,6 +12,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/Lenovo/Desktop/MicaLang/src/asm.cpp" "CMakeFiles/MicaLang.dir/src/asm.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/asm.cpp.obj.d"
   "C:/Users/Lenovo/Desktop/MicaLang/src/compiler.cpp" "CMakeFiles/MicaLang.dir/src/compiler.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/compiler.cpp.obj.d"
   "C:/Users/Lenovo/Desktop/MicaLang/src/debug.cpp" "CMakeFiles/MicaLang.dir/src/debug.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/debug.cpp.obj.d"
+  "C:/Users/Lenovo/Desktop/MicaLang/src/dis.cpp" "CMakeFiles/MicaLang.dir/src/dis.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/dis.cpp.obj.d"
   "C:/Users/Lenovo/Desktop/MicaLang/src/lexer.cpp" "CMakeFiles/MicaLang.dir/src/lexer.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/lexer.cpp.obj.d"
   "C:/Users/Lenovo/Desktop/MicaLang/src/loader.cpp" "CMakeFiles/MicaLang.dir/src/loader.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/loader.cpp.obj.d"
   "C:/Users/Lenovo/Desktop/MicaLang/src/makeError.cpp" "CMakeFiles/MicaLang.dir/src/makeError.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/makeError.cpp.obj.d"
