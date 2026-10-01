@@ -7,7 +7,6 @@ AstToMtype::AstToMtype(CompileEnvironment* env) {
     this->env = env;
 }
 
-
 MType* AstToMtype::parseTemplateType(AST* a) {
     auto tmp = (TemplateType*) a;
     auto root = getType(tmp->rootType);
@@ -124,13 +123,6 @@ CurrentCompileTask::CurrentCompileTask(Scope* current, std::string name) {
     this->funcName = name;
 }
 
-int CurrentCompileTask::addLocalVar(std::string name, MType* type, bool isInit, VarSymbol::VarKind vkind) {
-    auto sym = new VarSymbol(name, type, isInit, vkind);
-    if (currentScope->registVar(name, sym, localVarCnt ))
-        return localVarCnt++;
-    return -1;
-}
-
 Symbol* CurrentCompileTask::lookupLocalVar(std::string name) {
     return currentScope->lookupLocalVar(name);
 }
@@ -218,6 +210,8 @@ MType* Compiler::visitCallNode(AST* a, MType* expect) {
     std::vector<std::string> argsType;
     std::vector<std::string> paramType;
     FunctionType* tp = (FunctionType*)visitValue(tmp->fnid, expect);
+    if (tmp->fnid->kind == AST::AST_MEMBER_ACCESS) // 对于className.funcName(args)这种的call需要先加载'self'参数
+        visitValue(((MemberAccess*)tmp->fnid)->parent, nullptr);
     for (auto i : tp->argsType) argsType.push_back(i->__str__());
     for (auto i : tmp->args) 
         paramType.push_back(visitValue(i, expect)->__str__());
@@ -243,32 +237,51 @@ MType* Compiler::visitMemberAccess(AST* a, MType* expect) {
     return ((ClassSymbol*)((ClassType*)parent)->sym)->members[tmp->member];
 }
 
-void Compiler::visitVarDefineGrp(AST* a) {
+void Compiler::visitVarDefineGrp(AST* a, bool isGlobal) {
     auto tmp = (VarDefGrp*) a;
     for (auto i : tmp->vars)
-        visitVarDefine(i);
+        visitVarDefine(i, isGlobal);
 }
 
-Vresult Compiler::visitVarDefine(AST* a) {
+Vresult Compiler::visitVarDefine(AST* a, bool isGlobal) {
     Vresult res;
-    auto tmp = (VarDef*) a;
+    auto tmp = (VarDef *) a;
     auto tp = conver->getType(tmp->type);
-    int varId = getCurrentTsk()->addLocalVar(tmp->name,
-                                             tp,
-                                             tmp->init!=nullptr,
-                                             getCurrentTsk()->currentScope->scopeKind == Scope::SGLOBAL? VarSymbol::Global : VarSymbol::Local);
+
+    if (!isGlobal) {
+        int varId = getCurrentTsk()->addLocalVar(tmp->name,
+                                                 tp,
+                                                 tmp->init != nullptr);
+        if (tmp->init) {
+            auto temp = visitValue(tmp->init, tp)->__str__();
+            if (temp != tp->__str__())
+                std::cout << "WARN: type " << temp << ", " << tp->__str__() << std::endl;
+            emit(getLabel(),  STORE_SVAR,varId, 0);
+        }
+        res.id = varId;
+        res.name = tmp->name;
+        res.type = tp;
+        return res;
+    }
+    int varId = addGlobalVar(tmp->name, tp, tmp->init != nullptr);
     if (tmp->init) {
         auto temp = visitValue(tmp->init, tp)->__str__();
         if (temp != tp->__str__())
             std::cout << "WARN: type " << temp << ", " << tp->__str__() << std::endl;
-        emit(getLabel(), getCurrentTsk()->currentScope->scopeKind == Scope::SGLOBAL? STORE_GVAR : STORE_SVAR, varId, 0);
+        emit(getLabel(),  STORE_GVAR, varId, 0);
     }
-    res.id = varId;
-    res.name = tmp->name;
-    res.type = tp;
-    return res;
 }
 
+
+MType* Compiler::visitModuleImport(AST* a) {
+    auto tmp = (Import*) a;
+    std::string path = tmp->path;
+    std::string rename = tmp->align;
+    ProgramLoader loader(path);
+    ModuleSymbol* sym = loader.getModuleTag(path);
+    env->cs.registSymbolGbl(rename, sym);
+    return new ModuleType(rename, path, sym);
+}
 
 Function* Compiler::makeFunction(AST* a) {
     auto tmp = (Func*) a;
@@ -290,7 +303,7 @@ MType* Compiler::visitFunction(AST* a, bool autoend) {
     getCurrentTsk()->fnRetTp = ((FunctionType*)conver->getType(tmp->ftype))->retType;
     if (!tmp->isNative) {
         for (int i = 0; i < tmp->args.size(); ++i)
-            Vresult vid = visitVarDefine(tmp->args[i]);
+            Vresult vid = visitVarDefine(tmp->args[i], false);
         visitBlock(tmp->body, "", "");
     }
     auto t = conver->getType(tmp->ftype);
@@ -383,11 +396,13 @@ MType* Compiler::visitStmt(AST* a, std::string begin, std::string end) {
     if (a->kind == AST::AST_FUNC_DEF)
         return visitFunction(a, true);
     if (a->kind == AST::AST_VAR_DEF_GRP) {
-        visitVarDefineGrp(a);
+        visitVarDefineGrp(a, false);
         return nullptr;
     }
+    if (a->kind == AST::AST_IMPORT)
+        return visitModuleImport(a);
     if (a->kind == AST::AST_VAR_DEF) {
-        visitVarDefine(a);
+        visitVarDefine(a, false);
         return nullptr;
     }
     if (a->kind == AST::AST_CONTINUE) {
@@ -546,9 +561,9 @@ MType* Compiler::visitInterface(AST* a) {
 
 MType* Compiler::visitClass(AST* a) {
     auto cls = (Class*) a;
-    auto tmp = new ObjClass(cls->extend);
+    auto tmp = new ObjClass(cls->name);
     ClassSymbol* sym = nullptr;
-    ClassSymbol* super = getClassInfo(cls->name);
+    ClassSymbol* super = getClassInfo(cls->extend);
     std::vector<InterfaceSymbol*> impls;
     int clsId = env->classCnt++;
     for (auto i: cls->impls)
@@ -578,17 +593,16 @@ MType* Compiler::visitClass(AST* a) {
     }
     tmp->fields = fields;
     tmp->methods = funcs;
-    tmp->super = getClassObject(cls->name);
+    tmp->super = getClassObject(cls->extend);
     pushConstG(MicaValue::Object(tmp));
-    env->cs.registSymbolGbl(cls->name,
-                            new ClassSymbol(
+    env->cs.registSymbolGbl(cls->name, new ClassSymbol(
                                     cls->name,
                                     super,
                                     impls,
                                     env->moduleName,
                                     clsId,
                                     members
-                                    ));
+                                ));
     return nullptr;
 }
 
@@ -855,6 +869,63 @@ int Compiler::getInterfaceId(std::string name) {
     auto tmp = getInterface(name);
     if (!tmp) return -1;
     return tmp->interfaceId;
+}
+
+Module* Compiler::getProgram(std::string text, std::string fileName) {
+    std::vector<Register> tmp = parser.parseCode(text, fileName);
+    for (auto i : tmp)
+        if (!i.isSuc) std::cout << i.error << std::endl;
+    std::vector<AST*> Class, globalVar, Fn, Itf, Import;
+    for (auto i: tmp) {
+        if (i.result->kind == AST::AST_CLASS) Class.push_back(i.result);
+        else if (i.result->kind == AST::AST_VAR_DEF || i.result->kind == AST::AST_VAR_DEF_GRP) globalVar.push_back(i.result);
+        else if (i.result->kind == AST::AST_FUNC_DEF) Fn.push_back(i.result);
+        else if (i.result->kind == AST::AST_INTERFACE) Itf.push_back(i.result);
+        else if (i.result->kind == AST::AST_IMPORT) Import.push_back(i.result);
+    }
+    for (auto i : Class) visitClass(i);
+    for (auto i : Fn) visitFunction(i, true);
+
+    for (auto i : Itf) visitInterface(i);
+    int mainId = -1;
+    for (int j = 0; j < env->globalConstPool.size(); ++j) {
+        auto i = env->globalConstPool[j];
+        if (i.kind == MicaValue::OBJ && i.obj->tp == Obj::FUNCTION && ((Function *) i.obj)->name == "main") {
+            mainId = j;
+            break;
+        }
+    }
+    createTask("@init");
+    for (auto i : Import) visitModuleImport(i);
+    for (auto i : globalVar) {
+        if (i->kind == AST::AST_VAR_DEF) visitVarDefine(i, true);
+        else if (i->kind == AST::AST_VAR_DEF_GRP) visitVarDefineGrp(i, true);
+    }
+    if (mainId != -1) {
+        emit(getLabel(), LOAD_GCST, mainId, 0);
+        emit(getLabel(), CALL, 0,0);
+    }
+    emit(getLabel(), LOAD_NULL, 0, 0);
+    emit(getLabel(), RET, 0, 0);
+    endTask(false);
+
+    Module* md = new Module;
+    md->globalConstPool = env->globalConstPool;
+    return md;
+}
+
+int CurrentCompileTask::addLocalVar(std::string name, MType* type, bool isInit) {
+    auto sym = new VarSymbol(name, type, isInit, VarSymbol::Local);
+    if (currentScope->registVar(name, sym, localVarCnt ))
+        return localVarCnt++;
+    return -1;
+}
+
+int Compiler::addGlobalVar(std::string name, MType *type, bool isInit) {
+    auto sym = new VarSymbol(name, type, isInit, VarSymbol::Global);
+    if (env->cs.registSymbolGbl(name, sym))
+        return env->cs.globalVarCnt++;
+    return -1;
 }
 
 int CompileEnvironment::addFunctionValue(Function *f) {

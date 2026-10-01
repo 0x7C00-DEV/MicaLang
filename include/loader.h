@@ -5,11 +5,13 @@
 #ifndef MICALANG_LOADER_H
 #define MICALANG_LOADER_H
 #include "value.h"
+#include "symbol.h"
 
 class ProgramLoader {
 public:
     ProgramLoader(std::string);
     Program* getData();
+    ModuleSymbol* getModuleTag(std::string);
 private:
 };
 

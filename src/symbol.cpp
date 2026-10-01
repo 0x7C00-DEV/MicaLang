@@ -229,9 +229,10 @@ InterfaceSymbol::InterfaceSymbol(std::string name, std::unordered_map<std::strin
     this->labels = labels;
 }
 
-ModuleType::ModuleType(std::string reName, std::string path) : MType(BT_MODULE){
+ModuleType::ModuleType(std::string reName, std::string path, Symbol* moduleSymbol) : MType(BT_MODULE){
     this->reName = reName;
     this->path = path;
+    this->moduleSymbol = moduleSymbol;
 }
 
 std::string ModuleType::__str__() {

@@ -462,4 +462,10 @@ CMakeFiles/MicaLang.dir/main.cpp.obj: \
  F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/psdk_inc/_dbg_LOAD_IMAGE.h \
  F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/psdk_inc/_dbg_common.h \
  C:\Users\Lenovo\Desktop\MicaLang\include/config.h \
+ C:\Users\Lenovo\Desktop\MicaLang\include/compiler.h \
+ C:/Users/Lenovo/Desktop/MicaLang/include/compiler.h \
+ C:/Users/Lenovo/Desktop/MicaLang/include/symbol.h \
+ C:/Users/Lenovo/Desktop/MicaLang/include/value.h \
+ C:/Users/Lenovo/Desktop/MicaLang/include/parser.h \
+ C:/Users/Lenovo/Desktop/MicaLang/include/asm.h \
  C:\Users\Lenovo\Desktop\MicaLang\include/debug.h

@@ -6,6 +6,7 @@
 #define MICALANG_COMPILER_H
 #include "../include/compiler.h"
 #include "../include/symbol.h"
+#include "../include/loader.h"
 #include "../include/value.h"
 #include "../include/parser.h"
 #include "../include/asm.h"
@@ -33,7 +34,7 @@ struct CurrentCompileTask {
     int localVarCnt=0;
     int localLabelCnt=0;
     int pushLocalConst(MicaValue);
-    int addLocalVar(std::string, MType*, bool, VarSymbol::VarKind);
+    int addLocalVar(std::string, MType*, bool);
     Symbol* lookupLocalVar(std::string);
     Scope* functionScope;
     Scope* currentScope;
@@ -50,6 +51,7 @@ struct CompileEnvironment {
     int classCnt=0, interfaceCnt=0;
     CodeStruct cs;
     std::vector<MicaValue> globalConstPool;
+    std::vector<Module> modules;
     std::vector<CurrentCompileTask*> tasks;
     int addFunctionValue(Function*);
 };
@@ -79,6 +81,7 @@ struct Vresult {
 class Compiler {
 public:
     Compiler(CompileEnvironment*);
+    Module *getProgram(std::string, std::string);
 private:
 	Parser parser;
     CompileEnvironment* env;
@@ -90,6 +93,7 @@ private:
     void createTask(std::string);
     void endTask(bool);
     void emit(std::string, ByteCode, ByteCode, ByteCode);
+    int addGlobalVar(std::string, MType*, bool);
     int pushConstL(MicaValue);
     int pushConstG(MicaValue);
     void loadConstS(int);
@@ -105,12 +109,13 @@ private:
 
     Function* makeFunction(AST*);
     MType* visitBlock(AST*, std::string, std::string);
+    MType* visitModuleImport(AST*);
     MType* visitBinOpNode(AST*, MType*);
     MType* visitCallNode(AST*, MType*);
     MType* visitElementGet(AST*, MType*);
     MType* visitMemberAccess(AST*, MType*);
-    void visitVarDefineGrp(AST*);
-    Vresult visitVarDefine(AST*);
+    void visitVarDefineGrp(AST*, bool);
+    Vresult visitVarDefine(AST*, bool);
     MType* visitFunction(AST*, bool);
     MType* visitValue(AST*, MType*);
     MType* visitAssign(AST*);

@@ -10,3 +10,7 @@ Program* ProgramLoader::getData() {
 ProgramLoader::ProgramLoader(std::string) {
 
 }
+
+ModuleSymbol *ProgramLoader::getModuleTag(std::string reName) {
+    return nullptr;
+}

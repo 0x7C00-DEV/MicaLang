@@ -32,7 +32,8 @@ struct BaseType : MType {
 struct ModuleType : MType {
     std::string path;
     std::string reName;
-    ModuleType(std::string, std::string);
+    Symbol* moduleSymbol;
+    ModuleType(std::string, std::string, Symbol*);
 
     std::string __str__() override;
 };
@@ -144,7 +145,7 @@ struct Scope {
 
 struct CodeStruct {
     Scope *current= nullptr;
-    int scopeId=0;
+    int scopeId=0, globalVarCnt=0;
     CodeStruct();
     bool registSymbolSub(std::string, Symbol*);
     bool registSymbolGbl(std::string, Symbol*);

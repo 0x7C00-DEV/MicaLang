@@ -6,6 +6,7 @@
 #include "include/parser.h"
 #include "include/asm.h"
 #include "include/vm.h"
+#include "include/compiler.h"
 #include "include/debug.h"
 
 #pragma comment(lib, "imagehlp.lib")
