@@ -415,4 +415,28 @@ CMakeFiles/MicaLang.dir/src/loader.cpp.obj: \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/node_handle.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/erase_if.h \
  C:/Users/Lenovo/Desktop/MicaLang/include/asm.h \
- C:/Users/Lenovo/Desktop/MicaLang/include/config.h
+ C:/Users/Lenovo/Desktop/MicaLang/include/config.h \
+ C:/Users/Lenovo/Desktop/MicaLang/include/symbol.h \
+ C:/Users/Lenovo/Desktop/MicaLang/include/ast.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/complex \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/cmath \
+ F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/math.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/specfun.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/limits \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/tr1/gamma.tcc \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/tr1/special_function_util.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/tr1/bessel_function.tcc \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/tr1/beta_function.tcc \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/tr1/ell_integral.tcc \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/tr1/exp_integral.tcc \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/tr1/hypergeometric.tcc \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/tr1/legendre_function.tcc \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/tr1/modified_bessel_func.tcc \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/tr1/poly_hermite.tcc \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/tr1/poly_laguerre.tcc \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/tr1/riemann_zeta.tcc \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/sstream \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/sstream.tcc \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/utility \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_relops.h \
+ C:/Users/Lenovo/Desktop/MicaLang/include/position.h
