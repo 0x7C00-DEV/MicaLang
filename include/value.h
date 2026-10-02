@@ -71,7 +71,7 @@ struct Environment {
 
 using MicaCFunction = MicaValue(Environment*, std::vector<MicaValue>);
 
-std::vector<MicaCFunction*> loadMicaFunctions(const char*);
+std::vector<std::pair<std::string, MicaCFunction*>> loadMicaFunctions(const char*);
 
 struct Frame {
     int pc=0;
@@ -98,9 +98,10 @@ struct Function : Obj {
         isNative = false;
     }
 
-    Function(MicaCFunction* n): Obj(FUNCTION) {
+    Function(std::string name, MicaCFunction* n): Obj(FUNCTION) {
         __native__ = n;
         isNative = true;
+        this->name = name;
     }
 };
 
@@ -136,7 +137,13 @@ struct ObjInstance : Obj {
 
 struct ObjArray : ObjClass {
     std::vector<MicaValue> elements;
-    ObjArray(): ObjClass("Array") {}
+    static MicaValue resize(Environment* env, std::vector<MicaValue> args) {
+        ((ObjArray*)((ObjInstance*)args[0].obj)->cls)->elements.resize(args[1].i);
+        return MicaValue::Null();
+    }
+    ObjArray(): ObjClass("Array") {
+        elements.push_back(MicaValue::Object(new Function("resize", &ObjArray::resize)));
+    }
 };
 
 struct ObjString : ObjArray {

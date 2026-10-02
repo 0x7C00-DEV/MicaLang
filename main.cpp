@@ -48,7 +48,20 @@ void testFile() {
     vm.dumpGlobalVars();
 }
 
-int main() {
+void release(int argc, char** argv) {
+    std::string file = argv[1];
+    CompileEnvironment* ce = new CompileEnvironment;
+    Compiler compiler(ce);
+    Module* mod = compiler.getProgram(loadFile(file), file);
+    Dis dis(mod);
+    dis.disAll();
+    printf("START_RUNNING:\n");
+    VM vm(mod);
+    printf("END.\nVARS:");
+    vm.dumpGlobalVars();
+}
+
+int main(int argc, char** argv) {
     testFile();
     return 0;
 }

@@ -77,24 +77,29 @@ ObjInstance::ObjInstance(): Obj(INITED_OBJECT) {
 }
 
 #ifdef SUPDLL
-std::vector<MicaCFunction*> loadMicaFunctions(const char* dllPath) {
+std::vector<std::pair<std::string, MicaCFunction*>> loadMicaFunctions(const char* dllPath) {
     HMODULE h = LoadLibraryA(dllPath);
-    BYTE* base = (BYTE*)h;
+    if (!h) return {};
 
+    BYTE* base = (BYTE*)h;
     auto dos = (IMAGE_DOS_HEADER*)base;
     auto nt  = (IMAGE_NT_HEADERS*)(base + dos->e_lfanew);
     auto dir = nt->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT];
+    if (dir.VirtualAddress == 0) return {};
     auto exp = (IMAGE_EXPORT_DIRECTORY*)(base + dir.VirtualAddress);
 
     auto funcs = (DWORD*)(base + exp->AddressOfFunctions);
     auto names = (DWORD*)(base + exp->AddressOfNames);
     auto ords  = (WORD*) (base + exp->AddressOfNameOrdinals);
 
-    std::vector<MicaCFunction*> result;
-    for (DWORD i = 0; i < exp->NumberOfNames; i++)
-        result.push_back(
-            reinterpret_cast<MicaCFunction*>(base + funcs[ords[i]])
+    std::vector<std::pair<std::string, MicaCFunction*>> result;
+    for (DWORD i = 0; i < exp->NumberOfNames; i++) {
+        const char* name = (const char*)(base + names[i]);
+        result.emplace_back(
+                std::string(name),
+                reinterpret_cast<MicaCFunction*>(base + funcs[ords[i]])
         );
+    }
     return result;
 }
 #endif
@@ -109,8 +114,8 @@ ObjClass::ObjClass(std::string name): Obj(USER_DEFING_CLASS) {
 
 #ifdef SUPDLL
 Module::Module(std::string path): Obj(MODULE) {
-    std::vector<MicaCFunction*> tmp = loadMicaFunctions(path.c_str());
-    for (auto i : tmp) globalConstPool.push_back(MicaValue::Object(new Function(i)));
+    for (auto& [name, fn] : loadMicaFunctions(path.c_str()))
+        globalConstPool.push_back(MicaValue::Object(new Function(name, fn)));
 }
 #endif
 

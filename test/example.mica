@@ -1,25 +1,14 @@
-let g:[int]=[0,0,0,0,0,0];
+let a: [int] = [0, 0, 0, 0];
 
-fn fib(x: int): int {
-    if (x == 1 || x == 0) 
-        return 1;
-    return fib(x-1)+fib(x-2);
+fn ch(c: int): void {
+    ++c;
 }
 
-class Test {
-    x: int;
-    fn __init__(self: Test, x: int): void {
-        self.x = fib(x);
-    }
-
-    fn getX(self: Test): int {
-        return self.x;
-    }
-}
-
-fn main(): int {
-    let tmp: Test = new Test(6);
-    g[0] = tmp.x;
-    g[1] = tmp.getX();
+fn main() :int {
+    let tmp:int = 1;
+    a[0] = tmp;
+    a[1] = tmp++;
+    ch(tmp);
+    a[2] = tmp;
     return 0;
 }

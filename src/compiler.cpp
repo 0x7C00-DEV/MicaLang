@@ -743,25 +743,29 @@ void Compiler::endTask(bool isNative) {
 
     auto compiled = getCurrentTsk()->getCompileResult();
     compiled->isNative = isNative;
-    bool filled = false;
     std::string name = getCurrentTsk()->funcName;
+
     auto sym = env->cs.lookup(name);
     if (sym && sym->kind == Symbol::SYM_FUNC) {
         auto fsym = (FunctionSymbol*)sym;
-        if (fsym->constPoolIdx >= 0 &&
-            fsym->constPoolIdx < (int)env->globalConstPool.size()) {
+
+        if (fsym->constPoolIdx < 0) {
+            fsym->constPoolIdx = env->addFunctionValue(compiled);
+        } else {
             auto& slot = env->globalConstPool[fsym->constPoolIdx];
             if (slot.kind == MicaValue::OBJ && slot.obj->tp == Obj::FUNCTION) {
                 auto f = (Function*)slot.obj;
                 f->ins       = compiled->ins;
                 f->constants = compiled->constants;
                 f->isNative  = isNative;
-                filled = true;
+            } else {
+                env->globalConstPool[fsym->constPoolIdx] =
+                        MicaValue::Object(compiled);
             }
         }
-    }
-    if (!filled)
+    } else {
         env->addFunctionValue(compiled);
+    }
 
     env->tasks.pop_back();
     env->cs.leaveScope();
