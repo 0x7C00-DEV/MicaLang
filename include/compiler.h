@@ -9,7 +9,12 @@
 #include "../include/loader.h"
 #include "../include/value.h"
 #include "../include/parser.h"
+#include "../include/config.h"
 #include "../include/asm.h"
+
+#ifdef TEST
+#include "native.h"
+#endif
 
 struct ByteCode {
     std::string label;
@@ -89,6 +94,9 @@ private:
     std::unordered_map<std::string, int> opera;
     CurrentCompileTask* getCurrentTsk();
     Scope* createScope(Scope::ScopeKind);
+#ifdef TEST
+    void registNativeFunction();
+#endif
     void leaveScope();
     void createTask(std::string);
     void endTask(bool);

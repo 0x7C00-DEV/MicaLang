@@ -16,6 +16,7 @@
     <inspection_tool class="CppBoostFormatTooManyArgs" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CppCStyleCast" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="CppCVQualifierCanNotBeAppliedToReference" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppClassCanBeFinal" enabled="false" level="HINT" enabled_by_default="false" />
     <inspection_tool class="CppClassIsIncomplete" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CppClassNeedsConstructorBecauseOfUninitializedMember" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CppClassNeverUsed" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -26,6 +27,25 @@
     <inspection_tool class="CppConstValueFunctionReturnType" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="CppConstexprIfDiscardedBranch" enabled="false" level="HINT" enabled_by_default="false" />
     <inspection_tool class="CppCoroutineCallResolveError" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFAArrayIndexOutOfBounds" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFAConstantConditions" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFAConstantFunctionResult" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFAConstantParameter" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFADeletedPointer" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFAEndlessLoop" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFAInfiniteRecursion" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFAInvalidatedMemory" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFALocalValueEscapesFunction" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFALocalValueEscapesScope" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFALoopConditionNotUpdated" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFAMemoryLeak" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFANotInitializedField" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFANullDereference" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFATimeOver" enabled="false" level="HINT" enabled_by_default="false" />
+    <inspection_tool class="CppDFAUnreachableCode" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFAUnreachableFunctionCall" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFAUnreadVariable" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CppDFAUnusedValue" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CppDeclarationHidesLocal" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="CppDeclarationHidesUncapturedLocal" enabled="false" level="HINT" enabled_by_default="false" />
     <inspection_tool class="CppDeclarationSpecifierWithoutDeclarators" enabled="false" level="WARNING" enabled_by_default="false" />

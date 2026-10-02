@@ -977,6 +977,9 @@ Module* Compiler::getProgram(std::string text, std::string fileName) {
         else if (i.result->kind == AST::AST_INTERFACE) Itf.push_back(i.result);
         else if (i.result->kind == AST::AST_IMPORT) Import.push_back(i.result);
     }
+#ifdef TEST
+    registNativeFunction();
+#endif
 
     for (auto i : globalVar) declareGlobalVars(i);
 
@@ -1046,3 +1049,14 @@ int CompileEnvironment::addFunctionValue(Function *f) {
     globalConstPool.push_back(MicaValue::Object(f));
     return globalConstPool.size()-1;
 }
+
+#ifdef TEST
+void Compiler::registNativeFunction() {
+    std::vector<NativeFunction*> funcs = getFuncs();
+    for (auto i : funcs) {
+        int idx = env->addFunctionValue(i->nativeFn);
+        i->symbol->constPoolIdx = idx;
+        env->cs.registSymbolGbl(i->name, i->symbol);
+    }
+}
+#endif

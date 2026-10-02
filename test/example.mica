@@ -1,14 +1,6 @@
-let a: [int] = [0, 0, 0, 0];
 
-fn ch(c: int): void {
-    ++c;
-}
 
-fn main() :int {
-    let tmp:int = 1;
-    a[0] = tmp;
-    a[1] = tmp++;
-    ch(tmp);
-    a[2] = tmp;
+fn main(): int {
+
     return 0;
 }

@@ -6,5 +6,6 @@
 #define MICALANG_CONFIG_H
 
 #define SUPDLL
+#define TEST
 
 #endif //MICALANG_CONFIG_H

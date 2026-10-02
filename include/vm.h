@@ -7,7 +7,7 @@
 #include "asm.h"
 #include "value.h"
 #include <algorithm>
-
+#include "native.h"
 
 class VM;
 
@@ -32,9 +32,13 @@ public:
     Function* lookFunction(std::string);
     Environment env;
     void dumpGlobalVars();
+#ifdef TEST
+    void registNativeFunction(Module*);
+#endif
 private:
     CALT IVEC[NEW_ARR+1];
     BOP  BINOP[BLESS+1];
+
     void push(MicaValue);
     MicaValue pop();
     void binOp(int, int);

@@ -29,4 +29,6 @@ add_executable(MicaLang main.cpp
         include/symbol.h
         src/symbol.cpp
         include/dis.h
-        src/dis.cpp)
+        src/dis.cpp
+        include/native.h
+        src/native.cpp)

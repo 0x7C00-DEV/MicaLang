@@ -48,6 +48,9 @@ Module* Environment::loadModule(VM* vm, Program* md, std::string name, std::stri
     Module* module = new Module();
     module->moduleName = name;
     module->globalConstPool = md->constPools;
+#ifdef TEST
+    vm->registNativeFunction(module);
+#endif
     for (auto i : md->funcs) {
         i->module = module;
         module->globalConstPool.push_back(MicaValue::Object(i));

@@ -17,6 +17,9 @@ Function* VM::lookFunction(std::string name) {
 
 VM::VM(Module* module) {
     initVec();
+#ifdef TEST
+    registNativeFunction(module);
+#endif
     start(module);
 }
 
@@ -52,6 +55,7 @@ void VM::start(Module* module) {
 }
 
 void VM::executeLoop(int base) {
+
     while (env.callChain.size() > base) {
         execute(env.getCTask()->getInstr());
     }
@@ -59,6 +63,9 @@ void VM::executeLoop(int base) {
 
 void VM::initModule(Module* module) {
     module->isReady = true;
+#ifdef TEST
+    registNativeFunction(module);
+#endif
     auto base = env.callChain.size();
     start0(module->moduleName, "@init", {});
     executeLoop(base);
@@ -130,6 +137,28 @@ void VM::initVec() {
     BINOP[BLESS] = &VM::BLESS__;
 }
 
+#ifdef TEST
+void VM::registNativeFunction(Module* mod) {
+    auto tmp = getFuncs();
+    for (auto i : tmp) {
+        bool exists = false;
+        for (auto& v : mod->globalConstPool) {
+            if (v.kind == MicaValue::OBJ && v.obj->tp == Obj::FUNCTION &&
+                ((Function*)v.obj)->name == i->name) {
+                if (!((Function*)v.obj)->isNative) {
+                    ((Function*)v.obj)->__native__ = i->nativeFn->__native__;
+                    ((Function*)v.obj)->isNative  = true;
+                }
+                exists = true;
+                break;
+                }
+        }
+        if (!exists)
+            mod->globalConstPool.push_back(MicaValue::Object(i->nativeFn));
+    }
+}
+#endif
+
 void VM::setGlobalVar(int address) {
     auto val = pop();
     if (address >= env.getCTask()->module->globalVars.size())
@@ -153,6 +182,9 @@ VM::VM(std::string moduleName) {
     env.mainModule = new Module;
     env.mainModule->moduleName = moduleName;
     env.modules.push_back(env.mainModule);
+#ifdef TEST
+    registNativeFunction(env.mainModule);
+#endif
 }
 
 void VM::push(MicaValue value) {
@@ -208,6 +240,9 @@ void VM::start0(std::string moduleName, std::string funcName, std::vector<MicaVa
 void VM::start0(std::string path) {
     ProgramLoader loader(path);
     env.mainModule = env.loadModule(this, loader.getData(), "Main", path);
+#ifdef TEST
+    registNativeFunction(env.mainModule);
+#endif
     int base = env.callChain.size();
     start0("Main", "main", {});
     executeLoop(base);
