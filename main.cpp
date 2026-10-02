@@ -73,9 +73,9 @@ void testFile() {
     Module* mod = compiler.getProgram(loadFile(file), file);
     Dis dis(mod);
     dis.disAll();
-    printf("START_RUNNING:\n");
+    printf("begin:\n");
     VM vm(mod);
-    printf("END.\n");
+    printf("end\n");
 }
 
 void release(int argc, char** argv) {
@@ -92,6 +92,6 @@ void release(int argc, char** argv) {
 }
 
 int main(int argc, char** argv) {
-    shell();
+    testFile();
     return 0;
 }

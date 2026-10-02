@@ -4,16 +4,21 @@ class Test {
         self.x = x;
     }
 
-    fn showX(self:Test): void {
+    fn showX(self: Test): void {
         println(itos(self.x));
+    }
+
+    fn __add__(self: Test, y: int): Test {
+        return new Test(self.x + y);
+    }
+
+    fn __elementget__(self: Test, value: int): int {
+        return self.x + value;
     }
 }
 
-fn call(x: ():void, args: Test):void {
-    x(args);
-}
-
 fn main(): int {
-    
+    let tmp = new Test(12);
+    println(itos(tmp[9]));
     return 0;
 }

@@ -134,7 +134,7 @@ Token Lexer::getIdOrKey() {
     auto begin = getPos();
     std::string res;
     TokenKind tk = TT_ID;
-    while (current && isWord(current)) {
+    while (current && (isWord(current) || std::isdigit(current))) {
         res += current;
         advance();
     }

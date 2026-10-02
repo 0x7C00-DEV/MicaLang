@@ -281,7 +281,7 @@ void showAST(AST* tree, int indent, const std::string& fo, const std::string& eo
             std::cout << printIndent(indent) << fo << "Var {\n";
             auto tmp = (VarDef*) tree;
             std::cout << printIndent(indent+1) << "NAME: " << tmp->name << ",\n";
-            showAST(tmp->type, indent+1, "TYPE: ", ",\n");
+            if (tmp->type) showAST(tmp->type, indent+1, "TYPE: ", ",\n");
             if (tmp->init)
                 showAST(tmp->init, indent+1, "INIT: ", "\n");
             std::cout << printIndent(indent) << "}" << eo;

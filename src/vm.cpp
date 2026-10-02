@@ -88,11 +88,13 @@ void VM::initVec() {
     IVEC[JMP] = &VM::jmp;
     IVEC[JMPF] = &VM::jmpf;
     IVEC[JMPT] = &VM::jmpt;
+    IVEC[SWAP_SP] = &VM::swapSp;
     IVEC[CALL] = &VM::call;
     IVEC[IMPORT_MODULE] = &VM::importModule;
     IVEC[LOAD_GVAR] = &VM::loadGVar;
     IVEC[STORE_GVAR] = &VM::storeGVar;
     IVEC[LOAD_SVAR] = &VM::loadSVar;
+    IVEC[SWAP] = &VM::swap;
     IVEC[STORE_SVAR] = &VM::storeSVar;
     IVEC[LOAD_MODULE] = &VM::loadModule;
     IVEC[LOAD_GCST] = &VM::loadGCst;
@@ -198,6 +200,13 @@ MicaValue VM::pop() {
     auto tmp = env.getCTask()->mstack.back();
     env.getCTask()->mstack.pop_back();
     return tmp;
+}
+
+void VM::swapSp(int, int) {
+    auto sp = pop();
+    auto und = pop();
+    push(sp);
+    push(und);
 }
 
 void VM::execute(int instr) {
@@ -315,6 +324,12 @@ void VM::jmpt(int a, int b) {
     if (v.b) env.getCTask()->pc = a;
 }
 
+void VM::swap(int a, int b) {
+    auto i1 = (int)env.getCTask()->mstack.size() - 1 - a;
+    auto i2 = (int)env.getCTask()->mstack.size() - 1 - b;
+    std::swap(env.getCTask()->mstack[i1], env.getCTask()->mstack[i2]);
+}
+
 void VM::call(int a, int b) {
     // Stack: [fn, v1, v2, v3, v4, ..., vN]
     std::vector<MicaValue> args;
@@ -421,6 +436,7 @@ void VM::dup(int a, int b) {
 
 void VM::memGet(int a, int b) {
     std::string fieldName;
+    // [obj, fieldName]
     auto fieName = pop();
     auto arr = (ObjArray*)(((ObjInstance*)fieName.obj)->cls);
     for (auto i : arr->elements)

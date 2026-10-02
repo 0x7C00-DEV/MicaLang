@@ -92,6 +92,7 @@ private:
     CompileEnvironment* env;
     AstToMtype* conver;
     std::unordered_map<std::string, int> opera;
+    std::unordered_map<std::string, std::string> optofn;
     CurrentCompileTask* getCurrentTsk();
     Scope* createScope(Scope::ScopeKind);
 #ifdef TEST
@@ -120,6 +121,7 @@ private:
     MType* visitBlock(AST*, std::string, std::string);
     MType* visitModuleImport(AST*);
     MType* visitBinOpNode(AST*, MType*);
+    MType* getMemberType(AST*);
     MType* visitCallNode(AST*, MType*);
     MType* visitElementGet(AST*, MType*);
     MType* visitMemberAccess(AST*, MType*);

@@ -803,10 +803,14 @@ Register Parser::makeVarDefine() {
     setError(res, equal(TT_ID), "SyntaxError: want a id");
     std::string name = current.data;
     advance();
-    setError(res, equal(":") && equal(TT_OP), "SyntaxError: want ':', found '" + current.data + "'");
-    advance();
-    Register type = makeType();
-    test(type);
+
+    Register type;
+    if (equal(":") && equal(TT_OP)) {
+        advance();
+        type = makeType();
+        test(type);
+    }
+
     Register init;
     init.ok(nullptr);
     if (equal("=")) {
@@ -814,7 +818,8 @@ Register Parser::makeVarDefine() {
         init = makeExpr();
         test(init);
     }
-    Position end = init.result ? init.result->end : type.result->end;
+
+    Position end = posEnd();
     res.ok(new VarDef(name, type.result, init.result, begin, end));
     return res;
 }

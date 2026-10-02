@@ -41,10 +41,12 @@ private:
 
     void push(MicaValue);
     MicaValue pop();
+    void swapSp(int, int);
     void binOp(int, int);
     void jmp(int, int);
     void jmpf(int, int);
     void jmpt(int, int);
+    void swap(int, int);
     void call(int, int);
     void loadGVar(int, int);
     void storeGVar(int, int);
