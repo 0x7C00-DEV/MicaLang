@@ -5,6 +5,7 @@
 #ifndef MICALANG_LEXER_H
 #define MICALANG_LEXER_H
 #include "token.h"
+#include "unordered_map"
 
 enum {
     SYN_TYPE,
@@ -27,6 +28,8 @@ private:
     std::string expr;
     int pos;
     char current;
+
+    std::unordered_map<std::string, std::string> optofn;
 
     struct State {
         std::string expr;

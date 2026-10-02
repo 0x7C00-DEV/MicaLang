@@ -22,6 +22,24 @@ Lexer::Lexer() {
     pos = -1;
     current = 0;
     lin = col = 1;
+    optofn["+"] = "__add__";
+    optofn["-"] = "__sub__";
+    optofn["/"] = "__div__";
+    optofn["*"] = "__mul__";
+    optofn["<<"] = "__shl__";
+    optofn[">>"] = "__shr__";
+    optofn["%"] = "__mod__";
+    optofn["^"] = "__xor__";
+    optofn["=="] = "__eq__";
+    optofn["!="] = "__neq__";
+    optofn[">"] = "__big__";
+    optofn["<"] = "__less__";
+    optofn[">="] = "__eqorbig__";
+    optofn["<="] = "__eqorless__";
+    optofn["&"] = "__bitand__";
+    optofn["|"] = "__bitor__";
+    optofn["&&"] = "__and__";
+    optofn["||"] = "__or__";
 }
 
 static bool isWord(const char c) {
@@ -142,6 +160,14 @@ Token Lexer::getIdOrKey() {
     tk = res == "false" || res == "true"? TT_BOOL : tk;
     tk = res == "null"? TT_NULL : tk;
     auto end = getPos();
+    if (res == "operator") {
+        auto tmp = getSymbol(SYN_VALUE);
+        if (tmp.data == "[" && tmp.kind == TT_OP) {
+            advance(SYN_VALUE);
+            return { "[]", TT_ID, begin, end };
+        }
+        return { optofn[tmp.data], TT_ID, begin, end };
+    }
     return {res, tk, begin, end};
 }
 

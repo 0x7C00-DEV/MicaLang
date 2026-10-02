@@ -41,6 +41,21 @@ void calc(std::string expr, int& bigBlockCnt, int& midBlockCnt) {
     }
 }
 
+void testLexer() {
+    Lexer lexer;
+    while (true) {
+        printf(">>> ");
+        std::string expr;
+        std::getline(std::cin, expr);
+        lexer.resetExpr(expr, "<stdin>");
+        Token current = lexer.getToken(SYN_VALUE);
+        while (current.kind != TT_EOF) {
+            current.debug();
+            current = lexer.getToken(SYN_VALUE);
+        }
+    }
+}
+
 void shell() {
     Parser p;
     while (true) {

@@ -562,6 +562,8 @@ Register Parser::makeFunction() {
     }
     std::vector<AST*> argTypes;
     for (auto i : args) argTypes.push_back(((VarDef*)i)->type);
+    if (funcName == "[]" && args.size()==3) funcName = "__elementset__";
+    else if (funcName == "[]" && args.size()==2) funcName = "__elementget__";
     return {new Func(funcName, body.result, args,
                      new FuncType(retType.result, argTypes, templates, begin, end),
                      isNative, begin, end)};

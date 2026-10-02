@@ -4,11 +4,11 @@ class Test {
         self.x = [0,0,0,0,0,0];
     }
 
-    fn __elementset__(self: Test, pos:int, val: int): void {
+    fn operator[](self: Test, pos:int, val: int): void {
         self.x[pos] = val;
     }
 
-    fn __elementget__(self: Test, pos:int): int {
+    fn operator[](self: Test, pos:int): int {
         return self.x[pos];
     }
 }
