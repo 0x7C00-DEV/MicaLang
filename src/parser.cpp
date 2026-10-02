@@ -68,6 +68,40 @@ Register Parser::makeBinOpNode(MPCLBCK clb, std::vector<std::string> ops) {
     return left;
 }
 
+
+Register Parser::makeLambda() {
+    Position begin = posBegin();
+    Register res;
+    Register body;
+    std::vector<AST*> args;
+    std::vector<AST*> argType;
+    Register retType = nullptr;
+    setError(res, equal("(") && equal(TT_OP), "SyntaxError: want a '('");
+    advance();
+    while (current.kind != TT_EOF && !(equal(")") && equal(TT_OP))) {
+        Register tmp = makeVarDefine();
+        test(tmp);
+        args.push_back(tmp.result);
+        argType.push_back(((VarDef*)tmp.result)->type);
+        if (equal(")") && equal(TT_OP)) break;
+        setError(res, equal(",")&&equal(TT_OP), "SyntaxError: want a ','" );
+        advance();
+    }
+    setError(res, equal(")") && equal(TT_OP), "SyntaxError: want a ')'");
+    advance();
+
+    setError(res, equal(":")&&equal(TT_OP), "SyntaxError: want a ':'");
+    advance();
+    retType = makeType();
+    test(retType);
+
+    body = makeBlock();
+    test(body);
+    auto end = posEnd();
+    res.ok(new Lambda(body.result, args, new FuncType(retType.result, argType, {}, posBegin(), posEnd()), begin, end));
+    return res;
+}
+
 Register Parser::makeNumberNode() {
     Position begin = posBegin();
     Position end = posEnd();
@@ -187,12 +221,18 @@ Register Parser::makeValue() {
         return makeArray();
 
     if (equal(TT_OP) && equal("(")) {
-        advance(SYN_VALUE);
-        auto tmp = makeExpr();
-        test(tmp);
-        setError(tmp, equal(")") && equal(TT_OP), "SyntaxError: Want a ')'");
-        advance(SYN_VALUE);
-        return makeElementGetN(tmp.result, {}, SYN_VALUE);
+        saveState();
+        auto lmd = makeLambda();
+        if (!lmd.isSuc) {
+            restore();
+            advance(SYN_VALUE);
+            auto tmp = makeExpr();
+            test(tmp);
+            setError(tmp, equal(")") && equal(TT_OP), "SyntaxError: Want a ')'");
+            advance(SYN_VALUE);
+            return makeElementGetN(tmp.result, {}, SYN_VALUE);
+        }
+        return lmd;
     }
 
     if (equal(TT_CHAR))

@@ -1,7 +1,7 @@
-CMakeFiles/MicaLang.dir/src/compiler.cpp.obj: \
- C:\Users\Lenovo\Desktop\MicaLang\src\compiler.cpp \
- C:/Users/Lenovo/Desktop/MicaLang/include/compiler.h \
- C:/Users/Lenovo/Desktop/MicaLang/include/compiler.h \
+CMakeFiles/MicaLang.dir/src/native.cpp.obj: \
+ C:\Users\Lenovo\Desktop\MicaLang\src\native.cpp \
+ C:/Users/Lenovo/Desktop/MicaLang/include/native.h \
+ C:/Users/Lenovo/Desktop/MicaLang/include/config.h \
  C:/Users/Lenovo/Desktop/MicaLang/include/symbol.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/string \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/requires_hosted.h \
@@ -179,7 +179,6 @@ CMakeFiles/MicaLang.dir/src/compiler.cpp.obj: \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_relops.h \
  C:/Users/Lenovo/Desktop/MicaLang/include/position.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/iostream \
- C:/Users/Lenovo/Desktop/MicaLang/include/loader.h \
  C:/Users/Lenovo/Desktop/MicaLang/include/value.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/cstdint \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/stdint.h \
@@ -441,12 +440,6 @@ CMakeFiles/MicaLang.dir/src/compiler.cpp.obj: \
  F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/psdk_inc/_dbg_LOAD_IMAGE.h \
  F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/psdk_inc/_dbg_common.h \
  C:/Users/Lenovo/Desktop/MicaLang/include/asm.h \
- C:/Users/Lenovo/Desktop/MicaLang/include/config.h \
- C:/Users/Lenovo/Desktop/MicaLang/include/symbol.h \
- C:/Users/Lenovo/Desktop/MicaLang/include/value.h \
- C:/Users/Lenovo/Desktop/MicaLang/include/parser.h \
- C:/Users/Lenovo/Desktop/MicaLang/include/lexer.h \
- C:/Users/Lenovo/Desktop/MicaLang/include/token.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/algorithm \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_algo.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/algorithmfwd.h \
@@ -456,7 +449,4 @@ CMakeFiles/MicaLang.dir/src/compiler.cpp.obj: \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/ranges_algo.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/ranges_algobase.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/pstl/glue_algorithm_defs.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/pstl/execution_defs.h \
- C:/Users/Lenovo/Desktop/MicaLang/include/config.h \
- C:/Users/Lenovo/Desktop/MicaLang/include/asm.h \
- C:/Users/Lenovo/Desktop/MicaLang/include/native.h
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/pstl/execution_defs.h

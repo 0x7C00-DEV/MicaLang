@@ -16,6 +16,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/Lenovo/Desktop/MicaLang/src/lexer.cpp" "CMakeFiles/MicaLang.dir/src/lexer.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/lexer.cpp.obj.d"
   "C:/Users/Lenovo/Desktop/MicaLang/src/loader.cpp" "CMakeFiles/MicaLang.dir/src/loader.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/loader.cpp.obj.d"
   "C:/Users/Lenovo/Desktop/MicaLang/src/makeError.cpp" "CMakeFiles/MicaLang.dir/src/makeError.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/makeError.cpp.obj.d"
+  "C:/Users/Lenovo/Desktop/MicaLang/src/native.cpp" "CMakeFiles/MicaLang.dir/src/native.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/native.cpp.obj.d"
   "C:/Users/Lenovo/Desktop/MicaLang/src/parser.cpp" "CMakeFiles/MicaLang.dir/src/parser.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/parser.cpp.obj.d"
   "C:/Users/Lenovo/Desktop/MicaLang/src/position.cpp" "CMakeFiles/MicaLang.dir/src/position.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/position.cpp.obj.d"
   "C:/Users/Lenovo/Desktop/MicaLang/src/symbol.cpp" "CMakeFiles/MicaLang.dir/src/symbol.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/symbol.cpp.obj.d"

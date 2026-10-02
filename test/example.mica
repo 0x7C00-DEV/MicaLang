@@ -9,10 +9,11 @@ class Test {
     }
 }
 
+fn call(x: ():void, args: Test):void {
+    x(args);
+}
+
 fn main(): int {
-    let tmp:[Test] = [];
-    resize(tmp, 10);
-    tmp[0] = new Test(12);
-    tmp[0].showX();
+    
     return 0;
 }

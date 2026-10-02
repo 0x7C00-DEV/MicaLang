@@ -23,6 +23,20 @@ void showAST(AST* tree, int indent, const std::string& fo, const std::string& eo
             std::cout << printIndent(indent) << "}" << eo;
             break;
         }
+        case AST::AST_LAMBDA: {
+            std::cout << printIndent(indent) << fo << "Lambda {\n";
+            auto tmp = (Lambda*) tree;
+            if (!tmp->args.empty()) {
+                std::cout << printIndent(indent+1) << "ARGS: [\n";
+                for (int i=0; i<tmp->args.size(); ++i)
+                    showAST(tmp->args[i], indent+2, std::to_string(i) + ":", ",\n");
+                std::cout << printIndent(indent+1) << "]\n";
+            }
+            showAST(tmp->ftype, indent+1, "TYPE: ", ",\n");
+            showAST(tmp->body, indent+1, "BODY: ", ",\n");
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
         case AST::AST_FUNC_DEF: {
             auto tmp = (Func*) tree;
             std::cout << printIndent(indent) << fo << "Function {\n";

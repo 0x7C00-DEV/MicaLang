@@ -320,6 +320,30 @@ src/makeError.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/makeError.cpp.s
 .PHONY : src/makeError.cpp.s
 
+src/native.obj: src/native.cpp.obj
+.PHONY : src/native.obj
+
+# target to build an object file
+src/native.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/native.cpp.obj
+.PHONY : src/native.cpp.obj
+
+src/native.i: src/native.cpp.i
+.PHONY : src/native.i
+
+# target to preprocess a source file
+src/native.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/native.cpp.i
+.PHONY : src/native.cpp.i
+
+src/native.s: src/native.cpp.s
+.PHONY : src/native.s
+
+# target to generate assembly for a file
+src/native.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/native.cpp.s
+.PHONY : src/native.cpp.s
+
 src/parser.obj: src/parser.cpp.obj
 .PHONY : src/parser.obj
 
@@ -497,6 +521,9 @@ help:
 	@echo ... src/makeError.obj
 	@echo ... src/makeError.i
 	@echo ... src/makeError.s
+	@echo ... src/native.obj
+	@echo ... src/native.i
+	@echo ... src/native.s
 	@echo ... src/parser.obj
 	@echo ... src/parser.i
 	@echo ... src/parser.s

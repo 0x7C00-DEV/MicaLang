@@ -20,15 +20,46 @@ std::string loadFile(std::string path) {
     return res;
 }
 
+void calc(std::string expr, int& bigBlockCnt, int& midBlockCnt) {
+    for (int i=0; i<expr.size(); ++i) {
+        if (expr[i] == '\'')  {
+            ++i;
+            while (i < expr.size() && expr[i] != '\'') ++i;
+            ++i;
+            continue;
+        }
+        if (expr[i] == '"')  {
+            ++i;
+            while (i < expr.size() && expr[i] != '"') ++i;
+            ++i;
+            continue;
+        }
+        if (expr[i]=='(') ++midBlockCnt;
+        else if (expr[i]==')') --midBlockCnt;
+        else if (expr[i]=='{') ++bigBlockCnt;
+        else if (expr[i]=='}') --bigBlockCnt;
+    }
+}
+
 void shell() {
     Parser p;
     while (true) {
         printf(">>> ");
         std::string expr;
         std::getline(std::cin, expr);
+        int bigBlockCnt=0, midBlockCnt=0;
+        calc(expr, bigBlockCnt, midBlockCnt);
+        while (bigBlockCnt != 0 || midBlockCnt != 0) {
+            printf("...");
+            std::string tmp;
+            std::getline(std::cin, expr);
+            expr += tmp;
+            calc(expr, bigBlockCnt, midBlockCnt);
+        }
         auto tmp = p.parseExpr(expr, "<stdin>");
         if (!tmp.isSuc) {
-            std::cout << "Error: " << tmp.error << std::endl;
+            std::cout << tmp.error << std::endl;
+            continue;
         } else {
             showAST(tmp.result, 0, "", "\n");
         }
@@ -61,6 +92,6 @@ void release(int argc, char** argv) {
 }
 
 int main(int argc, char** argv) {
-    testFile();
+    shell();
     return 0;
 }

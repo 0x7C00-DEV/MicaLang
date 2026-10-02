@@ -82,5 +82,11 @@
   "command": "F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -g -std=gnu++20 -o CMakeFiles\\MicaLang.dir\\src\\dis.cpp.obj -c C:\\Users\\Lenovo\\Desktop\\MicaLang\\src\\dis.cpp",
   "file": "C:/Users/Lenovo/Desktop/MicaLang/src/dis.cpp",
   "output": "CMakeFiles/MicaLang.dir/src/dis.cpp.obj"
+},
+{
+  "directory": "C:/Users/Lenovo/Desktop/MicaLang/build",
+  "command": "F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -g -std=gnu++20 -o CMakeFiles\\MicaLang.dir\\src\\native.cpp.obj -c C:\\Users\\Lenovo\\Desktop\\MicaLang\\src\\native.cpp",
+  "file": "C:/Users/Lenovo/Desktop/MicaLang/src/native.cpp",
+  "output": "CMakeFiles/MicaLang.dir/src/native.cpp.obj"
 }
 ]

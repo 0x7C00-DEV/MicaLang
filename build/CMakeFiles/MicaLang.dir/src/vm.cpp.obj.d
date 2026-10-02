@@ -450,4 +450,5 @@ CMakeFiles/MicaLang.dir/src/vm.cpp.obj: \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/ranges_algo.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/ranges_algobase.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/pstl/glue_algorithm_defs.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/pstl/execution_defs.h
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/pstl/execution_defs.h \
+ C:/Users/Lenovo/Desktop/MicaLang/include/native.h

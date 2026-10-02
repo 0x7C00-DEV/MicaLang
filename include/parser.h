@@ -83,6 +83,7 @@ private:
     Register makeType();
     Register makeClass();
     Register makeNew();
+    Register makeLambda();
     TRegister makeTemplate();
 
     Register makeForInit();

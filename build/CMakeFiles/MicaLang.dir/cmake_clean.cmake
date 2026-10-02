@@ -15,6 +15,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/MicaLang.dir/src/loader.cpp.obj.d"
   "CMakeFiles/MicaLang.dir/src/makeError.cpp.obj"
   "CMakeFiles/MicaLang.dir/src/makeError.cpp.obj.d"
+  "CMakeFiles/MicaLang.dir/src/native.cpp.obj"
+  "CMakeFiles/MicaLang.dir/src/native.cpp.obj.d"
   "CMakeFiles/MicaLang.dir/src/parser.cpp.obj"
   "CMakeFiles/MicaLang.dir/src/parser.cpp.obj.d"
   "CMakeFiles/MicaLang.dir/src/position.cpp.obj"
