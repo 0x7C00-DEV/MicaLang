@@ -555,6 +555,7 @@ MType* Compiler::visitAssign(AST* a) {
             visitValue(temp->position, ft->argsType[1]);  // [method, obj, pos]
             visitValue(src,            ft->argsType[2]);  // [method, obj, pos, val]
             emit(getLabel(), CALL, 3, 0);       // ← CALL 3
+            emit(getLabel(), POP, 0, 0);
             return ft->retType;
         } else {
             std::cout << "ERROR: error unsuppose type " << obj->baseType << "\n";

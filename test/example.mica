@@ -14,8 +14,8 @@ class Test {
 }
 
 fn main(): int {
-    let tmp = new Test();
-    tmp[0] = 12;
-    println(itos(tmp[0]));
+    let x = 0;
+    x += 1;
+    println(itos(x));
     return 0;
 }
