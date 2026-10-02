@@ -1,6 +1,18 @@
+class Test {
+    x: int;
+    fn __init__(self: Test, x: int): void {
+        self.x = x;
+    }
 
+    fn showX(self:Test): void {
+        println(itos(self.x));
+    }
+}
 
 fn main(): int {
-
+    let tmp:[Test] = [];
+    resize(tmp, 10);
+    tmp[0] = new Test(12);
+    tmp[0].showX();
     return 0;
 }

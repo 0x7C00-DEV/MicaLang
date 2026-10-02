@@ -55,7 +55,6 @@ void VM::start(Module* module) {
 }
 
 void VM::executeLoop(int base) {
-
     while (env.callChain.size() > base) {
         execute(env.getCTask()->getInstr());
     }

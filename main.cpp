@@ -44,8 +44,7 @@ void testFile() {
     dis.disAll();
     printf("START_RUNNING:\n");
     VM vm(mod);
-    printf("END.\nVARS:");
-    vm.dumpGlobalVars();
+    printf("END.\n");
 }
 
 void release(int argc, char** argv) {

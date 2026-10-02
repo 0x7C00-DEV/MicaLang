@@ -11,6 +11,7 @@
 #define mica_string new TArrayType(new BaseType(BaseType::MCHAR))
 #define mica_int new BaseType(BaseType::MINT)
 #define mica_double new BaseType(BaseType::MDOUBLE)
+#define mica_bool new BaseType(BaseType::MBOOL)
 #define MFBEGIN [](Environment* env, std::vector<MicaValue> args) -> MicaValue
 
 NativeFunction::NativeFunction(std::string name, Function* fn, FunctionSymbol* fs) {
@@ -163,6 +164,19 @@ std::vector<NativeFunction*> getFuncs() {
         return MicaValue::Object(ins);
     });
     res.push_back(new NativeFunction("ftos", fn_ftos, fs_ftos));
+
+    auto fs_resize = new FunctionSymbol("resize", new FunctionType(mica_void, {mica_int}));
+    auto fn_resize = new Function("resize", MFBEGIN {
+        ((ObjArray*)((ObjInstance*)args[0].obj)->cls)->elements.resize(args[1].i);
+            return MicaValue::Null();
+    });
+    res.push_back(new NativeFunction("resize", fn_resize, fs_resize));
+
+    auto fs_strlen = new FunctionSymbol("strLen", new FunctionType(mica_int, {mica_string}));
+    auto fn_strlen = new Function("strLen", MFBEGIN {
+        return MicaValue::Int(((ObjArray*)((ObjInstance*)args[0].obj)->cls)->elements.size());
+    });
+    res.push_back(new NativeFunction("strLen", fn_strlen, fs_strlen));
 
     return res;
 }
