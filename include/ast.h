@@ -73,10 +73,12 @@ struct NewClass : AST {
     std::string className;
     std::vector<AST*> initArgs;
     std::vector<AST*> ttypes;
-    NewClass(std::string className, std::vector<AST*> initArgs, std::vector<AST*> ttypes, Position begin, Position end) : AST(AST_NEW_CLASS, begin, end) {
+    bool isCallInit = false;
+    NewClass(std::string className, std::vector<AST*> initArgs, std::vector<AST*> ttypes,bool isCallInit, Position begin, Position end) : AST(AST_NEW_CLASS, begin, end) {
         this->className = className;
         this->initArgs = initArgs;
         this->ttypes = ttypes;
+        this->isCallInit = isCallInit;
     } 
 };
 

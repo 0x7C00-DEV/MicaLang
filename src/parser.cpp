@@ -1137,7 +1137,10 @@ Register Parser::makeNew() {
             return {temps.error, posBegin(), posEnd()};
     }
 
+    bool isCallInit = false;
+
     if (equal("(") && equal(TT_OP)) {
+        isCallInit = true;
         advance();
         while (current.kind != TT_EOF && !(equal(")") && equal(TT_OP))) {
             auto tmp = makeExpr();
@@ -1152,6 +1155,6 @@ Register Parser::makeNew() {
     }
 
     auto end = posEnd();
-    res.ok(new NewClass(name, initArgs, temps.result, begin, end));
+    res.ok(new NewClass(name, initArgs, temps.result, isCallInit, begin, end));
     return res;
 }

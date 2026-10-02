@@ -521,15 +521,45 @@ MType* Compiler::visitAssign(AST* a) {
     }
     if (dst->kind == AST::AST_ELEMENT_GET) {
         auto temp = (ElementGet*) dst;
-        auto obj = visitValue(temp->address, nullptr);
-        auto valt = visitValue(src, ((TArrayType*)obj)->elementType);
-        auto pos_ = visitValue(temp->position, new BaseType(BaseType::MINT));
-        emit(getLabel(), EL_SET, 0, 0);
-        if (pos_->__str__() != "int;") std::cout << "WARN: want a int, get '" << pos_->__str__() << "'\n";
-        if (obj->baseType != MType::BT_ARRAY) std::cout << "WARN: not a array\n";
-        if (valt->__str__() != ((TArrayType*)obj)->elementType->__str__())
-            std::cout << "WARN: element type is '" << ((TArrayType*)obj)->elementType->__str__() << "' value type is '" << valt->__str__() << "'\n";
-        return valt;
+        MType* obj = visitValue(temp->address, nullptr);
+        // [obj]
+        if (obj->baseType == MType::BT_ARRAY) {
+            MType* valt = visitValue(src, ((TArrayType*)obj)->elementType);
+            MType* pos_ = visitValue(temp->position, new BaseType(BaseType::MINT));
+            emit(getLabel(), EL_SET, 0, 0);
+            if (pos_->__str__() != "int;") std::cout << "WARN: want a int, get '" << pos_->__str__() << "'\n";
+            if (obj->baseType != MType::BT_ARRAY) std::cout << "WARN: not a array\n";
+            if (valt->__str__() != ((TArrayType*)obj)->elementType->__str__())
+                std::cout << "WARN: element type is '" << ((TArrayType*)obj)->elementType->__str__() << "' value type is '" << valt->__str__() << "'\n";
+            return valt;
+        } else if (obj->baseType == MType::BT_CLASS) {
+            // [obj]
+            ClassSymbol* cls = ((ClassSymbol*)((ClassType*) obj)->sym);
+            auto it = cls->members.find("__elementset__");
+            if (it == cls->members.end()) {
+                std::cout << "ERROR: object '" << cls->name
+                          << "' has no '__elementset__' member\n";
+                exit(-1);
+            }
+            if (it->second->baseType != MType::BT_FUNC) {
+                std::cout << "ERROR: '__elementset__' is not callable\n";
+                exit(-1);
+            }
+            auto ft = (FunctionType*)it->second;
+
+            // [obj]
+            emit(getLabel(), DUP, 0, 0);        // [obj, obj]
+            storeString("__elementset__");      // [obj, obj, str]
+            emit(getLabel(), MEM_GET, 0, 0);    // [obj, method]
+            emit(getLabel(), SWAP_SP, 0, 0);    // [method, obj]
+            visitValue(temp->position, ft->argsType[1]);  // [method, obj, pos]
+            visitValue(src,            ft->argsType[2]);  // [method, obj, pos, val]
+            emit(getLabel(), CALL, 3, 0);       // ← CALL 3
+            return ft->retType;
+        } else {
+            std::cout << "ERROR: error unsuppose type " << obj->baseType << "\n";
+            exit(-1);
+        }
     }
     if (dst->kind == AST::AST_MEMBER_ACCESS) {
         auto tmpx = (MemberAccess*) dst;
@@ -801,7 +831,7 @@ MType* Compiler::visitNewClass(AST* a, MType* expect) {
     }
     emit(getLabel(), LOAD_GCST, pos, 0);   // [class]
     emit(getLabel(), NEW, 0, 0);           // [obj]
-    if (!tmp->initArgs.empty()) {
+    if (tmp->isCallInit) {
         emit(getLabel(), DUP, 0, 0);       // [obj, obj]
         storeString("__init__");           // [obj, obj, strArr]
         emit(getLabel(), MEM_GET, 0, 0);   // [obj, fn]

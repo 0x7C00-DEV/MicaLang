@@ -1,24 +1,21 @@
 class Test {
-    x: int;
-    fn __init__(self: Test, x: int): void {
-        self.x = x;
+    x: [int];
+    fn __init__(self: Test): void {
+        self.x = [0,0,0,0,0,0];
     }
 
-    fn showX(self: Test): void {
-        println(itos(self.x));
+    fn __elementset__(self: Test, pos:int, val: int): void {
+        self.x[pos] = val;
     }
 
-    fn __add__(self: Test, y: int): Test {
-        return new Test(self.x + y);
-    }
-
-    fn __elementget__(self: Test, value: int): int {
-        return self.x + value;
+    fn __elementget__(self: Test, pos:int): int {
+        return self.x[pos];
     }
 }
 
 fn main(): int {
-    let tmp = new Test(12);
-    println(itos(tmp[9]));
+    let tmp = new Test();
+    tmp[0] = 12;
+    println(itos(tmp[0]));
     return 0;
 }
