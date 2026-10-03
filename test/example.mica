@@ -12,7 +12,9 @@ class Circle {
     }
 }
 
-fn takeShape(x: IShape): void { }
+fn takeShape(x: IShape): void { 
+    println(ftos(x.area()));
+}
 
 fn main(): int {
     let c = new Circle(1.0);

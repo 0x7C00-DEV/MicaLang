@@ -8,7 +8,6 @@ AstToMtype::AstToMtype(CompileEnvironment* env) {
     this->env = env;
 }
 
-
 MType* AstToMtype::parseImplementType(AST* a) {
     auto tmp = (ImplementsType*) a;
     std::vector<InterfaceSymbol*> symbols;
@@ -454,6 +453,9 @@ MType* Compiler::visitMemberAccess(AST* a, MType* expect) {
     auto parent = visitValue(tmp->parent, expect);
     storeString(tmp->member);
     emit(getLabel(), MEM_GET, 0, 0);
+    if (parent->baseType == MType::BT_INTERFACE) {
+        return  ((InterfaceType*)parent)->symbol->labels[tmp->member]->type;
+    }
     return ((ClassSymbol*)((ClassType*)parent)->sym)->members[tmp->member];
 }
 
