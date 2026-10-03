@@ -31,4 +31,5 @@ add_executable(MicaLang main.cpp
         include/dis.h
         src/dis.cpp
         include/native.h
-        src/native.cpp)
+        src/native.cpp
+        include/types.h)

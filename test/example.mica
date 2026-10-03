@@ -1,38 +1,21 @@
-interface Show {
-    fn asString():str;
+interface IShape {
+    fn area(): double;
 }
 
-
-class A implement Show {
-    msg: str;
-    fn __init__(self: A, msg: str): void {
-        self.msg = msg;
+class Circle {
+    r: double;
+    fn __init__(self: Circle, r: double): void {
+        self.r = r;
     }
-
-    fn operator()(self: A, b: str): void {
-        println("called!");
-        println(b);
-        println(self.msg);
-    }
-
-    fn show(self: A): void {
-        println(self.msg);
-    }
-
-    fn test(): void {
-        println("hello, world");
-    }
-
-    fn asString(self: A) : str {
-        return self.msg;
+    fn area(self: Circle): double {
+        return 3.14 * self.r * self.r;
     }
 }
 
-
+fn takeShape(x: IShape): void { }
 
 fn main(): int {
-    let tmp = new A("hello, world");
-    tmp("1");
-    tmp.show();
-    A.test();
+    let c = new Circle(1.0);
+    takeShape(c);
+    return 0;
 }

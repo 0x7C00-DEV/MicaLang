@@ -10,13 +10,24 @@
 #include <unordered_map>
 #include "ast.h"
 
+struct MType;
+struct InterfaceSymbol;
 struct Symbol;
+
+
+bool typeComp(MType*, MType*);
+bool typeComp(MType*, std::vector<InterfaceSymbol*>);
+std::string getTypeString(MType*);
 
 struct MType {
     enum TP { BT_BASIC, BT_NORMAL, BT_FUNC, BT_ARRAY, BT_TEMPLATE, BT_MODULE, BT_CLASS, BT_IMPL, BT_INTERFACE } baseType;
 
     MType(TP tp);
+private:
     virtual std::string __str__() = 0;
+    friend bool typeComp(MType*, MType*);
+    friend bool typeComp(MType*, std::vector<InterfaceSymbol*>);
+    friend std::string getTypeString(MType*);
 
     bool operator==(MType*);
     bool operator!=(MType*);
@@ -132,6 +143,7 @@ struct TImplementsType : MType {
 struct ClassType : MType {
     Symbol* sym;
     std::string name;
+    bool isImplement(std::vector<InterfaceSymbol*>);
     std::string __str__() override;
     ClassType(std::string, Symbol*);
 };

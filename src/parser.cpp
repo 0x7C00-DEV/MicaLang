@@ -377,7 +377,7 @@ Register Parser::makeImport() {
     setError(res, equal(TT_KEY)&&equal("as"), "SyntaxError: want a 'as'");
     advance();
 
-    setError(res, equal(TT_ID), "SyntaxError: want a id");
+    setError(res, equal(TT_ID), "SyntaxError: want a id4");
     align = current.data;
     advance();
 
@@ -818,7 +818,7 @@ Register Parser::makeVarDefGrp() {
 Register Parser::makeVarDefine() {
     Register res;
     Position begin = posBegin();
-    setError(res, equal(TT_ID), "SyntaxError: want a id");
+    setError(res, equal(TT_ID), "SyntaxError: want a id5");
     std::string name = current.data;
     advance();
 
@@ -971,7 +971,7 @@ Register Parser::makeFunctionTag(AccessType at) {
     Position begin = posBegin();
     advance();
     Register res;
-    setError(res, equal(TT_ID), "SyntaxError: want a id");
+    setError(res, equal(TT_ID), "SyntaxError: want a id6");
     std::string name = current.data;
     advance();
 
@@ -1019,7 +1019,7 @@ Register Parser::makeInterface() {
     Position begin = posBegin();
     advance();
     Register res;
-    setError(res, equal(TT_ID), "SyntaxError: want a id");
+    setError(res, equal(TT_ID), "SyntaxError: want a id7");
     std::string name = current.data;
     std::vector<AST*> funcs;
     advance();
@@ -1074,15 +1074,15 @@ Register Parser::makeClass() {
     setError(res, equal("class") && equal(TT_KEY), "SyntaxError: want a 'class'");
     advance();
     std::string name, extend;
-    std::vector<std::string> impls;
+    std::vector<AST*> impls;
     std::vector<std::string> temp;
-    setError(res, equal(TT_ID), "SyntaxError: want a id");
+    setError(res, equal(TT_ID), "SyntaxError: want a id8");
     name = current.data;
     advance();
     if (equal("<") && equal(TT_OP)) {
         advance(SYN_TYPE);
         while (current.kind != TT_EOF && !(equal(">") && equal(TT_OP))) {
-            setError(res, equal(TT_ID), "SyntaxError: want a id");
+            setError(res, equal(TT_ID), "SyntaxError: want a id9");
             temp.push_back(current.data);
             advance();
             if (equal(">") && equal(TT_OP)) break;
@@ -1095,16 +1095,17 @@ Register Parser::makeClass() {
 
     if (equal("extend")) {
         advance();
-        setError(res, equal(TT_ID), "SyntaxError: want a id");
+        setError(res, equal(TT_ID), "SyntaxError: want a id1");
         extend = current.data;
         advance();
     }
     if (equal("implement")) {
         advance();
         while (current.kind != TT_EOF && !(equal("{") && equal(TT_OP))) {
-            setError(res, equal(TT_ID), "SyntaxError: want a id");
-            impls.push_back(current.data);
-            advance();
+            setError(res, equal(TT_ID), "SyntaxError: want a id2");
+            Register tmp1 = makeMemberAccess(SYN_TYPE);
+            test(tmp1);
+            impls.push_back(tmp1.result);
             if (equal("{") && equal(TT_OP)) break;
             setError(res, equal(",") && equal(TT_OP), "SyntaxError: want a ,");
             advance();
@@ -1116,7 +1117,11 @@ Register Parser::makeClass() {
     setError(res, equal("{") && equal(TT_OP), "SyntaxError: want a '{'");
     advance();
     while (current.kind != TT_EOF && !(equal(TT_OP) && equal("}"))) {
-        if (!(equal(TT_KEY) && equal("fn"))) {
+        if (equal(TT_KEY) && equal("interface")) {
+            Register tmp = makeInterface();
+            test(tmp);
+            fields.push_back(tmp.result);
+        } else if (!(equal(TT_KEY) && equal("fn"))) {
             Register tmp = makeVarDefine();
             test(tmp);
             fields.push_back(tmp.result);
@@ -1145,7 +1150,7 @@ Register Parser::makeNew() {
     setError(res, equal(TT_KEY) && equal("new"), "SyntaxError: want a 'new'");
     advance();
 
-    setError(res, equal(TT_ID), "SyntaxError: want a id");
+    setError(res, equal(TT_ID), "SyntaxError: want a id3");
     name = current.data;
     advance();
 

@@ -111,12 +111,12 @@ private:
     void loadConstG(int);
     std::string getLabel();
 
-    ClassSymbol* getClassInfo(std::string);
+    Symbol* getClassInfo(std::string);
     ObjClass* getClassObject(std::string);
     int getClassId(std::string);
 
-    InterfaceSymbol* getInterface(std::string);
-    int getInterfaceId(std::string);
+    Symbol* getInterface(AST*);
+    int getInterfaceId(AST*);
 
     void declareGlobalVars(AST*);
     Function* makeFunction(AST*);
@@ -133,7 +133,7 @@ private:
     MType* visitValue(AST*, MType*);
     MType* visitAssign(AST*);
     MType* visitStmt(AST*, std::string, std::string);
-    MType* visitFuncTag(AST*);
+    FunctionSymbol* visitFuncTag(AST*);
     MType* visitIf(AST*, std::string, std::string);
     MType* visitTernOp(AST*, MType*);
     MType* visitForLoop(AST*);

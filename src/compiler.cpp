@@ -2,6 +2,7 @@
 // Created by Lenovo on 2026/9/25.
 //
 #include "../include/compiler.h"
+#include "../include/types.h"
 
 AstToMtype::AstToMtype(CompileEnvironment* env) {
     this->env = env;
@@ -279,11 +280,11 @@ MType* Compiler::visitBinOpNode(AST* a, MType* expect) {
     MType* right = visitValue(tmp->right, operandExpect);
     if (left->baseType != MType::BT_ARRAY && left->baseType != MType::BT_CLASS) {
         emit(getLabel(), BIN_OPER, op, 0);
-        auto tl = left->__str__();
-        auto tr = right->__str__();
+        auto tl = left;
+        auto tr = right;
         if (tmp->op == "==" || tmp->op == "!=" || tmp->op == ">=" || tmp->op == "<=" || tmp->op == ">" || tmp->op == "<")
             return new BaseType(BaseType::MBOOL);
-        if (tl == "double;" || tr == "double;")
+        if (typeComp(tl, mica_double) || typeComp(tr, mica_double))
             return new BaseType(BaseType::MDOUBLE);
         return left;
     } else if (left->baseType == MType::BT_CLASS) {
@@ -328,8 +329,16 @@ Symbol *Compiler::getMemberType(AST* node) {
     }
     if (node->kind == AST::AST_MEMBER_ACCESS) {
         auto tmp = getMemberType(((MemberAccess*)node)->parent);
+        if (!tmp) {
+            std::cout << "ERROR: tmp is a null pointer\n";
+            exit(-1);
+        }
+        if (tmp->kind != Symbol::SYM_CLASS) {
+            std::cout << "ERROR: not a class\n";
+            exit(-1);
+        }
         auto member = ((MemberAccess*)node)->member;
-        return ((ClassSymbol*)((ClassType*)tmp)->sym)->syms[member];
+        return ((ClassSymbol*)tmp)->syms[member];
     }
     if (node->kind == AST::AST_ELEMENT_GET) {
         auto tmp = (ElementGet*) node;
@@ -357,8 +366,11 @@ MType* Compiler::visitCallNode(AST* a, MType* expect) {
                 argc += 1;
             }
         }
-        for (auto i : tmp->args)
-            visitValue(i, expect);
+        for (int i=0; i<tmp->args.size(); ++i) {
+            if (! typeComp(visitValue(tmp->args[i], nullptr), tp->argsType[i])) {
+                std::cout << "WARN: type error\n";
+            }
+        }
         emit(getLabel(), CALL, argc, 0);
         return tp->retType;
     } else if (tp1->baseType == MType::BT_CLASS) {
@@ -383,8 +395,11 @@ MType* Compiler::visitCallNode(AST* a, MType* expect) {
         // [obj, func]
         emit(getLabel(), SWAP_SP, 0, 0);
         // [func, obj]
-        for (auto i : tmp->args)
-            visitValue(i, nullptr);
+        for (int i=0; i<tmp->args.size(); ++i) {
+            if (! typeComp(visitValue(tmp->args[i], nullptr), ftmp->argsType[i])) {
+                std::cout << "WARN: type error\n";
+            }
+        }
         emit(getLabel(), CALL, tmp->args.size()+1, 0);
         return retTp;
     } else {
@@ -402,7 +417,7 @@ MType* Compiler::visitElementGet(AST* a, MType* expect) {
         MType* posType = visitValue(arrayId->position, expect);
         emit(getLabel(), EL_GET, 0, 0);
         if (((BaseType*)posType)->type != BaseType::MINT)
-            std::cout << "Warn: " << posType->__str__() << " not int\n";
+            std::cout << "Warn: " << getTypeString(posType) << " not int\n";
         return tp->elementType;
     } else if (tpm->baseType == MType::BT_CLASS) {
         // [obj]
@@ -472,9 +487,9 @@ Vresult Compiler::visitVarDefine(AST* a, bool isGlobal) {
                               ->lookupLocalVar(tmp->name);
                 if (sym && sym->kind == Symbol::SYM_VAR)
                     ((VarSymbol*)sym)->type = tp;
-            } else if (initType->__str__() != tp->__str__()) {
-                std::cout << "WARN: type " << initType->__str__()
-                          << ", " << tp->__str__() << std::endl;
+            } else if (!typeComp(initType, tp)) {
+                std::cout << "WARN: type " << getTypeString(initType)
+                          << ", " << getTypeString(tp) << std::endl;
             }
             emit(getLabel(), STORE_SVAR, varId, 0);
         }
@@ -497,9 +512,9 @@ Vresult Compiler::visitVarDefine(AST* a, bool isGlobal) {
             auto sym = env->cs.getGlobalScope()->symbols[tmp->name];
             if (sym && sym->kind == Symbol::SYM_VAR)
                 ((VarSymbol*)sym)->type = tp;
-        } else if (initType->__str__() != tp->__str__()) {
-            std::cout << "WARN: type " << initType->__str__()
-                      << ", " << tp->__str__() << std::endl;
+        } else if (!typeComp(initType, tp)) {
+            std::cout << "WARN: type " << getTypeString(initType)
+                      << ", " << getTypeString(tp) << std::endl;
         }
         emit(getLabel(), STORE_GVAR, varId, 0);
     }
@@ -607,9 +622,9 @@ MType* Compiler::visitAssign(AST* a) {
             exit(-1);
         }
         auto temp = (VarSymbol*) s;
-        auto vt = visitValue(src, temp->type)->__str__();
-        auto st = temp->type->__str__();
-        if (st != vt)
+        auto vt = visitValue(src, temp->type);
+        auto st = temp->type;
+        if (typeComp(vt, st))
             std::cout << "WARN: var '" << tmpx->name << "' type is '" << st << "' but value type is '" << vt << "'\n";
         int oper = (temp->vkind == VarSymbol::Global)? STORE_GVAR : STORE_SVAR;
         emit(getLabel(), oper, temp->id, 0);
@@ -623,10 +638,10 @@ MType* Compiler::visitAssign(AST* a) {
             MType* valt = visitValue(src, ((TArrayType*)obj)->elementType);
             MType* pos_ = visitValue(temp->position, new BaseType(BaseType::MINT));
             emit(getLabel(), EL_SET, 0, 0);
-            if (pos_->__str__() != "int;") std::cout << "WARN: want a int, get '" << pos_->__str__() << "'\n";
+            if (!typeComp(pos_, mica_int)) std::cout << "WARN: want a int, get '" << getTypeString(pos_) << "'\n";
             if (obj->baseType != MType::BT_ARRAY) std::cout << "WARN: not a array\n";
-            if (valt->__str__() != ((TArrayType*)obj)->elementType->__str__())
-                std::cout << "WARN: element type is '" << ((TArrayType*)obj)->elementType->__str__() << "' value type is '" << valt->__str__() << "'\n";
+            if (!typeComp(valt, ((TArrayType*)obj)->elementType))
+                std::cout << "WARN: element type is '" << getTypeString(((TArrayType*)obj)->elementType) << "' value type is '" << getTypeString(valt) << "'\n";
             return valt;
         } else if (obj->baseType == MType::BT_CLASS) {
             // [obj]
@@ -711,8 +726,6 @@ MType* Compiler::visitStmt(AST* a, std::string begin, std::string end) {
         return visitClass(a);
     if (a->kind == AST::AST_INTERFACE)
         return visitInterface(a);
-    if (a->kind == AST::AST_FUNC_TAG)
-        return visitFuncTag(a);
     MType* t = visitValue(a, nullptr);
     if (a->kind != AST::AST_ASSIGN_NODE)
         emit(getLabel(), POP, 0, 0);
@@ -731,8 +744,8 @@ MType* Compiler::visitTernOp(AST* a, MType* expect) {
     emit(false_, NOP, 0, 0);
     retTypef = visitValue(tmp->falseValue, expect);
     emit(end, NOP, 0, 0);
-    if (retTypef->__str__() != retTypet->__str__())
-        std::cout << "WARN: " << retTypet->__str__() << ", " << retTypef->__str__() << std::endl;
+    if (!typeComp(retTypef, retTypet))
+        std::cout << "WARN: " << getTypeString(retTypet) << ", " << getTypeString(retTypef) << std::endl;
     return retTypet;
 }
 
@@ -765,8 +778,8 @@ MType* Compiler::visitForLoop(AST* a) {
     emit("", JMP, begin, 0);
     emit(end, NOP, 0, 0);
 
-    if (tp && tp->__str__() != "bool;") {
-        std::cout << "WARN: want a bool, but get a '" << tp->__str__() << "'\n";
+    if (tp && !typeComp(tp, mica_bool)) {
+        std::cout << "WARN: want a bool, but get a '" << getTypeString(tp) << "'\n";
     }
     leaveScope();
     return nullptr;
@@ -783,8 +796,8 @@ MType* Compiler::visitWhileLoop(AST* a) {
     visitBlock(tmp->body, begin, end);
     emit(getLabel(), JMP, begin, 0);
     emit(end, NOP, 0,0);
-    if (tp->__str__() != "bool;")
-        std::cout << "warn in visitWhile, want a bool value, but get a '" << tp->__str__() << "'\n";
+    if (!typeComp(tp , mica_bool))
+        std::cout << "warn in visitWhile, want a bool value, but get a '" << getTypeString(tp) << "'\n";
     leaveScope();
     return nullptr;
 }
@@ -811,8 +824,8 @@ MType* Compiler::visitSwitch(AST* a) {
     std::string begin = getLabel();
     std::string end = getLabel();
     auto tp = visitValue(tmp->value, nullptr);
-    std::string t = tp->__str__();
-    std::vector<std::string> types;
+    auto t = tp;
+    std::vector<MType*> types;
     emit(begin, NOP, 0, 0);
     for (auto i: tmp->cases) {
         auto su = (Case*) i;
@@ -820,7 +833,7 @@ MType* Compiler::visitSwitch(AST* a) {
             createScope(Scope::SNORMAL_BLOCK);
             std::string end_ = getLabel();
             emit(getLabel(), DUP, 0, 0);
-            types.push_back(visitValue(su->value, tp)->__str__());
+            types.push_back(visitValue(su->value, tp));
             emit(getLabel(), BIN_OPER, BEQ, 0);
             emit(getLabel(), JMPF, end_, 0);
             visitBlock(su->block, begin, end);
@@ -832,7 +845,7 @@ MType* Compiler::visitSwitch(AST* a) {
     }
     emit(end, POP, 0, 0);
     for (auto i: types)
-        if (i != t) std::cout << "WARN: type '" << t << "' != '" << i << "'\n";
+        if (!typeComp(i, t)) std::cout << "WARN: type '" << getTypeString(t) << "' != '" << getTypeString(i) << "'\n";
     leaveScope();
     return nullptr;
 }
@@ -860,10 +873,20 @@ MType* Compiler::visitClass(AST* a) {
     auto cls = (Class*) a;
     auto tmp = new ObjClass(cls->name);
 
-    ClassSymbol* super = getClassInfo(cls->extend);
+    ClassSymbol* super = (ClassSymbol*)getClassInfo(cls->extend);
     std::vector<InterfaceSymbol*> impls;
-    for (auto i : cls->impls)
-        impls.push_back(getInterface(i));
+    for (auto i : cls->impls) {
+        auto tmp1 = getInterface(i);
+        if (!tmp1) {
+            std::cout << "ERROR: tmp1 is a null pointer\n";
+            exit(-1);
+        }
+        if (tmp1->kind != Symbol::SYM_INTERFACE) {
+            std::cout << "ERROR: not a interface\n";
+            exit(-1);
+        }
+        impls.push_back((InterfaceSymbol*)tmp1);
+    }
 
     auto sym = (ClassSymbol*)env->cs.lookup(cls->name);
     if (!sym) {
@@ -894,6 +917,13 @@ MType* Compiler::visitClass(AST* a) {
                 sym->members[vd->name] = conver->getType(vd->type);
                 sym->syms[vd->name] = new VarSymbol(vd->name, sym->members[vd->name], false, VarSymbol::ClassMember);
             }
+        } else if (i->kind == AST::AST_INTERFACE) {
+            auto inf = (Interface*) i;
+            std::unordered_map<std::string, FunctionSymbol*> tags;
+            for (auto i : inf->funcs)
+                tags[((Interface::FunctionTag*)i)->name] = visitFuncTag(i);
+            sym->syms[inf->name] = new InterfaceSymbol(inf->name, tags);
+            sym->members[inf->name] = new InterfaceType((InterfaceSymbol*)sym->syms[inf->name]);
         }
     }
     tmp->fields = fields;
@@ -966,7 +996,7 @@ MType* Compiler::visitArray(AST* a, MType* type) {
         MType* it = visitValue(tmp->elements[i], elemType);
         loadConstS(pushConstL(MicaValue::Int(i)));
         if (!elemType) elemType = it;
-        else if (elemType->__str__() != it->__str__()) std::cout << "WARN: element type mismatch: " << it->__str__() << " vs " << elemType->__str__() << "\n";
+        else if (!typeComp(elemType, it)) std::cout << "WARN: element type mismatch: " << getTypeString(it) << " vs " << getTypeString(elemType) << "\n";
         emit(getLabel(), EL_SET, 0, 0);
     }
     return new TArrayType(elemType, n);
@@ -1066,8 +1096,10 @@ MType *Compiler::visitReturn(AST *a) {
     return tp;
 }
 
-MType *Compiler::visitFuncTag(AST *) {
-    return nullptr;
+FunctionSymbol *Compiler::visitFuncTag(AST *f) {
+    auto symast = (Interface::FunctionTag*) f;
+    auto ftype = (FunctionType*)conver->getType((FuncType*) symast->funcType);
+    return new FunctionSymbol(symast->name, ftype, false);
 }
 
 MType *Compiler::visitId(AST *a) {
@@ -1159,8 +1191,8 @@ MType *Compiler::visitIf(AST *a, std::string begin, std::string end) {
     std::string if_ = getLabel();
     std::string ie = getLabel();
     auto tp = visitValue(tmp->condition, new BaseType(BaseType::MBOOL));
-    if (tp->__str__() != "bool;")
-        std::cout << "warn in visitIf, want a bool value, but get a '" << tp->__str__() << "'\n";
+    if (!typeComp(tp, mica_bool))
+        std::cout << "warn in visitIf, want a bool value, but get a '" << getTypeString(tp) << "'\n";
     emit(getLabel(), JMPF, if_, 0);
     visitBlock(tmp->tblock, begin, end);
     emit(getLabel(), JMP, ie, 0);
@@ -1223,7 +1255,7 @@ ObjClass *Compiler::getClassObject(std::string name) {
     return nullptr;
 }
 
-ClassSymbol *Compiler::getClassInfo(std::string name) {
+Symbol *Compiler::getClassInfo(std::string name) {
     if (name.empty()) return nullptr;
     auto cls = env->cs.lookup(name);
     if (!cls) return nullptr;
@@ -1232,17 +1264,43 @@ ClassSymbol *Compiler::getClassInfo(std::string name) {
     return (ClassSymbol*)cls;
 }
 
-InterfaceSymbol *Compiler::getInterface(std::string name) {
-    if (name.empty()) return nullptr;
-    auto cls = env->cs.lookup(name);
-    if (!cls) return nullptr;
-    if (cls->kind != Symbol::SYM_INTERFACE) return nullptr;
-    if (((InterfaceSymbol*)cls)->name != name) return nullptr;
-    return (InterfaceSymbol*)cls;
+Symbol *Compiler::getInterface(AST* tname) {
+    if (!tname) return nullptr;
+    if (tname->kind == AST::AST_ID) {
+        auto name = ((Id*)tname)->name;
+        auto cls = env->cs.lookup(name);
+        if (!cls) return cls;
+        if (((InterfaceSymbol*)cls)->name != name) return nullptr;
+        return cls;
+    }
+    if (tname->kind == AST::AST_MEMBER_ACCESS) {
+        auto h = getInterface(((MemberAccess*)tname)->parent);
+        if (!h) {
+            std::cout << "ERROR: h is a null pointer\n";
+            exit(-1);
+        }
+        if (h->kind != Symbol::SYM_CLASS) {
+            std::cout << "ERROR: h not a class\n";
+            exit(-1);
+        }
+        auto parent = (ClassSymbol*)h;
+        return parent->syms[((MemberAccess*)tname)->member];
+    }
+    std::cout << "ERROR: unknown kind " << tname->kind << "\n";
+    exit(-1);
 }
 
-int Compiler::getInterfaceId(std::string name) {
-    auto tmp = getInterface(name);
+int Compiler::getInterfaceId(AST* name) {
+    auto temp = getInterface(name);
+    if (!temp) {
+        std::cout << "ERROR: result is a null pointer\n";
+        exit(-1);
+    }
+    if (temp->kind != Symbol::SYM_INTERFACE) {
+        std::cout << "ERROR: not a interface\n";
+        exit(-1);
+    }
+    auto tmp = (InterfaceSymbol*)temp;
     if (!tmp) return -1;
     return tmp->interfaceId;
 }
@@ -1250,7 +1308,10 @@ int Compiler::getInterfaceId(std::string name) {
 Module* Compiler::getProgram(std::string text, std::string fileName) {
     std::vector<Register> tmp = parser.parseCode(text, fileName);
     for (auto i : tmp)
-        if (!i.isSuc) std::cout << i.error << std::endl;
+        if (!i.isSuc) {
+            std::cout << i.error << std::endl;
+            exit(-1);
+        }
 
     std::vector<AST*> Class_, globalVar, Fn, Itf, Import;
     for (auto i: tmp) {
@@ -1283,15 +1344,6 @@ Module* Compiler::getProgram(std::string text, std::string fileName) {
         }
     }
 
-    for (auto i : Fn) {
-        auto fn = (Func*)i;
-        if (!env->cs.lookup(fn->name)) {
-            auto ftp = (FunctionType*)conver->getType(fn->ftype);
-            env->cs.registSymbolGbl(fn->name,
-                                    new FunctionSymbol(fn->name, ftp, false));
-        }
-    }
-
     for (auto i : Itf) {
         auto itf = (Interface*)i;
         if (!env->cs.lookup(itf->name)) {
@@ -1301,6 +1353,17 @@ Module* Compiler::getProgram(std::string text, std::string fileName) {
             env->cs.registSymbolGbl(itf->name, sym);
         }
     }
+
+    for (auto i : Fn) {
+        auto fn = (Func*)i;
+        if (!env->cs.lookup(fn->name)) {
+            auto ftp = (FunctionType*)conver->getType(fn->ftype);
+            env->cs.registSymbolGbl(fn->name,
+                                    new FunctionSymbol(fn->name, ftp, false));
+        }
+    }
+
+
     for (auto i : Itf)   visitInterface(i);
     for (auto i : Class_) visitClass(i);
     for (auto i : Fn)    visitFunction(i, true);

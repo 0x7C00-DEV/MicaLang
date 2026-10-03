@@ -86,8 +86,6 @@ void testFile() {
     CompileEnvironment* ce = new CompileEnvironment;
     Compiler compiler(ce);
     Module* mod = compiler.getProgram(loadFile(file), file);
-    Dis dis(mod);
-    dis.disAll();
     printf("begin:\n");
     VM vm(mod);
     printf("end\n");

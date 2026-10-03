@@ -88,13 +88,13 @@ struct Class : AST {
     std::vector<std::string> templates;
     std::vector<AST*> methods;
     std::string extend;
-    std::vector<std::string> impls;
+    std::vector<AST*> impls;
 
     Class(std::string name, 
         std::vector<AST*> fields, 
         std::vector<AST*> methods, 
         std::string extend, 
-        std::vector<std::string> impls, 
+        std::vector<AST*> impls,
         std::vector<std::string> templates,
          Position begin, Position end)
         :AST(AST_CLASS, std::move(begin), std::move(end)) {

@@ -7,7 +7,9 @@
 // ---------------- MType ----------------
 
 
-
+std::string getTypeString(MType* a) {
+    return a->__str__();
+}
 
 InterfaceType::InterfaceType(InterfaceSymbol* s): MType(BT_INTERFACE) {
     this->name = s->name;
@@ -62,8 +64,8 @@ std::string FunctionType::__str__() {
     // (argTypes;)@retType;
     std::string res = "(";
     for (auto i : argsType)
-        res += i->__str__();
-    res += ")@" + retType->__str__() + ";";
+        res += getTypeString(i);
+    res += ")@" + getTypeString(retType) + ";";
     return res;
 }
 
@@ -79,7 +81,7 @@ TArrayType::TArrayType(MType* elementType, int size)
 
 std::string TArrayType::__str__() {
     // [elementType; size];
-    return "[" + elementType->__str__() + "];";
+    return "[" + getTypeString(elementType) + "];";
 }
 
 TTemplateType::TTemplateType(MType* rootType, std::vector<MType*> vars)
@@ -91,9 +93,9 @@ TTemplateType::TTemplateType(MType* rootType, std::vector<MType*> vars)
 std::string TTemplateType::__str__() {
     // <rootType;| templates;>;
     std::string res = "<";
-    res += rootType->__str__() + "|";
+    res += getTypeString(rootType) + "|";
     for (auto i: vars) {
-        res += i->__str__();
+        res += getTypeString(i);
     }
     res += ">;";
     return res;
@@ -142,11 +144,22 @@ FunctionType* FunctionType::withOutSelf() {
     return new FunctionType(retType, at);
 }
 
+bool ClassType::isImplement(std::vector<InterfaceSymbol*> tsym) {
+    for (auto i : tsym)
+        for (auto j : i->labels)
+            if (!((ClassSymbol*)sym)->checkFuncIsExist(j.second))
+                return false;
+    return true;
+}
+
 bool ClassSymbol::checkFuncIsExist(FunctionSymbol* func) {
     auto it = members.find(func->name);
-    if (it == members.end()) return false;
-    if (it->second->baseType != MType::BT_FUNC) return false;
-    return ((FunctionType*)it->second)->withOutSelf()->__str__() == ((FunctionType*)func->type)->withOutSelf()->__str__();
+    if (it != members.end() && it->second->baseType == MType::BT_FUNC
+        && ((FunctionType*)it->second)->withOutSelf()->__str__()
+           == ((FunctionType*)func->type)->withOutSelf()->__str__())
+        return true;
+    if (super) return super->checkFuncIsExist(func);
+    return false;
 }
 
 ClassSymbol::ClassSymbol(std::string name,
@@ -312,4 +325,20 @@ std::string ClassType::__str__() {
     auto res = tmp->getString();
     if (tmp->super) res += ":" + tmp->super->getString();
     return res + ";";
+}
+
+bool typeComp(MType* a, MType* b) {
+    if (a->baseType == MType::BT_CLASS && b->baseType == MType::BT_IMPL)
+        return ((ClassType*)a)->isImplement(((TImplementsType*)b)->interfaces);
+    return a->__str__() == b->__str__() || (a->baseType == MType::BT_CLASS
+        && b->baseType == MType::BT_INTERFACE
+        && ((ClassType*)a)->isImplement({((InterfaceType*)b)->symbol}));
+}
+
+bool typeComp(MType* a, std::vector<InterfaceSymbol*> b) {
+    if (a->baseType != MType::BT_CLASS) {
+        std::cout << "ERROR: not a class\n";
+        exit(-1);
+    }
+    return ((ClassType*)a)->isImplement(b);
 }
