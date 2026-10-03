@@ -19,8 +19,8 @@ MType* AstToMtype::parseTemplateType(AST* a) {
 MType* AstToMtype::getType(AST* a) {
     Type* t = (Type*) a;
     if (t->tpKind == Type::TYPE_ARRAY) return parseArrayType(a);
-    if (t->tpKind == Type::TYPE_TEMPLATE) return parseTemplateType(a); 
-    if (t->tpKind == Type::TYPE_NORMAL) return parseIdNode(a); 
+    if (t->tpKind == Type::TYPE_TEMPLATE) return parseTemplateType(a);
+    if (t->tpKind == Type::TYPE_NORMAL) return parseIdNode(a);
     if (t->tpKind == Type::TYPE_FUNC) return parseFuncType(a);
     printf("WARN: unknown type %d\n", t->tpKind);
     exit(-1);
@@ -204,7 +204,7 @@ MType* Compiler::visitBinOpNode(AST* a, MType* expect) {
     MType* operandExpect;
     if (op == BEQ || op == BNEQ || op == BAND || op == BOR ||
         op == BEQORBIG || op == BEQORLESS || op == BBIG || op == BLESS)
-        operandExpect = nullptr;   
+        operandExpect = nullptr;
     else if (op == BSHL || op == BSHR || op == BMOD ||
              op == BBAND || op == BBOR || op == BXOR)
         operandExpect = new BaseType(BaseType::MINT);
@@ -253,35 +253,28 @@ MType* Compiler::visitBinOpNode(AST* a, MType* expect) {
     }
 }
 
-MType *Compiler::getMemberType(AST* node) {
+Symbol *Compiler::getMemberType(AST* node) {
     if (node->kind == AST::AST_ID) {
         Symbol* sym = env->cs.lookup(((Id*)node)->name);
-        if (sym->kind == Symbol::SYM_VAR) 
-            return ((VarSymbol*)sym)->type;
-        if (sym->kind == Symbol::SYM_FUNC) 
-            return ((FunctionSymbol*)sym)->type;
-        if (sym->kind == Symbol::SYM_CLASS) 
-            return new ClassType(((ClassSymbol*)sym)->name, sym);
-        if (sym->kind == Symbol::SYM_MODULE) 
-            return new ModuleType(((ModuleSymbol*)sym)->reName, ((ModuleSymbol*)sym)->modulePath, sym);
-        if (sym->kind == Symbol::SYM_INTERFACE) {
-            std::cout << "ERROR: TYPE'interface'\n";
+        if (!sym) {
+            std::cout << "ERROR: symbol '" << ((Id*)node)->name << "' not found\n";
             exit(-1);
         }
+        return sym;
     }
     if (node->kind == AST::AST_MEMBER_ACCESS) {
         auto tmp = getMemberType(((MemberAccess*)node)->parent);
         auto member = ((MemberAccess*)node)->member;
-        return ((ClassSymbol*)((ClassType*)tmp)->sym)->members[member];
+        return ((ClassSymbol*)((ClassType*)tmp)->sym)->syms[member];
     }
     if (node->kind == AST::AST_ELEMENT_GET) {
         auto tmp = (ElementGet*) node;
         auto parentType = getMemberType(tmp->address);
-        return ((TArrayType*)parentType)->elementType;
+        return parentType;
     }
     if (node->kind == AST::AST_CALL) {
         auto tmp = (Call*) node;
-        return ((FunctionType*)getMemberType(tmp->fnid))->retType;
+        return getMemberType(tmp->fnid);
     }
     std::cout << "ERROR: type " << node->kind << " not suppose\n";
     exit(-1);
@@ -292,8 +285,10 @@ MType* Compiler::visitCallNode(AST* a, MType* expect) {
     FunctionType* tp = (FunctionType*)visitValue(tmp->fnid, expect);
     int argc = (int)tmp->args.size();
     if (tmp->fnid->kind == AST::AST_MEMBER_ACCESS) {
+        auto temp = getMemberType(((MemberAccess*)tmp->fnid)->parent);
         visitValue(((MemberAccess*)tmp->fnid)->parent, nullptr);
         argc += 1;
+
     }
     for (auto i : tmp->args)
         visitValue(i, expect);
@@ -513,7 +508,7 @@ MType* Compiler::visitAssign(AST* a) {
         auto temp = (VarSymbol*) s;
         auto vt = visitValue(src, temp->type)->__str__();
         auto st = temp->type->__str__();
-        if (st != vt) 
+        if (st != vt)
             std::cout << "WARN: var '" << tmpx->name << "' type is '" << st << "' but value type is '" << vt << "'\n";
         int oper = (temp->vkind == VarSymbol::Global)? STORE_GVAR : STORE_SVAR;
         emit(getLabel(), oper, temp->id, 0);
@@ -700,10 +695,10 @@ MType* Compiler::visitDoWhile(AST* a) {
     std::string cond  = getLabel();
     std::string end   = getLabel();
     emit(begin, NOP, 0, 0);
-    visitBlock(tmp->body, cond, end);  
-    emit(cond, NOP, 0, 0);              
+    visitBlock(tmp->body, cond, end);
+    emit(cond, NOP, 0, 0);
     auto tp = visitValue(tmp->condition, new BaseType(BaseType::MBOOL));
-    emit(getLabel(), JMPT, begin, 0);     
+    emit(getLabel(), JMPT, begin, 0);
     emit(end, NOP, 0, 0);
     leaveScope();
     return tp;
@@ -770,7 +765,7 @@ MType* Compiler::visitClass(AST* a) {
     if (!sym) {
         int clsId = env->classCnt++;
         sym = new ClassSymbol(cls->name, super, impls,
-                              env->moduleName, clsId, {});
+                              env->moduleName, clsId, {}, {});
         env->cs.registSymbolGbl(cls->name, sym);
     } else {
         sym->super     = super;
@@ -787,11 +782,13 @@ MType* Compiler::visitClass(AST* a) {
             auto vd = (VarDef*)i;
             fields.push_back(vd->name);
             sym->members[vd->name] = conver->getType(vd->type);
+            sym->syms[vd->name] = new VarSymbol(vd->name, sym->members[vd->name], false, VarSymbol::ClassMember);
         } else if (i->kind == AST::AST_VAR_DEF_GRP) {
             for (auto j : ((VarDefGrp*)i)->vars) {
                 auto vd = (VarDef*)j;
                 fields.push_back(vd->name);
                 sym->members[vd->name] = conver->getType(vd->type);
+                sym->syms[vd->name] = new VarSymbol(vd->name, sym->members[vd->name], false, VarSymbol::ClassMember);
             }
         }
     }
@@ -800,6 +797,7 @@ MType* Compiler::visitClass(AST* a) {
         if (i->kind == AST::AST_FUNC_DEF) {
             auto fn = (Func*)i;
             sym->members[fn->name] = conver->getType(fn->ftype);
+            sym->syms[fn->name] = new FunctionSymbol(fn->name, (FunctionType*)sym->members[fn->name]);
         }
     }
 
@@ -1175,7 +1173,7 @@ Module* Compiler::getProgram(std::string text, std::string fileName) {
         if (!env->cs.lookup(cls->name)) {
             int clsId = env->classCnt++;
             auto sym = new ClassSymbol(cls->name, nullptr, {},
-                                       env->moduleName, clsId, {});
+                                       env->moduleName, clsId, {}, {});
             env->cs.registSymbolGbl(cls->name, sym);
         }
     }

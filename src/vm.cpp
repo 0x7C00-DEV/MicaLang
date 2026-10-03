@@ -442,6 +442,10 @@ void VM::memGet(int a, int b) {
     for (auto i : arr->elements)
         fieldName += i.c;
     auto obj = pop();
+    if (obj.obj->tp == Obj::USER_DEFING_CLASS) {
+        push(*((ObjClass*)obj.obj)->findMethod(fieldName));
+        return;
+    }
     push(((ObjInstance*)obj.obj)->getField(fieldName));
 }
 

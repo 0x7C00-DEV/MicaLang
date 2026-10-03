@@ -14,6 +14,13 @@
 #define mica_bool new BaseType(BaseType::MBOOL)
 #define MFBEGIN [](Environment* env, std::vector<MicaValue> args) -> MicaValue
 
+int random_int(int left, int right) {
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib(left, right);
+    return distrib(gen);
+}
+
 NativeFunction::NativeFunction(std::string name, Function* fn, FunctionSymbol* fs) {
     this->nativeFn = fn;
     this->symbol  = fs;
@@ -150,7 +157,7 @@ std::vector<NativeFunction*> getFuncs() {
         else if (std::isinf(d)) tmp = (d < 0) ? "-inf" : "inf";
         else {
             char buf[64];
-            std::snprintf(buf, sizeof(buf), "%.15g", d);
+            std::snprintf(buf, sizeof(buf), "%.5g", d);
             tmp = buf;
         }
 
@@ -178,7 +185,17 @@ std::vector<NativeFunction*> getFuncs() {
     });
     res.push_back(new NativeFunction("strLen", fn_strlen, fs_strlen));
 
+    auto fs_randrange = new FunctionSymbol("random", new FunctionType(mica_int, {mica_int, mica_int}));
+    auto fn_randrange = new Function("random",  MFBEGIN {
+        auto left = args[0].i;
+        auto right = args[1].i;
+        return MicaValue::Int(random_int(left, right));
+    });
+    res.push_back(new NativeFunction("random", fn_randrange, fs_randrange));
+
     return res;
 }
+
+
 
 #endif

@@ -7,6 +7,9 @@
 #include "config.h"
 #include "symbol.h"
 #include "value.h"
+#include "random"
+
+int random_int(int , int );
 
 #ifdef TEST
 

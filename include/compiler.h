@@ -121,7 +121,7 @@ private:
     MType* visitBlock(AST*, std::string, std::string);
     MType* visitModuleImport(AST*);
     MType* visitBinOpNode(AST*, MType*);
-    MType* getMemberType(AST*);
+    Symbol* getMemberType(AST*);
     MType* visitCallNode(AST*, MType*);
     MType* visitElementGet(AST*, MType*);
     MType* visitMemberAccess(AST*, MType*);

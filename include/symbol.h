@@ -87,7 +87,7 @@ struct VarSymbol : Symbol {
     MType* type;
     int id=0;
     bool isInit = false;
-    enum VarKind { Global, Local } vkind;
+    enum VarKind { Global, Local, ClassMember } vkind;
 
     VarSymbol(std::string name, MType* type, bool isInit, VarKind vkind);
 };
@@ -105,6 +105,7 @@ struct ClassSymbol : Symbol {
     ClassSymbol* super;
     std::vector<InterfaceSymbol*> impl;
     std::unordered_map<std::string, MType*> members;
+    std::unordered_map<std::string, Symbol*> syms;
     std::string clsModule;
     int clsId=0;
     std::string getString();
@@ -113,7 +114,8 @@ struct ClassSymbol : Symbol {
                 std::vector<InterfaceSymbol*> impl,
                 std::string clsModule,
                 int clsId,
-                std::unordered_map<std::string, MType*> members);
+                std::unordered_map<std::string, MType*> members,
+                std::unordered_map<std::string, Symbol*> symbols);
 };
 
 struct ClassType : MType {

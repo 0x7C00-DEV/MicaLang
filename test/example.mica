@@ -11,11 +11,25 @@ class Test {
     fn operator[](self: Test, pos:int): int {
         return self.x[pos];
     }
+
+    fn showX(self: Test): void {
+        println(itos(self.x[0]));
+    }
+
+    fn test(): void {
+        println("hello, world");
+    }
+}
+
+fn change(x:[int]): void {
+    x[0] = 12;
 }
 
 fn main(): int {
-    let x = 0;
-    x += 1;
-    println(itos(x));
+    let tmp = new Test();
+    tmp[0] = 12;
+    tmp.showX();
+    println(itos(tmp[0]));
+    Test.test();
     return 0;
 }

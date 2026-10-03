@@ -121,7 +121,8 @@ ClassSymbol::ClassSymbol(std::string name,
                          std::vector<InterfaceSymbol*> impl,
                          std::string clsModule,
                          int clsId,
-                         std::unordered_map<std::string, MType*> members)
+                         std::unordered_map<std::string, MType*> members,
+                         std::unordered_map<std::string, Symbol*> symbols)
         : Symbol(SYM_CLASS) {
     this->name = name;
     this->super = super;
@@ -129,6 +130,7 @@ ClassSymbol::ClassSymbol(std::string name,
     this->members = members;
     this->clsId = clsId;
     this->clsModule = clsModule;
+    this->syms = symbols;
 }
 
 
