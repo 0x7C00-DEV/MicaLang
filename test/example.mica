@@ -1,10 +1,15 @@
-class A {
-    msg: string;
-    fn __init__(self: A, msg: string): void {
+interface Show {
+    fn asString():str;
+}
+
+
+class A implement Show {
+    msg: str;
+    fn __init__(self: A, msg: str): void {
         self.msg = msg;
     }
 
-    fn operator()(self: A, b: string): void {
+    fn operator()(self: A, b: str): void {
         println("called!");
         println(b);
         println(self.msg);
@@ -17,7 +22,12 @@ class A {
     fn test(): void {
         println("hello, world");
     }
+
+    fn asString(self: A) : str {
+        return self.msg;
+    }
 }
+
 
 
 fn main(): int {

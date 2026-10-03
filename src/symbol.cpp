@@ -6,12 +6,40 @@
 
 // ---------------- MType ----------------
 
+
+
+
+InterfaceType::InterfaceType(InterfaceSymbol* s): MType(BT_INTERFACE) {
+    this->name = s->name;
+    this->symbol = s;
+}
+
 MType::MType(TP tp) {
     baseType = tp;
 }
 
 std::string MType::__str__() {
     return ";";
+}
+
+TImplementsType::TImplementsType(std::vector<InterfaceSymbol*> interface)
+        : MType(BT_IMPL) {
+    this->interfaces = interface;
+}
+
+std::string inttostr(InterfaceSymbol* a) {
+    return "[" + a->name + "@" + a->moduleName + "@" + std::to_string(a->interfaceId) + "]";
+}
+
+std::string InterfaceType::__str__() {
+    return inttostr(this->symbol);
+}
+
+std::string TImplementsType::__str__() {
+    std::string res = "%";
+    for (auto i : interfaces)
+        res += inttostr(i);
+    return res + ";";
 }
 
 bool MType::operator==(MType* other) {
@@ -75,10 +103,11 @@ Symbol::Symbol(SymbolKind kind) {
     this->kind = kind;
 }
 
-FunctionSymbol::FunctionSymbol(std::string name, FunctionType* type)
+FunctionSymbol::FunctionSymbol(std::string name, FunctionType* type, bool isClassMethod)
         : Symbol(SYM_FUNC) {
     this->name = name;
     this->type = type;
+    this->isClassMethod = isClassMethod;
 }
 
 std::string FunctionSymbol::getString() {
@@ -91,6 +120,33 @@ VarSymbol::VarSymbol(std::string name, MType* type, bool isInit, VarKind vkind)
     this->isInit = isInit;
     this->type = type;
     this->vkind = vkind;
+}
+
+
+void ClassSymbol::checkIsImplement() {
+    for (auto i : impl)
+        for (auto j : i->labels)
+            if (!checkFuncIsExist(j.second)) {
+                std::cout << "ERROR: The function '" << j.first << "' hasn't been overridden " << std::endl;
+                exit(-1);
+            }
+}
+
+
+FunctionType* FunctionType::withOutSelf() {
+    std::vector<MType*> at;
+    if (argsType.size() > 1) {
+        for (int i=1; i<argsType.size(); ++i)
+            at.push_back(argsType[i]);
+    }
+    return new FunctionType(retType, at);
+}
+
+bool ClassSymbol::checkFuncIsExist(FunctionSymbol* func) {
+    auto it = members.find(func->name);
+    if (it == members.end()) return false;
+    if (it->second->baseType != MType::BT_FUNC) return false;
+    return ((FunctionType*)it->second)->withOutSelf()->__str__() == ((FunctionType*)func->type)->withOutSelf()->__str__();
 }
 
 ClassSymbol::ClassSymbol(std::string name,

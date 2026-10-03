@@ -29,7 +29,7 @@ NativeFunction::NativeFunction(std::string name, Function* fn, FunctionSymbol* f
 
 std::vector<NativeFunction*> getFuncs() {
     std::vector<NativeFunction*> res;
-    auto fs_print = new FunctionSymbol("print", new FunctionType(mica_void, {mica_string}));
+    auto fs_print = new FunctionSymbol("print", new FunctionType(mica_void, {mica_string}), false);
     auto fn_print   = new Function("print", MFBEGIN {
         auto tmp = ((ObjArray*)((ObjInstance*)args[0].obj)->cls)->elements;
         std::string temp;
@@ -39,7 +39,7 @@ std::vector<NativeFunction*> getFuncs() {
     });
     res.push_back(new NativeFunction("print", fn_print, fs_print));
 
-    auto fs_println = new FunctionSymbol("println", new FunctionType(mica_void, {mica_string}));
+    auto fs_println = new FunctionSymbol("println", new FunctionType(mica_void, {mica_string}), false);
     auto fn_println   = new Function("println", MFBEGIN {
         auto tmp = ((ObjArray*)((ObjInstance*)args[0].obj)->cls)->elements;
         std::string temp;
@@ -50,7 +50,7 @@ std::vector<NativeFunction*> getFuncs() {
     });
     res.push_back(new NativeFunction("println", fn_println, fs_println));
 
-    auto fs_itos = new FunctionSymbol("itos", new FunctionType(mica_string, {mica_int}));
+    auto fs_itos = new FunctionSymbol("itos", new FunctionType(mica_string, {mica_int}), false);
     auto fn_itos = new Function("itos", MFBEGIN {
         long long n = args[0].i;
         bool neg = (n < 0);
@@ -82,7 +82,7 @@ std::vector<NativeFunction*> getFuncs() {
     });
     res.push_back(new NativeFunction("itos", fn_itos, fs_itos));
 
-    auto fs_stoi = new FunctionSymbol("stoi", new FunctionType(mica_int, {mica_string}));
+    auto fs_stoi = new FunctionSymbol("stoi", new FunctionType(mica_int, {mica_string}), false);
     auto fn_stoi = new Function("stoi", MFBEGIN {
         std::string s;
         auto arr = (ObjArray*)((ObjInstance*)args[0].obj)->cls;
@@ -105,7 +105,7 @@ std::vector<NativeFunction*> getFuncs() {
     });
     res.push_back(new NativeFunction("stoi", fn_stoi, fs_stoi));
 
-    auto fs_stof = new FunctionSymbol("stof", new FunctionType(mica_double, {mica_string}));
+    auto fs_stof = new FunctionSymbol("stof", new FunctionType(mica_double, {mica_string}), false);
     auto fn_stof = new Function("stof", MFBEGIN {
         std::string s;
         auto arr = (ObjArray*)((ObjInstance*)args[0].obj)->cls;
@@ -148,7 +148,7 @@ std::vector<NativeFunction*> getFuncs() {
     });
     res.push_back(new NativeFunction("stof", fn_stof, fs_stof));
 
-    auto fs_ftos = new FunctionSymbol("ftos", new FunctionType(mica_string, {mica_double}));
+    auto fs_ftos = new FunctionSymbol("ftos", new FunctionType(mica_string, {mica_double}), false);
     auto fn_ftos = new Function("ftos", MFBEGIN {
         double d = (args[0].kind == MicaValue::FLOAT) ? args[0].f : (double)args[0].i;
 
@@ -172,20 +172,20 @@ std::vector<NativeFunction*> getFuncs() {
     });
     res.push_back(new NativeFunction("ftos", fn_ftos, fs_ftos));
 
-    auto fs_resize = new FunctionSymbol("resize", new FunctionType(mica_void, {mica_int}));
+    auto fs_resize = new FunctionSymbol("resize", new FunctionType(mica_void, {mica_int}), false);
     auto fn_resize = new Function("resize", MFBEGIN {
         ((ObjArray*)((ObjInstance*)args[0].obj)->cls)->elements.resize(args[1].i);
             return MicaValue::Null();
     });
     res.push_back(new NativeFunction("resize", fn_resize, fs_resize));
 
-    auto fs_strlen = new FunctionSymbol("strLen", new FunctionType(mica_int, {mica_string}));
+    auto fs_strlen = new FunctionSymbol("strLen", new FunctionType(mica_int, {mica_string}), false);
     auto fn_strlen = new Function("strLen", MFBEGIN {
         return MicaValue::Int(((ObjArray*)((ObjInstance*)args[0].obj)->cls)->elements.size());
     });
     res.push_back(new NativeFunction("strLen", fn_strlen, fs_strlen));
 
-    auto fs_randrange = new FunctionSymbol("random", new FunctionType(mica_int, {mica_int, mica_int}));
+    auto fs_randrange = new FunctionSymbol("random", new FunctionType(mica_int, {mica_int, mica_int}), false);
     auto fn_randrange = new Function("random",  MFBEGIN {
         auto left = args[0].i;
         auto right = args[1].i;

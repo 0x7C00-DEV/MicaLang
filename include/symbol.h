@@ -13,7 +13,7 @@
 struct Symbol;
 
 struct MType {
-    enum TP { BT_BASIC, BT_NORMAL, BT_FUNC, BT_ARRAY, BT_TEMPLATE, BT_MODULE, BT_CLASS } baseType;
+    enum TP { BT_BASIC, BT_NORMAL, BT_FUNC, BT_ARRAY, BT_TEMPLATE, BT_MODULE, BT_CLASS, BT_IMPL, BT_INTERFACE } baseType;
 
     MType(TP tp);
     virtual std::string __str__() = 0;
@@ -42,6 +42,7 @@ struct FunctionType : MType {
     std::vector<MType*> argsType;
     MType* retType;
     std::string __str__() override;
+    FunctionType* withOutSelf();
     FunctionType(MType* retType, std::vector<MType*> argsType);
 };
 
@@ -71,8 +72,9 @@ struct FunctionSymbol : Symbol {
     std::string name;
     FunctionType* type;
     std::vector<Symbol*> outBind;
+    bool isClassMethod;
     int constPoolIdx = -1;
-    FunctionSymbol(std::string name, FunctionType* type);
+    FunctionSymbol(std::string , FunctionType*, bool);
     std::string getString();
 };
 
@@ -94,6 +96,13 @@ struct InterfaceSymbol : Symbol {
     InterfaceSymbol(std::string, std::unordered_map<std::string, FunctionSymbol*>);
 };
 
+struct InterfaceType : MType {
+    std::string name;
+    InterfaceSymbol* symbol;
+    std::string __str__() override;
+    InterfaceType(InterfaceSymbol*);
+};
+
 struct ClassSymbol : Symbol {
     std::string name;
     ClassSymbol* super;
@@ -103,6 +112,8 @@ struct ClassSymbol : Symbol {
     std::string clsModule;
     int clsId=0;
     std::string getString();
+    bool checkFuncIsExist(FunctionSymbol*);
+    void checkIsImplement();
     ClassSymbol(std::string name,
                 ClassSymbol* super,
                 std::vector<InterfaceSymbol*> impl,
@@ -110,6 +121,12 @@ struct ClassSymbol : Symbol {
                 int clsId,
                 std::unordered_map<std::string, MType*> members,
                 std::unordered_map<std::string, Symbol*> symbols);
+};
+
+struct TImplementsType : MType {
+    std::vector<InterfaceSymbol*> interfaces;
+    TImplementsType(std::vector<InterfaceSymbol*>);
+    std::string __str__() override;
 };
 
 struct ClassType : MType {

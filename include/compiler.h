@@ -71,8 +71,10 @@ private:
     MType* parseArrayType(AST*);
     MType* parseFuncType(AST*);
     MType* parseTemplateType(AST*);
+    MType* parseImplementType(AST*);
 
     ClassSymbol* findClass(std::string);
+    Symbol* findInterface(AST*);
 
     MType* findClassMember(AST*);
 };

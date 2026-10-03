@@ -7,6 +7,15 @@ AstToMtype::AstToMtype(CompileEnvironment* env) {
     this->env = env;
 }
 
+
+MType* AstToMtype::parseImplementType(AST* a) {
+    auto tmp = (ImplementsType*) a;
+    std::vector<InterfaceSymbol*> symbols;
+    for (auto i : tmp->interfaceNames)
+        symbols.push_back((InterfaceSymbol*)findInterface(i));
+    return new TImplementsType(symbols);
+}
+
 MType* AstToMtype::parseTemplateType(AST* a) {
     auto tmp = (TemplateType*) a;
     auto root = getType(tmp->rootType);
@@ -22,6 +31,7 @@ MType* AstToMtype::getType(AST* a) {
     if (t->tpKind == Type::TYPE_TEMPLATE) return parseTemplateType(a);
     if (t->tpKind == Type::TYPE_NORMAL) return parseIdNode(a);
     if (t->tpKind == Type::TYPE_FUNC) return parseFuncType(a);
+    if (t->tpKind == Type::TYEP_IMPLEMENTS) return parseImplementType(a);
     printf("WARN: unknown type %d\n", t->tpKind);
     exit(-1);
 }
@@ -50,17 +60,71 @@ MType* AstToMtype::parseFuncType(AST* a) {
 MType *AstToMtype::findClassMember(AST *a) {
     if (a->kind == AST::AST_ID) {
         auto name = ((Id*)a)->name;
-        if (name == "int") return new BaseType(BaseType::MINT);
+        if (name == "int")    return new BaseType(BaseType::MINT);
         if (name == "double") return new BaseType(BaseType::MDOUBLE);
-        if (name == "char") return new BaseType(BaseType::MCHAR);
-        if (name == "void") return new BaseType(BaseType::MVOID);
-        if (name == "bool") return new BaseType(BaseType::MBOOL);
-        if (name == "str") return new TArrayType(new BaseType(BaseType::MCHAR));
-        return new ClassType(name, findClass(name));
+        if (name == "char")   return new BaseType(BaseType::MCHAR);
+        if (name == "void")   return new BaseType(BaseType::MVOID);
+        if (name == "bool")   return new BaseType(BaseType::MBOOL);
+        if (name == "str")    return new TArrayType(new BaseType(BaseType::MCHAR));
+
+        Symbol* sym = env->cs.lookup(name);
+        if (!sym) {
+            std::cout << "ERROR: '" << name << "' not found\n";
+            exit(-1);
+        }
+        if (sym->kind == Symbol::SYM_INTERFACE)
+            return new InterfaceType((InterfaceSymbol*)sym);
+        if (sym->kind == Symbol::SYM_CLASS)
+            return new ClassType(name, sym);
+        std::cout << "ERROR: '" << name << "' is not a type\n";
+        exit(-1);
     }
     auto parent = ((MemberAccess*)a)->parent;
     auto member = ((MemberAccess*)a)->member;
     return ((ClassSymbol*)((ClassType*)findClassMember(parent))->sym)->members[member];
+}
+
+Symbol* AstToMtype::findInterface(AST* a) {
+    if (a->kind == AST::AST_ID) {
+        Symbol* sym = env->cs.lookup(((Id*)a)->name);
+        if (!sym) {
+            std::cout << "ERROR: '" << ((Id*)a)->name << "' not found\n";
+            exit(-1);
+        }
+        if (sym->kind != Symbol::SYM_INTERFACE) {
+            std::cout << "ERROR: '" << ((Id*)a)->name
+                      << "' is not an interface\n";
+            exit(-1);
+        }
+        return sym;
+    }
+
+    if (a->kind != AST::AST_MEMBER_ACCESS) {
+        std::cout << "ERROR: unknown type '" << a->kind << "'\n";
+        exit(-1);
+    }
+
+    auto tmp = findClassMember(((MemberAccess*)a)->parent);
+    if (tmp->baseType != MType::BT_CLASS) {
+        std::cout << "ERROR: unsuppose type " << tmp->baseType << std::endl;
+        exit(-1);
+    }
+
+    ClassSymbol* cs = ((ClassSymbol*)(((ClassType*)tmp)->sym));
+    std::string memberName = ((MemberAccess*)a)->member;
+
+    auto it = cs->members.find(memberName);
+    if (it == cs->members.end()) {
+        std::cout << "ERROR: class '" << cs->name
+                  << "' has no nested interface '" << memberName << "'\n";
+        exit(-1);
+    }
+    if (it->second->baseType != MType::BT_INTERFACE) {
+        std::cout << "ERROR: '" << cs->name << "." << memberName
+                  << "' is not an interface\n";
+        exit(-1);
+    }
+    return ((InterfaceType*)it->second)->symbol;
 }
 
 ClassSymbol *AstToMtype::findClass(std::string name) {
@@ -478,7 +542,7 @@ MType* Compiler::visitFunction(AST* a, bool autoend) {
 
     if (autoend && !env->cs.lookup(tmp->name))
         env->cs.registSymbolGbl(tmp->name,
-                                new FunctionSymbol(tmp->name, ftp));
+                                new FunctionSymbol(tmp->name, ftp, false));
 
     if (!tmp->isNative) {
         for (int i = 0; i < tmp->args.size(); ++i)
@@ -775,17 +839,20 @@ MType* Compiler::visitSwitch(AST* a) {
 
 MType* Compiler::visitInterface(AST* a) {
     Interface* i = (Interface*)a;
-    std::unordered_map<std::string, FunctionSymbol*> funcs;
+    auto sym = (InterfaceSymbol*)env->cs.lookup(i->name);
+    if (!sym || sym->kind != Symbol::SYM_INTERFACE) {
+        std::cout << "ERROR: interface '" << i->name << "' not registered\n";
+        exit(-1);
+    }
+
     for (auto j : i->funcs) {
         auto temp = (Interface::FunctionTag*) j;
-        funcs[temp->name] = new FunctionSymbol(
+        sym->labels[temp->name] = new FunctionSymbol(
             temp->name,
-            (FunctionType*)conver->getType(temp->funcType)
+            (FunctionType*)conver->getType(temp->funcType),
+            false
         );
     }
-    auto tmp = new InterfaceSymbol(i->name, funcs);
-    tmp->interfaceId = env->interfaceCnt++;
-    env->cs.registSymbolGbl(i->name, tmp);
     return nullptr;
 }
 
@@ -834,7 +901,7 @@ MType* Compiler::visitClass(AST* a) {
         if (i->kind == AST::AST_FUNC_DEF) {
             auto fn = (Func*)i;
             sym->members[fn->name] = conver->getType(fn->ftype);
-            sym->syms[fn->name] = new FunctionSymbol(fn->name, (FunctionType*)sym->members[fn->name]);
+            sym->syms[fn->name] = new FunctionSymbol(fn->name, (FunctionType*)sym->members[fn->name], true);
         }
     }
 
@@ -847,6 +914,7 @@ MType* Compiler::visitClass(AST* a) {
     }
 
     tmp->methods = funcs;
+    sym->checkIsImplement();
     return nullptr;
 }
 
@@ -1220,13 +1288,22 @@ Module* Compiler::getProgram(std::string text, std::string fileName) {
         if (!env->cs.lookup(fn->name)) {
             auto ftp = (FunctionType*)conver->getType(fn->ftype);
             env->cs.registSymbolGbl(fn->name,
-                                    new FunctionSymbol(fn->name, ftp));
+                                    new FunctionSymbol(fn->name, ftp, false));
         }
     }
 
+    for (auto i : Itf) {
+        auto itf = (Interface*)i;
+        if (!env->cs.lookup(itf->name)) {
+            auto sym = new InterfaceSymbol(itf->name, {});
+            sym->interfaceId = env->interfaceCnt++;
+            sym->moduleName  = env->moduleName;
+            env->cs.registSymbolGbl(itf->name, sym);
+        }
+    }
+    for (auto i : Itf)   visitInterface(i);
     for (auto i : Class_) visitClass(i);
     for (auto i : Fn)    visitFunction(i, true);
-    for (auto i : Itf)   visitInterface(i);
 
     createTask("@init");
     for (auto i : Import) visitModuleImport(i);
