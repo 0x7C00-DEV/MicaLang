@@ -166,6 +166,10 @@ Token Lexer::getIdOrKey() {
             advance(SYN_VALUE);
             return { "[]", TT_ID, begin, end };
         }
+        if (tmp.data == "(" && tmp.kind == TT_OP) {
+            advance(SYN_VALUE);
+            return {"__call__", TT_ID, begin, end};
+        }
         return { optofn[tmp.data], TT_ID, begin, end };
     }
     return {res, tk, begin, end};

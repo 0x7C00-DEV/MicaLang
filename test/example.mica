@@ -4,7 +4,7 @@ class A {
         self.msg = msg;
     }
 
-    fn __call__(self: A, b: string): void {
+    fn operator()(self: A, b: string): void {
         println("called!");
         println(b);
         println(self.msg);
