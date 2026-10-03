@@ -130,8 +130,15 @@ struct Interface : AST {
 };
 
 struct Type : AST {
-    enum TPKind { TYPE_ARRAY, TYPE_TEMPLATE, TYPE_NORMAL, TYPE_FUNC } tpKind;
+    enum TPKind { TYPE_ARRAY, TYPE_TEMPLATE, TYPE_NORMAL, TYPE_FUNC, TYEP_IMPLEMENTS } tpKind;
     Type(TPKind tp_kind, Position begin, Position end) : AST(AST_TYPE, begin, end), tpKind(tp_kind) {}
+};
+
+struct ImplementsType : Type {
+    std::vector<AST*> interfaceNames;
+    ImplementsType(std::vector<AST*> interfaceNames, Position begin, Position end): Type(TYEP_IMPLEMENTS, begin, end) {
+        this->interfaceNames = interfaceNames;
+    }
 };
 
 struct FuncType : Type {

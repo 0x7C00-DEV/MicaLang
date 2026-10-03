@@ -45,13 +45,6 @@ struct FunctionType : MType {
     FunctionType(MType* retType, std::vector<MType*> argsType);
 };
 
-struct TNormalType : MType {
-    Symbol* class_;
-
-    TNormalType(Symbol* class_);
-    std::string __str__() override;
-};
-
 struct TArrayType : MType {
     MType* elementType;
     int size;

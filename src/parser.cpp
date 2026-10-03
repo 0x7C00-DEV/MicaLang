@@ -757,6 +757,22 @@ Register Parser::makeType() {
         Position end = posEnd();
         if (isT) res.ok(new TemplateType(clid.result, args, begin, end));
         else res.ok(new NormalType(clid.result, begin, end));
+    } else if (equal("{") && equal(TT_OP)) {
+        std::vector<AST*> interfaceName;
+        advance(SYN_TYPE);
+        auto begin = posBegin();
+        while (current.kind != TT_EOF && !(equal("}") && equal(TT_OP))) {
+            Register tmp = makeType();
+            test(tmp);
+            interfaceName.push_back(tmp.result);
+            if (equal("}") && equal(TT_OP)) break;
+            setError(res, equal(",") && equal(TT_OP), "SyntaxError: want a ','");
+            advance(SYN_TYPE);
+        }
+        setError(res, equal(TT_OP)&&equal("}"), "SyntaxError: want a '}'");
+        advance(SYN_TYPE);
+        auto end = posEnd();
+        res.ok(new ImplementsType(interfaceName, begin, end));
     } else {
         setError(res, false, "SyntaxError: not a type '" + current.data + "'");
     }

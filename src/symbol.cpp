@@ -39,31 +39,8 @@ std::string FunctionType::__str__() {
     return res;
 }
 
-TNormalType::TNormalType(Symbol* class_)
-        : MType(BT_NORMAL) {
-    this->class_ = class_;
-}
-
-
 std::string ClassSymbol::getString() {
     return "$" + name + "/" + clsModule + "/" + std::to_string(clsId);
-}
-
-std::string TNormalType::__str__() {
-    if (class_->kind == Symbol::SYM_CLASS) {
-        auto tmp = ((ClassSymbol *) class_);
-
-        // $NAME/module/id:super; or $NAME/module/id;
-        auto res = tmp->getString();
-        if (tmp->super) res += ":" + tmp->super->getString();
-        return res + ";";
-    } else if (class_->kind == Symbol::SYM_INTERFACE) {
-        auto tmp = ((InterfaceSymbol *) class_);
-        // #NAME/module/id
-        return "#" + tmp->name + "/" + tmp->moduleName + "/" + std::to_string(tmp->interfaceId) + ";";
-    } else {
-        return "ERROR;";
-    }
 }
 
 TArrayType::TArrayType(MType* elementType, int size)

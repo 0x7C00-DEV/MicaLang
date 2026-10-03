@@ -273,6 +273,13 @@ void showAST(AST* tree, int indent, const std::string& fo, const std::string& eo
                 for (int i=0; i<tmp->subType.size(); ++i)
                     showAST(tmp->subType[i], indent+2, std::to_string(i)+": ", ",\n");
                 std::cout << printIndent(indent+1) << "]\n";
+            } else if (tp == Type::TYEP_IMPLEMENTS) {
+                std::cout << printIndent(indent+1) << "KIND: IMPLEMENTS, \n";
+                ImplementsType* itp = (ImplementsType*) tree;
+                std::cout << printIndent(indent+1) << "INTERFACES: {\n";
+                for (int i=0; i<itp->interfaceNames.size(); ++i)
+                    showAST(itp->interfaceNames[i], indent+2, std::to_string(i)+": ", ",\n");
+                std::cout << printIndent(indent+1) << "}\n";
             }
             std::cout << printIndent(indent) << "}" << eo;
             break;
