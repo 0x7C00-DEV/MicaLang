@@ -149,4 +149,12 @@ CMakeFiles/MicaLang.dir/src/lexer.cpp.obj: \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_vector.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_bvector.h \
  F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/vector.tcc \
- C:/Users/Lenovo/Desktop/MicaLang/include/position.h
+ C:/Users/Lenovo/Desktop/MicaLang/include/position.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/unordered_map \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/unordered_map.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/hashtable.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/hashtable_policy.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/ext/aligned_buffer.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/enable_special_members.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/node_handle.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/erase_if.h

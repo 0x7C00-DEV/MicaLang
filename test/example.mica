@@ -1,3 +1,28 @@
-fn main(): void {
+class A {
+    msg: string;
+    fn __init__(self: A, msg: string): void {
+        self.msg = msg;
+    }
 
+    fn __call__(self: A, b: string): void {
+        println("called!");
+        println(b);
+        println(self.msg);
+    }
+
+    fn show(self: A): void {
+        println(self.msg);
+    }
+
+    fn test(): void {
+        println("hello, world");
+    }
+}
+
+
+fn main(): int {
+    let tmp = new A("hello, world");
+    tmp("1");
+    tmp.show();
+    A.test();
 }

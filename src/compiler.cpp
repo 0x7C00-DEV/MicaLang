@@ -282,18 +282,51 @@ Symbol *Compiler::getMemberType(AST* node) {
 
 MType* Compiler::visitCallNode(AST* a, MType* expect) {
     auto tmp = (Call*) a;
-    FunctionType* tp = (FunctionType*)visitValue(tmp->fnid, expect);
-    int argc = (int)tmp->args.size();
-    if (tmp->fnid->kind == AST::AST_MEMBER_ACCESS) {
-        auto temp = getMemberType(((MemberAccess*)tmp->fnid)->parent);
-        visitValue(((MemberAccess*)tmp->fnid)->parent, nullptr);
-        argc += 1;
-
+    MType* tp1 = visitValue(tmp->fnid, expect);
+    if (tp1->baseType == MType::BT_FUNC) {
+        auto tp = (FunctionType*) tp1;
+        int argc = (int)tmp->args.size();
+        if (tmp->fnid->kind == AST::AST_MEMBER_ACCESS) {
+            auto temp = getMemberType(((MemberAccess*)tmp->fnid)->parent);
+            if (temp->kind != Symbol::SYM_CLASS) {
+                visitValue(((MemberAccess*)tmp->fnid)->parent, nullptr);
+                argc += 1;
+            }
+        }
+        for (auto i : tmp->args)
+            visitValue(i, expect);
+        emit(getLabel(), CALL, argc, 0);
+        return tp->retType;
+    } else if (tp1->baseType == MType::BT_CLASS) {
+        // [object]
+        auto csym = ((ClassSymbol*)((ClassType*) tp1)->sym);
+        auto tmp1 = csym->members.find("__call__");
+        if (tmp1 == csym->members.end()) {
+            std::cout << "Class '" << csym->name << "' has no member '__call__'" << std::endl;
+            exit(-1);
+        }
+        if (tmp1->second->baseType != MType::BT_FUNC) {
+            std::cout << "'__call__' not a function\n";
+            exit(-1);
+        }
+        auto ftmp = (FunctionType*)tmp1->second;
+        auto retTp = ftmp->retType;
+        emit(getLabel(), DUP, 0, 0);
+        // [obj, obj]
+        storeString("__call__");
+        // [obj, obj, name]
+        emit(getLabel(), MEM_GET, 0, 0);
+        // [obj, func]
+        emit(getLabel(), SWAP_SP, 0, 0);
+        // [func, obj]
+        for (auto i : tmp->args)
+            visitValue(i, nullptr);
+        emit(getLabel(), CALL, tmp->args.size()+1, 0);
+        return retTp;
+    } else {
+        std::cout << "ERROR: type " << tp1->baseType << " can not call\n";
+        exit(-1);
     }
-    for (auto i : tmp->args)
-        visitValue(i, expect);
-    emit(getLabel(), CALL, argc, 0);
-    return tp->retType;
 }
 
 MType* Compiler::visitElementGet(AST* a, MType* expect) {

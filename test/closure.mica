@@ -1,0 +1,31 @@
+fn maker(): ():int {
+    let n: int = 0;
+    fn counter(): int {
+        return ++n;
+    }
+    return counter;
+}
+
+
+class __Box_<Int>0 {
+    n: int;
+    fn __init__(self: __Box_<Int>0, n: int): void {
+        self.n = n;
+    }
+}
+
+class __<counter>_Class0 { 
+    n: __Box_<Int>0;
+    fn __init__(self: __<counter>_Class0, n: __Box_<Int>0): void { // 自己, 捕获的变量....
+        self.n = n;
+    }
+    
+    fn __call__(self, __<counter>_Class0): int {
+        return ++self.n.n;
+    }
+}
+
+fn maker(): __<counter>_Class0 {
+    let n: __Box_<Int>0 = new __Box_<Int0>(0);
+    return new __<counter>_Class0(n);
+}
