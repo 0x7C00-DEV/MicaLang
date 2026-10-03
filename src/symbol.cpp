@@ -254,6 +254,9 @@ BaseType::BaseType(BaseType::MicaTypes tp) : MType(MType::BT_BASIC){
         case MCHAR:
             str = "char";
             break;
+        case MNULL:
+            str = "null";
+            break;
         case MBOOL:
             str = "bool";
             break;

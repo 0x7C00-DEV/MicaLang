@@ -23,7 +23,7 @@ struct MType {
 };
 
 struct BaseType : MType {
-    enum MicaTypes { MINT, MDOUBLE, MCHAR, MBOOL, MVOID } type;
+    enum MicaTypes { MINT, MDOUBLE, MCHAR, MBOOL, MVOID, MNULL } type;
     std::string str;
     std::string __str__() override;
     BaseType(MicaTypes);

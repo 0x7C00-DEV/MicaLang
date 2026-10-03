@@ -470,6 +470,10 @@ MType* Compiler::visitValue(AST* a, MType* expect) {
         return visitAssign(a);
     if (a->kind == AST::AST_BOOL)
         return visitBool(a);
+    if (a->kind == AST::AST_NULL) {
+        emit(getLabel(), LOAD_NULL, 0, 0);
+        return new BaseType(BaseType::MNULL);
+    }
     if (a->kind == AST::AST_ID)
         return visitId(a);
     if (a->kind == AST::AST_CALL)
