@@ -328,11 +328,26 @@ std::string ClassType::__str__() {
 }
 
 bool typeComp(MType* a, MType* b) {
+    if (!a || !b) return false;
+
+    if (a->baseType == MType::BT_CLASS && b->baseType == MType::BT_CLASS) {
+        auto target = (ClassSymbol*)((ClassType*)b)->sym;
+        auto cur    = (ClassSymbol*)((ClassType*)a)->sym;
+        while (cur) {
+            if (cur == target) return true;
+            cur = cur->super;
+        }
+        return false;
+    }
+
     if (a->baseType == MType::BT_CLASS && b->baseType == MType::BT_IMPL)
         return ((ClassType*)a)->isImplement(((TImplementsType*)b)->interfaces);
-    return a->__str__() == b->__str__() || (a->baseType == MType::BT_CLASS
-        && b->baseType == MType::BT_INTERFACE
-        && ((ClassType*)a)->isImplement({((InterfaceType*)b)->symbol}));
+
+
+    if (a->baseType == MType::BT_CLASS && b->baseType == MType::BT_INTERFACE)
+        return ((ClassType*)a)->isImplement({((InterfaceType*)b)->symbol});
+
+    return a->__str__() == b->__str__();
 }
 
 bool typeComp(MType* a, std::vector<InterfaceSymbol*> b) {
@@ -341,4 +356,18 @@ bool typeComp(MType* a, std::vector<InterfaceSymbol*> b) {
         exit(-1);
     }
     return ((ClassType*)a)->isImplement(b);
+}
+
+MType* ClassSymbol::findMember(std::string name) {
+    auto it = members.find(name);
+    if (it != members.end()) return it->second;
+    if (super) return super->findMember(name);
+    return nullptr;
+}
+
+Symbol* ClassSymbol::findSym(std::string name){
+    auto it = syms.find(name);
+    if (it != syms.end()) return it->second;
+    if (super) return super->findSym(name);
+    return nullptr;
 }

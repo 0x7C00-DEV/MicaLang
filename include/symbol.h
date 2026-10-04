@@ -125,20 +125,9 @@ struct ClassSymbol : Symbol {
     std::string getString();
     bool checkFuncIsExist(FunctionSymbol*);
     void checkIsImplement();
-    MType* findMember(const std::string& name) {
-        auto it = members.find(name);
-        if (it != members.end()) return it->second;
-        if (super) return super->findMember(name);
-        return nullptr;
-    }
+    MType* findMember(std::string);
 
-    // 新增：沿父类链查找符号
-    Symbol* findSym(const std::string& name) {
-        auto it = syms.find(name);
-        if (it != syms.end()) return it->second;
-        if (super) return super->findSym(name);
-        return nullptr;
-    }
+    Symbol* findSym(std::string);
     ClassSymbol(std::string name,
                 ClassSymbol* super,
                 std::vector<InterfaceSymbol*> impl,

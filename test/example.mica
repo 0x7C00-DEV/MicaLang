@@ -1,24 +1,10 @@
 class Parent {
-    fn __init__(self: Parent): void {
-
-    }
-
-    fn show(self: Parent): void {
-        println("hello, world");
-    }
+    fn show(self: Parent): void { println("parent"); }
 }
-
 class Children extend Parent {
-    fn __init__(self: Children): void {
-        self.show();
-    }
-
-    fn operator[](self: Children, pos: int): int {
-        return pos*12;
-    }
+    fn __init__(self: Children): void { self.show(); }
 }
-
 fn main(): void {
-    let tmp = new Children();
-    println(itos(tmp[1]));
+    let p: Parent = new Children();  // 现在能通过类型检查
+    p.show();
 }
