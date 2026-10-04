@@ -1,23 +1,24 @@
-interface IShape {
-    fn area(): double;
-}
+class Parent {
+    fn __init__(self: Parent): void {
 
-class Circle {
-    r: double;
-    fn __init__(self: Circle, r: double): void {
-        self.r = r;
     }
-    fn area(self: Circle): double {
-        return 3.14 * self.r * self.r;
+
+    fn show(self: Parent): void {
+        println("hello, world");
     }
 }
 
-fn takeShape(x: IShape): void { 
-    println(ftos(x.area()));
+class Children extend Parent {
+    fn __init__(self: Children): void {
+        self.show();
+    }
+
+    fn operator[](self: Children, pos: int): int {
+        return pos*12;
+    }
 }
 
-fn main(): int {
-    let c = new Circle(1.0);
-    takeShape(c);
-    return 0;
+fn main(): void {
+    let tmp = new Children();
+    println(itos(tmp[1]));
 }

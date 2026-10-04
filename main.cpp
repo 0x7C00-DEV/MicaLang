@@ -4,6 +4,8 @@
 #include "include/makeError.h"
 #include "include/symbol.h"
 #include "include/dis.h"
+#include "include/loader.h"
+#include "include/writer.h"
 #include "include/parser.h"
 #include "include/asm.h"
 #include "include/vm.h"
@@ -92,16 +94,30 @@ void testFile() {
 }
 
 void release(int argc, char** argv) {
-    std::string file = argv[1];
-    CompileEnvironment* ce = new CompileEnvironment;
-    Compiler compiler(ce);
-    Module* mod = compiler.getProgram(loadFile(file), file);
-    Dis dis(mod);
-    dis.disAll();
-    printf("START_RUNNING:\n");
-    VM vm(mod);
-    printf("END.\nVARS:");
-    vm.dumpGlobalVars();
+    std::string file = argv[2];
+    std::string op = argv[1];
+    if (op == "/R") {
+        ProgramLoader loader(file);
+        auto module = loader.getData();
+        Module* mod = new Module;
+        mod->globalConstPool = module->constPools;
+        VM vm(mod);
+        return;
+    }
+    Compiler cs(new CompileEnvironment);
+    Module* mod = cs.getProgram(loadFile(file), file);
+    ProgramWriter writer("a.cmic");
+    auto p = new Program;
+    std::vector<Function*> f;
+    std::vector<MicaValue> v;
+    for (auto i : mod->globalConstPool)
+        if (i.kind == MicaValue::OBJ && i.obj->tp == Obj::FUNCTION)
+            f.push_back((Function*)i.obj);
+        else
+            v.push_back(i);
+    p->funcs = f;
+    p->constPools = v;
+    writer.write(p, "", {});
 }
 
 int main(int argc, char** argv) {

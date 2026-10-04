@@ -355,52 +355,70 @@ Symbol *Compiler::getMemberType(AST* node) {
 MType* Compiler::visitCallNode(AST* a, MType* expect) {
     auto tmp = (Call*) a;
     MType* tp1 = visitValue(tmp->fnid, expect);
+
+    if (!tp1) {
+        std::cout << "ERROR: visitCallNode: callee type resolved to null. "
+                     "Check that the member exists in the class or its super class.\n";
+        exit(-1);
+    }
+
     if (tp1->baseType == MType::BT_FUNC) {
         auto tp = (FunctionType*) tp1;
         int argc = (int)tmp->args.size();
+
         if (tmp->fnid->kind == AST::AST_MEMBER_ACCESS) {
             auto temp = getMemberType(((MemberAccess*)tmp->fnid)->parent);
-            if (temp->kind != Symbol::SYM_CLASS) {
+            if (temp && temp->kind != Symbol::SYM_CLASS) {
                 visitValue(((MemberAccess*)tmp->fnid)->parent, nullptr);
                 argc += 1;
             }
         }
-        for (int i=0; i<tmp->args.size(); ++i) {
-            if (! typeComp(visitValue(tmp->args[i], nullptr), tp->argsType[i])) {
+
+        for (int i = 0; i < (int)tmp->args.size(); ++i) {
+            MType* expectedArg = (i < (int)tp->argsType.size())
+                                 ? tp->argsType[i] : nullptr;
+            MType* actualArg = visitValue(tmp->args[i], expectedArg);
+            if (expectedArg && !typeComp(actualArg, expectedArg)) {
                 std::cout << "WARN: type error\n";
             }
         }
+
         emit(getLabel(), CALL, argc, 0);
         return tp->retType;
+
     } else if (tp1->baseType == MType::BT_CLASS) {
         // [object]
         auto csym = ((ClassSymbol*)((ClassType*) tp1)->sym);
-        auto tmp1 = csym->members.find("__call__");
-        if (tmp1 == csym->members.end()) {
-            std::cout << "Class '" << csym->name << "' has no member '__call__'" << std::endl;
+
+        MType* callFnType = csym->findMember("__call__");
+        if (!callFnType) {
+            std::cout << "Class '" << csym->name
+                      << "' has no member '__call__'" << std::endl;
             exit(-1);
         }
-        if (tmp1->second->baseType != MType::BT_FUNC) {
+        if (callFnType->baseType != MType::BT_FUNC) {
             std::cout << "'__call__' not a function\n";
             exit(-1);
         }
-        auto ftmp = (FunctionType*)tmp1->second;
+        auto ftmp = (FunctionType*) callFnType;
         auto retTp = ftmp->retType;
-        emit(getLabel(), DUP, 0, 0);
-        // [obj, obj]
-        storeString("__call__");
-        // [obj, obj, name]
-        emit(getLabel(), MEM_GET, 0, 0);
-        // [obj, func]
-        emit(getLabel(), SWAP_SP, 0, 0);
-        // [func, obj]
-        for (int i=0; i<tmp->args.size(); ++i) {
-            if (! typeComp(visitValue(tmp->args[i], nullptr), ftmp->argsType[i])) {
+
+        emit(getLabel(), DUP, 0, 0);        // [obj, obj]
+        storeString("__call__");            // [obj, obj, name]
+        emit(getLabel(), MEM_GET, 0, 0);    // [obj, func]
+        emit(getLabel(), SWAP_SP, 0, 0);    // [func, obj]
+
+        for (int i = 0; i < (int)tmp->args.size(); ++i) {
+            MType* expectedArg = (i + 1 < (int)ftmp->argsType.size())
+                                 ? ftmp->argsType[i + 1] : nullptr;
+            MType* actualArg = visitValue(tmp->args[i], expectedArg);
+            if (expectedArg && !typeComp(actualArg, expectedArg)) {
                 std::cout << "WARN: type error\n";
             }
         }
-        emit(getLabel(), CALL, tmp->args.size()+1, 0);
+        emit(getLabel(), CALL, (int)tmp->args.size() + 1, 0);
         return retTp;
+
     } else {
         std::cout << "ERROR: type " << tp1->baseType << " can not call\n";
         exit(-1);
@@ -410,28 +428,37 @@ MType* Compiler::visitCallNode(AST* a, MType* expect) {
 MType* Compiler::visitElementGet(AST* a, MType* expect) {
     auto arrayId = (ElementGet*)a;
     auto* tpm = visitValue(arrayId->address, expect);
+
+    if (!tpm) {
+        std::cout << "ERROR: visitElementGet: address type resolved to null\n";
+        exit(-1);
+    }
+
     // [Object]
     if (tpm->baseType == MType::BT_ARRAY) {
         auto tp = (TArrayType*) tpm;
-        MType* posType = visitValue(arrayId->position, expect);
+
+        MType* posType = visitValue(arrayId->position, mica_int);
         emit(getLabel(), EL_GET, 0, 0);
-        if (((BaseType*)posType)->type != BaseType::MINT)
+        if (!typeComp(posType, mica_int))
             std::cout << "Warn: " << getTypeString(posType) << " not int\n";
         return tp->elementType;
+
     } else if (tpm->baseType == MType::BT_CLASS) {
         // [obj]
         ClassSymbol* cls = ((ClassSymbol*)((ClassType*) tpm)->sym);
-        auto func = cls->members.find("__elementget__");
-        if (func == cls->members.end()) {
+
+        MType* elemGetType = cls->findMember("__elementget__");
+        if (!elemGetType) {
             std::cout << "ERROR: object '" << cls->name
                       << "' has no '__elementget__' member\n";
             exit(-1);
         }
-        if (func->second->baseType != MType::BT_FUNC) {
+        if (elemGetType->baseType != MType::BT_FUNC) {
             std::cout << "ERROR: '__elementget__' is not callable\n";
             exit(-1);
         }
-        auto ft = (FunctionType*)func->second;
+        auto ft = (FunctionType*) elemGetType;
         MType* retT = ft->retType;
 
         // [obj]
@@ -439,9 +466,17 @@ MType* Compiler::visitElementGet(AST* a, MType* expect) {
         storeString("__elementget__");      // [obj, obj, str]
         emit(getLabel(), MEM_GET, 0, 0);    // [obj, method]
         emit(getLabel(), SWAP, 0, 1);       // [method, obj]
-        visitValue(arrayId->position, ft->argsType[0]);  // [method, obj, pos]
+
+        MType* expectedPos = (ft->argsType.size() >= 2)
+                             ? ft->argsType[1] : mica_int;
+        MType* actualPos = visitValue(arrayId->position, expectedPos);
+        if (expectedPos && !typeComp(actualPos, expectedPos)) {
+            std::cout << "WARN: type error for __elementget__ index\n";
+        }
+
         emit(getLabel(), CALL, 2, 0);       // [retval]
         return retT;
+
     } else {
         std::cout << "ERROR: unknown type " << tpm->baseType << std::endl;
         exit(-1);
@@ -451,12 +486,40 @@ MType* Compiler::visitElementGet(AST* a, MType* expect) {
 MType* Compiler::visitMemberAccess(AST* a, MType* expect) {
     auto tmp = (MemberAccess*) a;
     auto parent = visitValue(tmp->parent, expect);
+    if (!parent) {
+        std::cout << "ERROR: visitMemberAccess: parent type is null\n";
+        exit(-1);
+    }
+
     storeString(tmp->member);
     emit(getLabel(), MEM_GET, 0, 0);
+
     if (parent->baseType == MType::BT_INTERFACE) {
-        return  ((InterfaceType*)parent)->symbol->labels[tmp->member]->type;
+        auto it = ((InterfaceType*)parent)->symbol->labels.find(tmp->member);
+        if (it == ((InterfaceType*)parent)->symbol->labels.end()) {
+            std::cout << "ERROR: interface '" << ((InterfaceType*)parent)->symbol->name
+                      << "' has no member '" << tmp->member << "'\n";
+            exit(-1);
+        }
+        return it->second->type;
     }
-    return ((ClassSymbol*)((ClassType*)parent)->sym)->members[tmp->member];
+
+    if (parent->baseType != MType::BT_CLASS) {
+        std::cout << "ERROR: '" << tmp->member
+                  << "' accessed on non-class type\n";
+        exit(-1);
+    }
+
+    MType* memberType =
+        ((ClassSymbol*)((ClassType*)parent)->sym)->findMember(tmp->member);
+    if (!memberType) {
+        std::cout << "ERROR: class '"
+                  << ((ClassSymbol*)((ClassType*)parent)->sym)->name
+                  << "' (or its super classes) has no member '"
+                  << tmp->member << "'\n";
+        exit(-1);
+    }
+    return memberType;
 }
 
 void Compiler::visitVarDefineGrp(AST* a, bool isGlobal) {

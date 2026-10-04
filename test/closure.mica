@@ -16,7 +16,7 @@ class __Box_<Int>0 {
 
 class __<counter>_Class0 { 
     n: __Box_<Int>0;
-    fn __init__(self: __<counter>_Class0, n: __Box_<Int>0): void { // 自己, 捕获的变量....
+    fn __init__(self: __<counter>_Class0, n: __Box_<Int>0): void {
         self.n = n;
     }
     
