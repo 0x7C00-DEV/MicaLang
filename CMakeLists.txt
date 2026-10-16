@@ -34,4 +34,8 @@ add_executable(MicaLang main.cpp
         src/native.cpp
         include/types.h
         include/repl.h
-        src/repl.cpp)
+        src/repl.cpp
+        include/errorCollect.h
+        src/errorCollect.cpp
+        include/errors.h
+        src/errors.cpp)

@@ -1,14 +1,12 @@
-//
-// Created by Lenovo on 2026/9/11.
-//
-
 #ifndef MICALANG_PARSER_H
 #define MICALANG_PARSER_H
+#include "errorCollect.h"
 #define MICA_TEST(x) if (!x.isSuc) {\
                     return x; \
                 }
 #define setError(x, cnd, info) if (!(cnd)) {\
                         x.fai(info, current.begin, current.end);\
+                        if (ec) ec->emitError(new SyntaxError(info, current.begin, current.end), false);\
                         return x;\
                     }
 
@@ -53,9 +51,10 @@ using MPCLBCK = Register(Parser::*)();
 
 class Parser {
 public:
-    Parser();
+    Parser(ErrorCollect*);
     Register parseExpr(std::string, std::string);
     std::vector<Register> parseCode(std::string, std::string);
+    ErrorCollect* ec;
 private:
     Token current;
     Lexer lexer;

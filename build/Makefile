@@ -248,6 +248,54 @@ src/dis.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/dis.cpp.s
 .PHONY : src/dis.cpp.s
 
+src/errorCollect.obj: src/errorCollect.cpp.obj
+.PHONY : src/errorCollect.obj
+
+# target to build an object file
+src/errorCollect.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/errorCollect.cpp.obj
+.PHONY : src/errorCollect.cpp.obj
+
+src/errorCollect.i: src/errorCollect.cpp.i
+.PHONY : src/errorCollect.i
+
+# target to preprocess a source file
+src/errorCollect.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/errorCollect.cpp.i
+.PHONY : src/errorCollect.cpp.i
+
+src/errorCollect.s: src/errorCollect.cpp.s
+.PHONY : src/errorCollect.s
+
+# target to generate assembly for a file
+src/errorCollect.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/errorCollect.cpp.s
+.PHONY : src/errorCollect.cpp.s
+
+src/errors.obj: src/errors.cpp.obj
+.PHONY : src/errors.obj
+
+# target to build an object file
+src/errors.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/errors.cpp.obj
+.PHONY : src/errors.cpp.obj
+
+src/errors.i: src/errors.cpp.i
+.PHONY : src/errors.i
+
+# target to preprocess a source file
+src/errors.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/errors.cpp.i
+.PHONY : src/errors.cpp.i
+
+src/errors.s: src/errors.cpp.s
+.PHONY : src/errors.s
+
+# target to generate assembly for a file
+src/errors.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/errors.cpp.s
+.PHONY : src/errors.cpp.s
+
 src/lexer.obj: src/lexer.cpp.obj
 .PHONY : src/lexer.obj
 
@@ -536,6 +584,12 @@ help:
 	@echo ... src/dis.obj
 	@echo ... src/dis.i
 	@echo ... src/dis.s
+	@echo ... src/errorCollect.obj
+	@echo ... src/errorCollect.i
+	@echo ... src/errorCollect.s
+	@echo ... src/errors.obj
+	@echo ... src/errors.i
+	@echo ... src/errors.s
 	@echo ... src/lexer.obj
 	@echo ... src/lexer.i
 	@echo ... src/lexer.s

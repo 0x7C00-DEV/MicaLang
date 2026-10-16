@@ -295,6 +295,34 @@ CMakeFiles/MicaLang.dir/src/repl.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/src/repl.cpp.s"
 	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\src\repl.cpp -o CMakeFiles\MicaLang.dir\src\repl.cpp.s
 
+CMakeFiles/MicaLang.dir/src/errorCollect.cpp.obj: CMakeFiles/MicaLang.dir/flags.make
+CMakeFiles/MicaLang.dir/src/errorCollect.cpp.obj: C:/Users/Lenovo/Desktop/MicaLang/src/errorCollect.cpp
+CMakeFiles/MicaLang.dir/src/errorCollect.cpp.obj: CMakeFiles/MicaLang.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/MicaLang.dir/src/errorCollect.cpp.obj"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/errorCollect.cpp.obj -MF CMakeFiles\MicaLang.dir\src\errorCollect.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\errorCollect.cpp.obj -c C:\Users\Lenovo\Desktop\MicaLang\src\errorCollect.cpp
+
+CMakeFiles/MicaLang.dir/src/errorCollect.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicaLang.dir/src/errorCollect.cpp.i"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\Desktop\MicaLang\src\errorCollect.cpp > CMakeFiles\MicaLang.dir\src\errorCollect.cpp.i
+
+CMakeFiles/MicaLang.dir/src/errorCollect.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/src/errorCollect.cpp.s"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\src\errorCollect.cpp -o CMakeFiles\MicaLang.dir\src\errorCollect.cpp.s
+
+CMakeFiles/MicaLang.dir/src/errors.cpp.obj: CMakeFiles/MicaLang.dir/flags.make
+CMakeFiles/MicaLang.dir/src/errors.cpp.obj: C:/Users/Lenovo/Desktop/MicaLang/src/errors.cpp
+CMakeFiles/MicaLang.dir/src/errors.cpp.obj: CMakeFiles/MicaLang.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/MicaLang.dir/src/errors.cpp.obj"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/MicaLang.dir/src/errors.cpp.obj -MF CMakeFiles\MicaLang.dir\src\errors.cpp.obj.d -o CMakeFiles\MicaLang.dir\src\errors.cpp.obj -c C:\Users\Lenovo\Desktop\MicaLang\src\errors.cpp
+
+CMakeFiles/MicaLang.dir/src/errors.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/MicaLang.dir/src/errors.cpp.i"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Lenovo\Desktop\MicaLang\src\errors.cpp > CMakeFiles\MicaLang.dir\src\errors.cpp.i
+
+CMakeFiles/MicaLang.dir/src/errors.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/MicaLang.dir/src/errors.cpp.s"
+	F:\develop\Mingw-14.2.0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Lenovo\Desktop\MicaLang\src\errors.cpp -o CMakeFiles\MicaLang.dir\src\errors.cpp.s
+
 # Object files for target MicaLang
 MicaLang_OBJECTS = \
 "CMakeFiles/MicaLang.dir/main.cpp.obj" \
@@ -312,7 +340,9 @@ MicaLang_OBJECTS = \
 "CMakeFiles/MicaLang.dir/src/symbol.cpp.obj" \
 "CMakeFiles/MicaLang.dir/src/dis.cpp.obj" \
 "CMakeFiles/MicaLang.dir/src/native.cpp.obj" \
-"CMakeFiles/MicaLang.dir/src/repl.cpp.obj"
+"CMakeFiles/MicaLang.dir/src/repl.cpp.obj" \
+"CMakeFiles/MicaLang.dir/src/errorCollect.cpp.obj" \
+"CMakeFiles/MicaLang.dir/src/errors.cpp.obj"
 
 # External object files for target MicaLang
 MicaLang_EXTERNAL_OBJECTS =
@@ -333,11 +363,13 @@ MicaLang.exe: CMakeFiles/MicaLang.dir/src/symbol.cpp.obj
 MicaLang.exe: CMakeFiles/MicaLang.dir/src/dis.cpp.obj
 MicaLang.exe: CMakeFiles/MicaLang.dir/src/native.cpp.obj
 MicaLang.exe: CMakeFiles/MicaLang.dir/src/repl.cpp.obj
+MicaLang.exe: CMakeFiles/MicaLang.dir/src/errorCollect.cpp.obj
+MicaLang.exe: CMakeFiles/MicaLang.dir/src/errors.cpp.obj
 MicaLang.exe: CMakeFiles/MicaLang.dir/build.make
 MicaLang.exe: CMakeFiles/MicaLang.dir/linkLibs.rsp
 MicaLang.exe: CMakeFiles/MicaLang.dir/objects1.rsp
 MicaLang.exe: CMakeFiles/MicaLang.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Linking CXX executable MicaLang.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\Lenovo\Desktop\MicaLang\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Linking CXX executable MicaLang.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\MicaLang.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

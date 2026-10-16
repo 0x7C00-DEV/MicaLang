@@ -15,14 +15,18 @@ Register::Register(AST* result): begin({"UNKNOWN", -1, -1}), end({"UNKNOWN", -1,
     this->isSuc = true;
 }
 
-Parser::Parser() {}
+Parser::Parser(ErrorCollect* ec) {
+    this->ec = ec;
+}
 
 void Parser::saveState() {
+    ec->save();
     states.push_back(current);
     lexer.saveState();
 }
 
 void Parser::restore() {
+    ec->restore();
     current = states.back();
     states.pop_back();
     lexer.restore();

@@ -63,7 +63,8 @@ void testLexer() {
 }
 
 void shell() {
-    Parser p;
+    ErrorCollect* ec = new ErrorCollect(nullptr);
+    Parser p(ec);
     while (true) {
         printf(">>> ");
         std::string expr;
@@ -90,8 +91,9 @@ void shell() {
 void testFile() {
     std::string file = R"(C:\Users\Lenovo\Desktop\MicaLang\test\example.mica)";
     CompileEnvironment* ce = new CompileEnvironment;
-    Compiler compiler(ce);
-    Module* mod = compiler.getProgram(loadFile(file), file);
+    ErrorCollect* ec = new ErrorCollect(nullptr);
+    Compiler compiler(ce, ec);
+    Module* mod = compiler.getProgram(loadFile(file), file, ec);
     printf("begin:\n");
     VM vm(mod);
     printf("end\n");
@@ -102,7 +104,7 @@ void release(int argc, char** argv) {
 }
 
 int main(int argc, char** argv) {
-    Repl rpl;
-    rpl.run();
+    Repl r(new ErrorCollect(nullptr));
+    r.run();
     return 0;
 }

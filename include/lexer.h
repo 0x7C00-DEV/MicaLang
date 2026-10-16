@@ -6,6 +6,7 @@
 #define MICALANG_LEXER_H
 #include "token.h"
 #include "unordered_map"
+#include "errorCollect.h"
 
 enum {
     SYN_TYPE,

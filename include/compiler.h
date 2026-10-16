@@ -7,6 +7,7 @@
 #include "../include/compiler.h"
 #include "../include/symbol.h"
 #include "../include/loader.h"
+#include "errorCollect.h"
 #include "../include/value.h"
 #include "../include/parser.h"
 #include "../include/config.h"
@@ -63,10 +64,11 @@ struct CompileEnvironment {
 
 class AstToMtype {
 public:
-    AstToMtype(CompileEnvironment*);
+    AstToMtype(CompileEnvironment*, ErrorCollect*);
     MType* getType(AST*);
 private:
     CompileEnvironment* env;
+    ErrorCollect* ec;
     MType* parseIdNode(AST*);
     MType* parseArrayType(AST*);
     MType* parseFuncType(AST*);
@@ -87,8 +89,9 @@ struct Vresult {
 
 class Compiler {
 public:
-    Compiler(CompileEnvironment*);
-    Module *getProgram(std::string, std::string);
+    Compiler(CompileEnvironment*, ErrorCollect*);
+    Module *getProgram(std::string, std::string, ErrorCollect*);
+    ErrorCollect* ec;
 private:
 	Parser parser;
     CompileEnvironment* env;

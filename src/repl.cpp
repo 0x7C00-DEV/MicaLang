@@ -1,9 +1,10 @@
 #include "../include/repl.h"
 #include <iostream>
 
-Repl::Repl() {
+Repl::Repl(ErrorCollect* ec) {
+    this->ec = ec;
     env_.moduleName = "__repl__";
-    compiler_ = std::make_unique<Compiler>(&env_);
+    compiler_ = std::make_unique<Compiler>(&env_, ec);
 
     module_ = new Module();
     module_->moduleName = "__repl__";
@@ -37,8 +38,14 @@ void Repl::eval(const std::string& line) {
     counter_++;
     std::string filename = "<repl:" + std::to_string(counter_) + ">";
 
-    Module* fresh = compiler_->getProgram(line, filename);
-    if (!fresh) { std::cout << "compile failed\n"; return; }
+    size_t mark = ec->errors.size();
+    Module* fresh = compiler_->getProgram(line, filename, ec);
+    if (!fresh) {
+        for (size_t i = mark; i < ec->errors.size(); ++i)
+            std::cout << ec->errors[i]->errorName << ": "
+                      << ec->errors[i]->errorInfo << "\n";
+        return;
+    }
 
     std::vector<MicaValue> oldGlobals = module_->globalVars;
     module_->globalConstPool = fresh->globalConstPool;

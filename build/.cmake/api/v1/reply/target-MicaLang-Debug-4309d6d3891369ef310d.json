@@ -72,7 +72,9 @@
 				24,
 				26,
 				28,
-				31
+				31,
+				33,
+				35
 			]
 		}
 	],
@@ -120,7 +122,9 @@
 				24,
 				26,
 				28,
-				31
+				31,
+				33,
+				35
 			]
 		},
 		{
@@ -142,7 +146,9 @@
 				25,
 				27,
 				29,
-				30
+				30,
+				32,
+				34
 			]
 		}
 	],
@@ -322,6 +328,28 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "src/repl.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/errorCollect.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/errorCollect.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/errors.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/errors.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

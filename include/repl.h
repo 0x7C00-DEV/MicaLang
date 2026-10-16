@@ -8,10 +8,10 @@
 
 class Repl {
 public:
-    Repl();
+    Repl(ErrorCollect*);
     ~Repl();
     void run();
-
+    ErrorCollect* ec;
 private:
     void eval(const std::string& line);
 

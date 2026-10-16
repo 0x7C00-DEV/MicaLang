@@ -1,27 +1,32 @@
-//
-// Created by Lenovo on 2026/9/25.
-//
 #include "../include/compiler.h"
 #include "../include/types.h"
 
-AstToMtype::AstToMtype(CompileEnvironment* env) {
+AstToMtype::AstToMtype(CompileEnvironment* env, ErrorCollect* ec) {
     this->env = env;
+    this->ec = ec;
 }
 
 MType* AstToMtype::parseImplementType(AST* a) {
     auto tmp = (ImplementsType*) a;
     std::vector<InterfaceSymbol*> symbols;
-    for (auto i : tmp->interfaceNames)
-        symbols.push_back((InterfaceSymbol*)findInterface(i));
+    for (auto i : tmp->interfaceNames) {
+        auto s = findInterface(i);
+        if (!s) return nullptr;
+        symbols.push_back((InterfaceSymbol*)s);
+    }
     return new TImplementsType(symbols);
 }
 
 MType* AstToMtype::parseTemplateType(AST* a) {
     auto tmp = (TemplateType*) a;
     auto root = getType(tmp->rootType);
+    if (!root) return nullptr;
     std::vector<MType*> templ;
-    for (auto i : tmp->subType)
-        templ.push_back(getType(i));
+    for (auto i : tmp->subType) {
+        auto t = getType(i);
+        if (!t) return nullptr;
+        templ.push_back(t);
+    }
     return new TTemplateType(root, templ);
 }
 
@@ -32,8 +37,8 @@ MType* AstToMtype::getType(AST* a) {
     if (t->tpKind == Type::TYPE_NORMAL) return parseIdNode(a);
     if (t->tpKind == Type::TYPE_FUNC) return parseFuncType(a);
     if (t->tpKind == Type::TYEP_IMPLEMENTS) return parseImplementType(a);
-    printf("ERROR: unknown type %d\n", t->tpKind);
-    exit(-1);
+    ec->emitError(new SystemError("Unsupported type kind", a->begin, a->end), false);
+    return nullptr;
 }
 
 MType* AstToMtype::parseIdNode(AST* a) {
@@ -44,17 +49,21 @@ MType* AstToMtype::parseIdNode(AST* a) {
 MType* AstToMtype::parseArrayType(AST* a) {
     auto tmp = (ArrayType*) a;
     auto elementType = getType(tmp->elementType);
+    if (!elementType) return nullptr;
     return new TArrayType(elementType);
 }
 
 MType* AstToMtype::parseFuncType(AST* a) {
     auto tmp = (FuncType*) a;
     std::vector<MType*> argTypes;
-    for (auto i : tmp->args) argTypes.push_back(getType(i));
-    return new FunctionType(
-        getType(tmp->retType),
-        argTypes
-    );
+    for (auto i : tmp->args) {
+        auto t = getType(i);
+        if (!t) return nullptr;
+        argTypes.push_back(t);
+    }
+    auto retType = getType(tmp->retType);
+    if (!retType) return nullptr;
+    return new FunctionType(retType, argTypes);
 }
 
 MType *AstToMtype::findClassMember(AST *a) {
@@ -69,45 +78,56 @@ MType *AstToMtype::findClassMember(AST *a) {
 
         Symbol* sym = env->cs.lookup(name);
         if (!sym) {
-            std::cout << "ERROR: '" << name << "' not found\n";
-            exit(-1);
+            ec->emitError(new NameError("Name '" + name + "' is not found", a->begin, a->end), false);
+            return nullptr;
         }
         if (sym->kind == Symbol::SYM_INTERFACE)
             return new InterfaceType((InterfaceSymbol*)sym);
         if (sym->kind == Symbol::SYM_CLASS)
             return new ClassType(name, sym);
-        std::cout << "ERROR: '" << name << "' is not a type\n";
-        exit(-1);
+        ec->emitError(new SyntaxError("Name '" + name + "' is not a class or interface", a->begin, a->end), false);
+        return nullptr;
     }
+
     auto parent = ((MemberAccess*)a)->parent;
     auto member = ((MemberAccess*)a)->member;
-    return ((ClassSymbol*)((ClassType*)findClassMember(parent))->sym)->members[member];
+    auto parentType = findClassMember(parent);
+    if (!parentType || parentType->baseType != MType::BT_CLASS) {
+        ec->emitError(new TypeError("Invalid class member access", a->begin, a->end), false);
+        return nullptr;
+    }
+    auto cls = (ClassSymbol*)((ClassType*)parentType)->sym;
+    auto it = cls->members.find(member);
+    if (it == cls->members.end()) {
+        ec->emitError(new NameError("Class '" + cls->name + "' has no member '" + member + "'", a->begin, a->end), false);
+        return nullptr;
+    }
+    return it->second;
 }
 
 Symbol* AstToMtype::findInterface(AST* a) {
     if (a->kind == AST::AST_ID) {
         Symbol* sym = env->cs.lookup(((Id*)a)->name);
         if (!sym) {
-            std::cout << "ERROR: '" << ((Id*)a)->name << "' not found\n";
-            exit(-1);
+            ec->emitError(new NameError("Name '" + ((Id*)a)->name + "' is not found", a->begin, a->end), false);
+            return nullptr;
         }
         if (sym->kind != Symbol::SYM_INTERFACE) {
-            std::cout << "ERROR: '" << ((Id*)a)->name
-                      << "' is not an interface\n";
-            exit(-1);
+            ec->emitError(new TypeError("Name '" + ((Id*)a)->name + "' is not an interface", a->begin, a->end), false);
+            return nullptr;
         }
         return sym;
     }
 
     if (a->kind != AST::AST_MEMBER_ACCESS) {
-        std::cout << "ERROR: unknown type '" << a->kind << "'\n";
-        exit(-1);
+        ec->emitError(new SystemError("Unknown type kind", a->begin, a->end), false);
+        return nullptr;
     }
 
     auto tmp = findClassMember(((MemberAccess*)a)->parent);
-    if (tmp->baseType != MType::BT_CLASS) {
-        std::cout << "ERROR: unsuppose type " << tmp->baseType << std::endl;
-        exit(-1);
+    if (!tmp || tmp->baseType != MType::BT_CLASS) {
+        ec->emitError(new TypeError("Invalid nested interface access", a->begin, a->end), false);
+        return nullptr;
     }
 
     ClassSymbol* cs = ((ClassSymbol*)(((ClassType*)tmp)->sym));
@@ -115,14 +135,12 @@ Symbol* AstToMtype::findInterface(AST* a) {
 
     auto it = cs->members.find(memberName);
     if (it == cs->members.end()) {
-        std::cout << "ERROR: class '" << cs->name
-                  << "' has no nested interface '" << memberName << "'\n";
-        exit(-1);
+        ec->emitError(new TypeError("Class '" + cs->name + "' has no nested interface '" + memberName + "'", a->begin, a->end), false);
+        return nullptr;
     }
     if (it->second->baseType != MType::BT_INTERFACE) {
-        std::cout << "ERROR: '" << cs->name << "." << memberName
-                  << "' is not an interface\n";
-        exit(-1);
+        ec->emitError(new TypeError("Name '" + cs->name + "." + memberName + "' is not an interface", a->begin, a->end), false);
+        return nullptr;
     }
     return ((InterfaceType*)it->second)->symbol;
 }
@@ -130,8 +148,8 @@ Symbol* AstToMtype::findInterface(AST* a) {
 ClassSymbol *AstToMtype::findClass(std::string name) {
     auto tmp = (ClassSymbol*)env->cs.lookup(name);
     if (!tmp) {
-        std::cout << "ERROR: name '" << name << "' not found\n";
-        exit(-1);
+        ec->emitError(new NameError("Name '" + name + "' not found", {}, {}), false);
+        return nullptr;
     }
     return tmp;
 }
@@ -209,9 +227,10 @@ void Compiler::leaveScope() {
     getCurrentTsk()->currentScope = tmp? tmp : getCurrentTsk()->functionScope;
 }
 
-Compiler::Compiler(CompileEnvironment* environment) {
+Compiler::Compiler(CompileEnvironment* environment, ErrorCollect* ec): parser(ec) {
     this->env = environment;
-    conver = new AstToMtype(this->env);
+    this->ec = ec;
+    conver = new AstToMtype(this->env, ec);
     opera["+"] = BADD;
     opera["-"] = BSUB;
     opera["/"] = BDIV;
@@ -263,7 +282,7 @@ MType* Compiler::visitBinOpNode(AST* a, MType* expect) {
     auto tmp = (BinOpNode*) a;
     auto it = opera.find(tmp->op);
     if (it == opera.end()) {
-        std::cout << "ERROR: operator '" << tmp->op << "' not suppose\n";
+        ec->emitError(new TypeError("Operator '" + tmp->op + "' is not supported", a->begin, a->end), false);
         return nullptr;
     }
     int op = it->second;
@@ -279,7 +298,10 @@ MType* Compiler::visitBinOpNode(AST* a, MType* expect) {
         operandExpect = expect;
 
     MType* left  = visitValue(tmp->left,  operandExpect);
+    if (!left) return nullptr;
     MType* right = visitValue(tmp->right, operandExpect);
+    if (!right) return nullptr;
+
     if (left->baseType != MType::BT_ARRAY && left->baseType != MType::BT_CLASS) {
         emit(getLabel(), BIN_OPER, op, 0);
         auto tl = left;
@@ -294,29 +316,39 @@ MType* Compiler::visitBinOpNode(AST* a, MType* expect) {
         emit(getLabel(), DUP, 0, 0);
         auto temp = optofn.find(tmp->op);
         if (temp == optofn.end()) {
-            std::cout << "ERROR: operator '" << tmp->op << "' unsuppose\n";
-            exit(-1);
+            ec->emitError(new TypeError("Operator '" + tmp->op + "' is not supported", a->begin, a->end), false);
+            return nullptr;
+        }
+        auto memberType = ((ClassSymbol*)((ClassType*)left)->sym)->findMember(temp->second);
+        if (!memberType || memberType->baseType != MType::BT_FUNC) {
+            ec->emitError(new TypeError("Class has no member '" + temp->second + "'", a->begin, a->end), false);
+            return nullptr;
         }
         storeString(temp->second);
         emit(getLabel(), MEM_GET, 0, 0);
         emit(getLabel(), SWAP, 0, 2);
         emit(getLabel(), CALL, 2, 0);
-        return ((FunctionType*)((ClassSymbol*)((ClassType*)left)->sym)->members[temp->second])->retType;
-    }  else if (right->baseType == MType::BT_CLASS) {
+        return ((FunctionType*)memberType)->retType;
+    } else if (right->baseType == MType::BT_CLASS) {
         emit(getLabel(), DUP, 0, 0);
         auto temp = optofn.find(tmp->op);
         if (temp == optofn.end()) {
-            std::cout << "ERROR: operator '" << tmp->op << "' unsuppose\n";
-            exit(-1);
+            ec->emitError(new TypeError("Operator '" + tmp->op + "' is not supported", a->begin, a->end), false);
+            return nullptr;
+        }
+        auto memberType = ((ClassSymbol*)((ClassType*)right)->sym)->findMember(temp->second);
+        if (!memberType || memberType->baseType != MType::BT_FUNC) {
+            ec->emitError(new TypeError("Class has no member '" + temp->second + "'", a->begin, a->end), false);
+            return nullptr;
         }
         storeString(temp->second);
         emit(getLabel(), MEM_GET, 0, 0);
         emit(getLabel(), SWAP, 0, 2);
         emit(getLabel(), CALL, 2, 0);
-        return ((FunctionType*)((ClassSymbol*)((ClassType*)right)->sym)->members[temp->second])->retType;
+        return ((FunctionType*)memberType)->retType;
     } else {
-        std::cout << "ERROR: unknown type " << left->baseType << ", " << right->baseType << "\n";
-        exit(-1);
+        ec->emitError(new TypeError("Unsupported operand types for binary operator '" + tmp->op + "'", a->begin, a->end), false);
+        return nullptr;
     }
 }
 
@@ -324,35 +356,36 @@ Symbol *Compiler::getMemberType(AST* node) {
     if (node->kind == AST::AST_ID) {
         Symbol* sym = env->cs.lookup(((Id*)node)->name);
         if (!sym) {
-            std::cout << "ERROR: symbol '" << ((Id*)node)->name << "' not found\n";
-            exit(-1);
+            ec->emitError(new NameError("Symbol '" + ((Id*)node)->name + "' not found", node->begin, node->end), false);
+            return nullptr;
         }
         return sym;
     }
     if (node->kind == AST::AST_MEMBER_ACCESS) {
         auto tmp = getMemberType(((MemberAccess*)node)->parent);
-        if (!tmp) {
-            std::cout << "ERROR: tmp is a null pointer\n";
-            exit(-1);
-        }
+        if (!tmp) return nullptr;
         if (tmp->kind != Symbol::SYM_CLASS) {
-            std::cout << "ERROR: not a class\n";
-            exit(-1);
+            ec->emitError(new TypeError("Not a class", node->begin, node->end), false);
+            return nullptr;
         }
         auto member = ((MemberAccess*)node)->member;
-        return ((ClassSymbol*)tmp)->syms[member];
+        auto it = ((ClassSymbol*)tmp)->syms.find(member);
+        if (it == ((ClassSymbol*)tmp)->syms.end()) {
+            ec->emitError(new NameError("Class '" + ((ClassSymbol*)tmp)->name + "' has no member '" + member + "'", node->begin, node->end), false);
+            return nullptr;
+        }
+        return it->second;
     }
     if (node->kind == AST::AST_ELEMENT_GET) {
         auto tmp = (ElementGet*) node;
-        auto parentType = getMemberType(tmp->address);
-        return parentType;
+        return getMemberType(tmp->address);
     }
     if (node->kind == AST::AST_CALL) {
         auto tmp = (Call*) node;
         return getMemberType(tmp->fnid);
     }
-    std::cout << "ERROR: type " << node->kind << " not suppose\n";
-    exit(-1);
+    ec->emitError(new SystemError("Unsupported member kind", node->begin, node->end), false);
+    return nullptr;
 }
 
 MType* Compiler::visitCallNode(AST* a, MType* expect) {
@@ -360,9 +393,8 @@ MType* Compiler::visitCallNode(AST* a, MType* expect) {
     MType* tp1 = visitValue(tmp->fnid, expect);
 
     if (!tp1) {
-        std::cout << "ERROR: visitCallNode: callee type resolved to null. "
-                     "Check that the member exists in the class or its super class.\n";
-        exit(-1);
+        ec->emitError(new TypeError("Cannot resolve callee type", a->begin, a->end), false);
+        return nullptr;
     }
 
     if (tp1->baseType == MType::BT_FUNC) {
@@ -372,18 +404,19 @@ MType* Compiler::visitCallNode(AST* a, MType* expect) {
         if (tmp->fnid->kind == AST::AST_MEMBER_ACCESS) {
             auto temp = getMemberType(((MemberAccess*)tmp->fnid)->parent);
             if (temp && temp->kind != Symbol::SYM_CLASS) {
-                visitValue(((MemberAccess*)tmp->fnid)->parent, nullptr);
+                auto recvType = visitValue(((MemberAccess*)tmp->fnid)->parent, nullptr);
+                if (!recvType) return nullptr;
                 argc += 1;
             }
         }
 
         for (int i = 0; i < (int)tmp->args.size(); ++i) {
-            MType* expectedArg = (i < (int)tp->argsType.size())
-                                 ? tp->argsType[i] : nullptr;
+            MType* expectedArg = (i < (int)tp->argsType.size()) ? tp->argsType[i] : nullptr;
             MType* actualArg = visitValue(tmp->args[i], expectedArg);
+            if (!actualArg) return nullptr;
             if (expectedArg && !typeComp(actualArg, expectedArg)) {
-                std::cout << "TYPEERROR: expect type '" << getTypeString(expectedArg) << "', found '" << getTypeString(actualArg) << "' \n";
-                exit(-1);
+                ec->emitError(new TypeError("Argument " + std::to_string(i + 1) + ": expected '" + getTypeString(expectedArg) + "', got '" + getTypeString(actualArg) + "'", tmp->args[i]->begin, tmp->args[i]->end), false);
+                return nullptr;
             }
         }
 
@@ -391,42 +424,40 @@ MType* Compiler::visitCallNode(AST* a, MType* expect) {
         return tp->retType;
 
     } else if (tp1->baseType == MType::BT_CLASS) {
-        // [object]
         auto csym = ((ClassSymbol*)((ClassType*) tp1)->sym);
 
         MType* callFnType = csym->findMember("__call__");
         if (!callFnType) {
-            std::cout << "Class '" << csym->name
-                      << "' has no member '__call__'" << std::endl;
-            exit(-1);
+            ec->emitError(new TypeError("Class '" + csym->name + "' has no member '__call__'", a->begin, a->end), false);
+            return nullptr;
         }
         if (callFnType->baseType != MType::BT_FUNC) {
-            std::cout << "'__call__' not a function\n";
-            exit(-1);
+            ec->emitError(new TypeError("'__call__' is not a function", a->begin, a->end), false);
+            return nullptr;
         }
         auto ftmp = (FunctionType*) callFnType;
         auto retTp = ftmp->retType;
 
-        emit(getLabel(), DUP, 0, 0);        // [obj, obj]
-        storeString("__call__");            // [obj, obj, name]
-        emit(getLabel(), MEM_GET, 0, 0);    // [obj, func]
-        emit(getLabel(), SWAP_SP, 0, 0);    // [func, obj]
+        emit(getLabel(), DUP, 0, 0);
+        storeString("__call__");
+        emit(getLabel(), MEM_GET, 0, 0);
+        emit(getLabel(), SWAP_SP, 0, 0);
 
         for (int i = 0; i < (int)tmp->args.size(); ++i) {
-            MType* expectedArg = (i + 1 < (int)ftmp->argsType.size())
-                                 ? ftmp->argsType[i + 1] : nullptr;
+            MType* expectedArg = (i + 1 < (int)ftmp->argsType.size()) ? ftmp->argsType[i + 1] : nullptr;
             MType* actualArg = visitValue(tmp->args[i], expectedArg);
+            if (!actualArg) return nullptr;
             if (expectedArg && !typeComp(actualArg, expectedArg)) {
-                std::cout << "TYPEERROR: expect type '" << getTypeString(expectedArg) << "', found '" << getTypeString(actualArg) << "' \n";
-                exit(-1);
+                ec->emitError(new TypeError("Argument " + std::to_string(i + 1) + ": expected '" + getTypeString(expectedArg) + "', got '" + getTypeString(actualArg) + "'", tmp->args[i]->begin, tmp->args[i]->end), false);
+                return nullptr;
             }
         }
         emit(getLabel(), CALL, (int)tmp->args.size() + 1, 0);
         return retTp;
 
     } else {
-        std::cout << "ERROR: type " << tp1->baseType << " can not call\n";
-        exit(-1);
+        ec->emitError(new TypeError("Type cannot be called", a->begin, a->end), false);
+        return nullptr;
     }
 }
 
@@ -435,59 +466,56 @@ MType* Compiler::visitElementGet(AST* a, MType* expect) {
     auto* tpm = visitValue(arrayId->address, expect);
 
     if (!tpm) {
-        std::cout << "ERROR: visitElementGet: address type resolved to null\n";
-        exit(-1);
+        ec->emitError(new TypeError("Cannot resolve address type", a->begin, a->end), false);
+        return nullptr;
     }
 
-    // [Object]
     if (tpm->baseType == MType::BT_ARRAY) {
         auto tp = (TArrayType*) tpm;
 
         MType* posType = visitValue(arrayId->position, mica_int);
+        if (!posType) return nullptr;
         emit(getLabel(), EL_GET, 0, 0);
         if (!typeComp(posType, mica_int)) {
-            std::cout << "ERROR: " << getTypeString(posType) << " not int\n";
-            exit(-1);
+            ec->emitError(new TypeError("Array index must be int, got '" + getTypeString(posType) + "'", arrayId->position->begin, arrayId->position->end), false);
+            return nullptr;
         }
         return tp->elementType;
 
     } else if (tpm->baseType == MType::BT_CLASS) {
-        // [obj]
         ClassSymbol* cls = ((ClassSymbol*)((ClassType*) tpm)->sym);
 
         MType* elemGetType = cls->findMember("__elementget__");
         if (!elemGetType) {
-            std::cout << "ERROR: object '" << cls->name
-                      << "' has no '__elementget__' member\n";
-            exit(-1);
+            ec->emitError(new TypeError("Object '" + cls->name + "' has no member '__elementget__'", a->begin, a->end), false);
+            return nullptr;
         }
         if (elemGetType->baseType != MType::BT_FUNC) {
-            std::cout << "ERROR: '__elementget__' is not callable\n";
-            exit(-1);
+            ec->emitError(new TypeError("'__elementget__' is not callable", a->begin, a->end), false);
+            return nullptr;
         }
         auto ft = (FunctionType*) elemGetType;
         MType* retT = ft->retType;
 
-        // [obj]
-        emit(getLabel(), DUP, 0, 0);        // [obj, obj]
-        storeString("__elementget__");      // [obj, obj, str]
-        emit(getLabel(), MEM_GET, 0, 0);    // [obj, method]
-        emit(getLabel(), SWAP, 0, 1);       // [method, obj]
+        emit(getLabel(), DUP, 0, 0);
+        storeString("__elementget__");
+        emit(getLabel(), MEM_GET, 0, 0);
+        emit(getLabel(), SWAP, 0, 1);
 
-        MType* expectedPos = (ft->argsType.size() >= 2)
-                             ? ft->argsType[1] : mica_int;
+        MType* expectedPos = (ft->argsType.size() >= 2) ? ft->argsType[1] : mica_int;
         MType* actualPos = visitValue(arrayId->position, expectedPos);
+        if (!actualPos) return nullptr;
         if (expectedPos && !typeComp(actualPos, expectedPos)) {
-            std::cout << "TYPEERROR: type error for __elementget__ index\n";
-            exit(-1);
+            ec->emitError(new TypeError("'__elementget__' index type mismatch: expected '" + getTypeString(expectedPos) + "', got '" + getTypeString(actualPos) + "'", arrayId->position->begin, arrayId->position->end), false);
+            return nullptr;
         }
 
-        emit(getLabel(), CALL, 2, 0);       // [retval]
+        emit(getLabel(), CALL, 2, 0);
         return retT;
 
     } else {
-        std::cout << "ERROR: unknown type " << tpm->baseType << std::endl;
-        exit(-1);
+        ec->emitError(new TypeError("Type cannot be indexed", a->begin, a->end), false);
+        return nullptr;
     }
 }
 
@@ -495,8 +523,8 @@ MType* Compiler::visitMemberAccess(AST* a, MType* expect) {
     auto tmp = (MemberAccess*) a;
     auto parent = visitValue(tmp->parent, expect);
     if (!parent) {
-        std::cout << "ERROR: visitMemberAccess: parent type is null\n";
-        exit(-1);
+        ec->emitError(new TypeError("Cannot resolve parent type", a->begin, a->end), false);
+        return nullptr;
     }
 
     storeString(tmp->member);
@@ -505,27 +533,22 @@ MType* Compiler::visitMemberAccess(AST* a, MType* expect) {
     if (parent->baseType == MType::BT_INTERFACE) {
         auto it = ((InterfaceType*)parent)->symbol->labels.find(tmp->member);
         if (it == ((InterfaceType*)parent)->symbol->labels.end()) {
-            std::cout << "ERROR: interface '" << ((InterfaceType*)parent)->symbol->name
-                      << "' has no member '" << tmp->member << "'\n";
-            exit(-1);
+            ec->emitError(new NameError("Interface '" + ((InterfaceType*)parent)->symbol->name + "' has no member '" + tmp->member + "'", a->begin, a->end), false);
+            return nullptr;
         }
         return it->second->type;
     }
 
     if (parent->baseType != MType::BT_CLASS) {
-        std::cout << "ERROR: '" << tmp->member
-                  << "' accessed on non-class type\n";
-        exit(-1);
+        ec->emitError(new TypeError("Member access on non-class type", a->begin, a->end), false);
+        return nullptr;
     }
 
-    MType* memberType =
-        ((ClassSymbol*)((ClassType*)parent)->sym)->findMember(tmp->member);
+    auto cls = ((ClassSymbol*)((ClassType*)parent)->sym);
+    MType* memberType = cls->findMember(tmp->member);
     if (!memberType) {
-        std::cout << "ERROR: class '"
-                  << ((ClassSymbol*)((ClassType*)parent)->sym)->name
-                  << "' (or its super classes) has no member '"
-                  << tmp->member << "'\n";
-        exit(-1);
+        ec->emitError(new NameError("Class '" + cls->name + "' (or its super classes) has no member '" + tmp->member + "'", a->begin, a->end), false);
+        return nullptr;
     }
     return memberType;
 }
@@ -540,12 +563,12 @@ Vresult Compiler::visitVarDefine(AST* a, bool isGlobal) {
     Vresult res;
     auto tmp = (VarDef *) a;
     MType* tp = (tmp->type)? conver->getType(tmp->type) : nullptr;
+    if (tmp->type && !tp) return res;
 
     if (!isGlobal) {
         if (!tp && !tmp->init) {
-            std::cout << "ERROR: Can't infer the type info of variable '"
-                      << tmp->name << "'\n";
-            exit(-1);
+            ec->emitError(new TypeError("Cannot infer the type of variable '" + tmp->name + "'", a->begin, a->end), false);
+            return res;
         }
 
         int varId = getCurrentTsk()->addLocalVar(tmp->name, tp,
@@ -553,6 +576,7 @@ Vresult Compiler::visitVarDefine(AST* a, bool isGlobal) {
 
         if (tmp->init) {
             MType* initType = visitValue(tmp->init, tp);
+            if (!initType) return res;
 
             if (!tp) {
                 tp = initType;
@@ -561,9 +585,8 @@ Vresult Compiler::visitVarDefine(AST* a, bool isGlobal) {
                 if (sym && sym->kind == Symbol::SYM_VAR)
                     ((VarSymbol*)sym)->type = tp;
             } else if (!typeComp(initType, tp)) {
-                std::cout << "ERRPR: type " << getTypeString(initType)
-                          << ", " << getTypeString(tp) << std::endl;
-                exit(-1);
+                ec->emitError(new TypeError("Variable '" + tmp->name + "': expected type '" + getTypeString(tp) + "', got '" + getTypeString(initType) + "'", a->begin, a->end), false);
+                return res;
             }
             emit(getLabel(), STORE_SVAR, varId, 0);
         }
@@ -575,21 +598,20 @@ Vresult Compiler::visitVarDefine(AST* a, bool isGlobal) {
 
     int varId = addGlobalVar(tmp->name, tp, tmp->init != nullptr);
     if (!tp && !tmp->init) {
-        std::cout << "ERROR: Can't infer the type info of variable '"
-                  << tmp->name << "'\n";
-        exit(-1);
+        ec->emitError(new TypeError("Cannot infer the type of variable '" + tmp->name + "'", a->begin, a->end), false);
+        return res;
     }
     if (tmp->init) {
         MType* initType = visitValue(tmp->init, tp);
+        if (!initType) return res;
         if (!tp) {
             tp = initType;
             auto sym = env->cs.getGlobalScope()->symbols[tmp->name];
             if (sym && sym->kind == Symbol::SYM_VAR)
                 ((VarSymbol*)sym)->type = tp;
         } else if (!typeComp(initType, tp)) {
-            std::cout << "ERRPR: type " << getTypeString(initType)
-                      << ", " << getTypeString(tp) << std::endl;
-            exit(-1);
+            ec->emitError(new TypeError("Variable '" + tmp->name + "': expected type '" + getTypeString(tp) + "', got '" + getTypeString(initType) + "'", a->begin, a->end), false);
+            return res;
         }
         emit(getLabel(), STORE_GVAR, varId, 0);
     }
@@ -599,13 +621,16 @@ Vresult Compiler::visitVarDefine(AST* a, bool isGlobal) {
     return res;
 }
 
-
 MType* Compiler::visitModuleImport(AST* a) {
     auto tmp = (Import*) a;
     std::string path = tmp->path;
     std::string rename = tmp->align;
     ProgramLoader loader(path);
-    ModuleSymbol* sym = loader.getModuleTag(path);
+    ModuleSymbol* sym = loader.getModuleTag(rename);
+    if (!sym) {
+        ec->emitError(new NameError("Module '" + path + "' cannot be loaded", a->begin, a->end), false);
+        return nullptr;
+    }
     env->cs.registSymbolGbl(rename, sym);
     return new ModuleType(rename, path, sym);
 }
@@ -628,6 +653,11 @@ MType* Compiler::visitFunction(AST* a, bool autoend) {
     auto tmp = (Func*) a;
     createTask(tmp->name);
     auto ftp = (FunctionType*)conver->getType(tmp->ftype);
+    if (!ftp) {
+        env->tasks.pop_back();
+        env->cs.leaveScope();
+        return nullptr;
+    }
     getCurrentTsk()->fnRetTp = ftp->retType;
 
     if (autoend && !env->cs.lookup(tmp->name))
@@ -677,7 +707,7 @@ MType* Compiler::visitValue(AST* a, MType* expect) {
     if (a->kind == AST::AST_BIT_NOT)     return visitBitNot(a, expect);
     if (a->kind == AST::AST_NOT)         return visitNot(a, expect);
     if (a->kind == AST::AST_SELF_CHANGE) return visitSelfChange(a);
-    std::cout << "ERROR: visitValue, kind "<< a->kind << "' not suppose\n";
+    ec->emitError(new SystemError("Unsupported expression kind", a->begin, a->end), false);
     return nullptr;
 }
 
@@ -689,21 +719,20 @@ MType* Compiler::visitAssign(AST* a) {
         auto tmpx = (Id*) dst;
         Symbol* s = env->cs.lookup(tmpx->name);
         if (!s) {
-            std::cout << "ERROR: in visitAssign name '" << tmpx->name << "' not found\n";
-            exit(-1);
+            ec->emitError(new NameError("Name '" + tmpx->name + "' not found", dst->begin, dst->end), false);
+            return nullptr;
         }
         if (s->kind != Symbol::SYM_VAR) {
-            std::cout << "ERROR: name '" << tmpx->name << "' not a var\n";
-            exit(-1);
+            ec->emitError(new TypeError("Name '" + tmpx->name + "' is not a variable", dst->begin, dst->end), false);
+            return nullptr;
         }
         auto temp = (VarSymbol*) s;
         auto vt = visitValue(src, temp->type);
+        if (!vt) return nullptr;
         auto st = temp->type;
         if (!typeComp(vt, st)) {
-            std::cout << "ERROR: var '" << tmpx->name << "' type is '"
-                      << getTypeString(st) << "' but value type is '"
-                      << getTypeString(vt) << "'\n";
-            exit(-1);
+            ec->emitError(new TypeError("Variable '" + tmpx->name + "': expected '" + getTypeString(st) + "', got '" + getTypeString(vt) + "'", a->begin, a->end), false);
+            return nullptr;
         }
         int oper = (temp->vkind == VarSymbol::Global)? STORE_GVAR : STORE_SVAR;
         emit(getLabel(), oper, temp->id, 0);
@@ -712,68 +741,73 @@ MType* Compiler::visitAssign(AST* a) {
     if (dst->kind == AST::AST_ELEMENT_GET) {
         auto temp = (ElementGet*) dst;
         MType* obj = visitValue(temp->address, nullptr);
-        // [obj]
+        if (!obj) return nullptr;
         if (obj->baseType == MType::BT_ARRAY) {
             MType* valt = visitValue(src, ((TArrayType*)obj)->elementType);
-            MType* pos_ = visitValue(temp->position, new BaseType(BaseType::MINT));
+            if (!valt) return nullptr;
+            MType* pos_ = visitValue(temp->position, mica_int);
+            if (!pos_) return nullptr;
             emit(getLabel(), EL_SET, 0, 0);
             if (!typeComp(pos_, mica_int)) {
-                std::cout << "ERROR: want a int, get '" << getTypeString(pos_) << "'\n";
-                exit(-1);
-            }
-            if (obj->baseType != MType::BT_ARRAY) {
-                std::cout << "ERROR: not a array\n";
-                exit(-1);
+                ec->emitError(new TypeError("Array index must be int, got '" + getTypeString(pos_) + "'", temp->position->begin, temp->position->end), false);
+                return nullptr;
             }
             if (!typeComp(valt, ((TArrayType*)obj)->elementType)) {
-                std::cout << "ERROR: element type is '" << getTypeString(((TArrayType*)obj)->elementType) << "' value type is '" << getTypeString(valt) << "'\n";
-                exit(-1);
+                ec->emitError(new TypeError("Array element type is '" + getTypeString(((TArrayType*)obj)->elementType) + "', value type is '" + getTypeString(valt) + "'", a->begin, a->end), false);
+                return nullptr;
             }
             return valt;
         } else if (obj->baseType == MType::BT_CLASS) {
-            // [obj]
             ClassSymbol* cls = ((ClassSymbol*)((ClassType*) obj)->sym);
             auto it = cls->members.find("__elementset__");
             if (it == cls->members.end()) {
-                std::cout << "ERROR: object '" << cls->name
-                          << "' has no '__elementset__' member\n";
-                exit(-1);
+                ec->emitError(new TypeError("Object '" + cls->name + "' has no member '__elementset__'", a->begin, a->end), false);
+                return nullptr;
             }
             if (it->second->baseType != MType::BT_FUNC) {
-                std::cout << "ERROR: '__elementset__' is not callable\n";
-                exit(-1);
+                ec->emitError(new TypeError("'__elementset__' is not callable", a->begin, a->end), false);
+                return nullptr;
             }
             auto ft = (FunctionType*)it->second;
 
-            // [obj]
-            emit(getLabel(), DUP, 0, 0);        // [obj, obj]
-            storeString("__elementset__");      // [obj, obj, str]
-            emit(getLabel(), MEM_GET, 0, 0);    // [obj, method]
-            emit(getLabel(), SWAP_SP, 0, 0);    // [method, obj]
-            visitValue(temp->position, ft->argsType[1]);  // [method, obj, pos]
-            visitValue(src,            ft->argsType[2]);  // [method, obj, pos, val]
-            emit(getLabel(), CALL, 3, 0);       // ← CALL 3
+            emit(getLabel(), DUP, 0, 0);
+            storeString("__elementset__");
+            emit(getLabel(), MEM_GET, 0, 0);
+            emit(getLabel(), SWAP_SP, 0, 0);
+            auto posType = visitValue(temp->position, ft->argsType[1]);
+            if (!posType) return nullptr;
+            auto valType = visitValue(src, ft->argsType[2]);
+            if (!valType) return nullptr;
+            emit(getLabel(), CALL, 3, 0);
             emit(getLabel(), POP, 0, 0);
             return ft->retType;
         } else {
-            std::cout << "ERROR: error unsuppose type " << obj->baseType << "\n";
-            exit(-1);
+            ec->emitError(new TypeError("Element assignment on unsupported type", a->begin, a->end), false);
+            return nullptr;
         }
     }
     if (dst->kind == AST::AST_MEMBER_ACCESS) {
         auto tmpx = (MemberAccess*) dst;
         MType* parentType = visitValue(tmpx->parent, nullptr);
+        if (!parentType) return nullptr;
         if (parentType->baseType != MType::BT_CLASS) {
-            std::cout << "ERROR: not a class\n"; exit(-1);
+            ec->emitError(new TypeError("Member assignment on non-class type", a->begin, a->end), false);
+            return nullptr;
         }
-        MType* memberType = ((ClassSymbol*)((ClassType*)parentType)->sym)->members[tmpx->member];
+        auto cls = ((ClassSymbol*)((ClassType*)parentType)->sym);
+        MType* memberType = cls->findMember(tmpx->member);
+        if (!memberType) {
+            ec->emitError(new NameError("Class '" + cls->name + "' has no member '" + tmpx->member + "'", dst->begin, dst->end), false);
+            return nullptr;
+        }
         MType* valueType = visitValue(src, memberType);
+        if (!valueType) return nullptr;
         storeString(tmpx->member);
         emit(getLabel(), MEM_SET, 0, 0);
         return valueType;
     }
-    std::cout << "ERROR: unsuppose type '" << dst->kind << "'\n";
-    exit(-1);
+    ec->emitError(new SystemError("Unsupported assignment target", dst->begin, dst->end), false);
+    return nullptr;
 }
 
 MType* Compiler::visitStmt(AST* a, std::string begin, std::string end) {
@@ -814,6 +848,7 @@ MType* Compiler::visitStmt(AST* a, std::string begin, std::string end) {
     if (a->kind == AST::AST_INTERFACE)
         return visitInterface(a);
     MType* t = visitValue(a, nullptr);
+    if (!t) return nullptr;
     if (a->kind != AST::AST_ASSIGN_NODE)
         emit(getLabel(), POP, 0, 0);
     return t;
@@ -822,18 +857,21 @@ MType* Compiler::visitStmt(AST* a, std::string begin, std::string end) {
 MType* Compiler::visitTernOp(AST* a, MType* expect) {
     std::string false_ = getLabel();
     std::string end = getLabel();
-    MType* retTypet,* retTypef;
+    MType* retTypet, * retTypef;
     auto tmp = (ThreeOp*)a;
     auto tp = visitValue(tmp->condition, expect);
+    if (!tp) return nullptr;
     emit(getLabel(), JMPF, false_, 0);
     retTypet = visitValue(tmp->trueValue, expect);
+    if (!retTypet) return nullptr;
     emit(getLabel(), JMP, end, 0);
     emit(false_, NOP, 0, 0);
     retTypef = visitValue(tmp->falseValue, expect);
+    if (!retTypef) return nullptr;
     emit(end, NOP, 0, 0);
     if (!typeComp(retTypef, retTypet)) {
-        std::cout << "ERROR: " << getTypeString(retTypet) << ", " << getTypeString(retTypef) << std::endl;
-        exit(-1);
+        ec->emitError(new TypeError("Ternary branches type mismatch: '" + getTypeString(retTypet) + "' vs '" + getTypeString(retTypef) + "'", a->begin, a->end), false);
+        return nullptr;
     }
     return retTypet;
 }
@@ -854,9 +892,14 @@ MType* Compiler::visitForLoop(AST* a) {
     MType* tp = nullptr;
     if (tmp->condition) {
         tp = visitValue(tmp->condition, new BaseType(BaseType::MBOOL));
-        if (!typeComp(tp , mica_bool) && !typeComp(tp, mica_int)) {
-            std::cout << "ERROR in visitWhile, want a bool value, but get a '" << getTypeString(tp) << "'\n";
-            exit(-1);
+        if (!tp) {
+            leaveScope();
+            return nullptr;
+        }
+        if (!typeComp(tp, mica_bool) && !typeComp(tp, mica_int)) {
+            ec->emitError(new TypeError("For loop condition: expected bool, got '" + getTypeString(tp) + "'", tmp->condition->begin, tmp->condition->end), false);
+            leaveScope();
+            return nullptr;
         }
         emit("", JMPF, end, 0);
     }
@@ -871,9 +914,10 @@ MType* Compiler::visitForLoop(AST* a) {
     emit("", JMP, begin, 0);
     emit(end, NOP, 0, 0);
 
-    if (tp && !typeComp(tp, mica_bool)) {
-        std::cout << "ERROR: want a bool, but get a '" << getTypeString(tp) << "'\n";
-        exit(-1);
+    if (tp && !typeComp(tp, mica_bool) && !typeComp(tp, mica_int)) {
+        ec->emitError(new TypeError("For loop condition: expected bool, got '" + getTypeString(tp) + "'", tmp->condition->begin, tmp->condition->end), false);
+        leaveScope();
+        return nullptr;
     }
     leaveScope();
     return nullptr;
@@ -886,13 +930,18 @@ MType* Compiler::visitWhileLoop(AST* a) {
     std::string end = getLabel();
     emit(begin, NOP, 0, 0);
     auto tp = visitValue(tmp->condition, new BaseType(BaseType::MBOOL));
+    if (!tp) {
+        leaveScope();
+        return nullptr;
+    }
     emit(getLabel(), JMPF, end, 0);
     visitBlock(tmp->body, begin, end);
     emit(getLabel(), JMP, begin, 0);
     emit(end, NOP, 0,0);
-    if (!typeComp(tp , mica_bool) && !typeComp(tp, mica_int)) {
-        std::cout << "ERROR in visitWhile, want a bool value, but get a '" << getTypeString(tp) << "'\n";
-        exit(-1);
+    if (!typeComp(tp, mica_bool) && !typeComp(tp, mica_int)) {
+        ec->emitError(new TypeError("While loop condition: expected bool, got '" + getTypeString(tp) + "'", tmp->condition->begin, tmp->condition->end), false);
+        leaveScope();
+        return nullptr;
     }
     leaveScope();
     return nullptr;
@@ -908,9 +957,14 @@ MType* Compiler::visitDoWhile(AST* a) {
     visitBlock(tmp->body, cond, end);
     emit(cond, NOP, 0, 0);
     auto tp = visitValue(tmp->condition, new BaseType(BaseType::MBOOL));
-    if (!typeComp(tp , mica_bool) && !typeComp(tp, mica_int)) {
-        std::cout << "ERROR in visitWhile, want a bool value, but get a '" << getTypeString(tp) << "'\n";
-        exit(-1);
+    if (!tp) {
+        leaveScope();
+        return nullptr;
+    }
+    if (!typeComp(tp, mica_bool) && !typeComp(tp, mica_int)) {
+        ec->emitError(new TypeError("Do-while condition: expected bool, got '" + getTypeString(tp) + "'", tmp->condition->begin, tmp->condition->end), false);
+        leaveScope();
+        return nullptr;
     }
     emit(getLabel(), JMPT, begin, 0);
     emit(end, NOP, 0, 0);
@@ -924,6 +978,10 @@ MType* Compiler::visitSwitch(AST* a) {
     std::string begin = getLabel();
     std::string end = getLabel();
     auto tp = visitValue(tmp->value, nullptr);
+    if (!tp) {
+        leaveScope();
+        return nullptr;
+    }
     auto t = tp;
     std::vector<MType*> types;
     emit(begin, NOP, 0, 0);
@@ -933,7 +991,13 @@ MType* Compiler::visitSwitch(AST* a) {
             createScope(Scope::SNORMAL_BLOCK);
             std::string end_ = getLabel();
             emit(getLabel(), DUP, 0, 0);
-            types.push_back(visitValue(su->value, tp));
+            auto caseType = visitValue(su->value, tp);
+            if (!caseType) {
+                leaveScope();
+                leaveScope();
+                return nullptr;
+            }
+            types.push_back(caseType);
             emit(getLabel(), BIN_OPER, BEQ, 0);
             emit(getLabel(), JMPF, end_, 0);
             visitBlock(su->block, begin, end);
@@ -944,11 +1008,13 @@ MType* Compiler::visitSwitch(AST* a) {
         }
     }
     emit(end, POP, 0, 0);
-    for (auto i: types)
+    for (auto i: types) {
         if (!typeComp(i, t)) {
-            std::cout << "ERROR: type '" << getTypeString(t) << "' != '" << getTypeString(i) << "'\n";
-            exit(-1);
+            ec->emitError(new TypeError("Switch case type '" + getTypeString(i) + "' does not match switch value type '" + getTypeString(t) + "'", a->begin, a->end), false);
+            leaveScope();
+            return nullptr;
         }
+    }
     leaveScope();
     return nullptr;
 }
@@ -957,17 +1023,15 @@ MType* Compiler::visitInterface(AST* a) {
     Interface* i = (Interface*)a;
     auto sym = (InterfaceSymbol*)env->cs.lookup(i->name);
     if (!sym || sym->kind != Symbol::SYM_INTERFACE) {
-        std::cout << "ERROR: interface '" << i->name << "' not registered\n";
-        exit(-1);
+        ec->emitError(new NameError("Interface '" + i->name + "' is not registered", a->begin, a->end), false);
+        return nullptr;
     }
 
     for (auto j : i->funcs) {
         auto temp = (Interface::FunctionTag*) j;
-        sym->labels[temp->name] = new FunctionSymbol(
-            temp->name,
-            (FunctionType*)conver->getType(temp->funcType),
-            false
-        );
+        auto ft = (FunctionType*)conver->getType(temp->funcType);
+        if (!ft) return nullptr;
+        sym->labels[temp->name] = new FunctionSymbol(temp->name, ft, false);
     }
     return nullptr;
 }
@@ -981,12 +1045,12 @@ MType* Compiler::visitClass(AST* a) {
     for (auto i : cls->impls) {
         auto tmp1 = getInterface(i);
         if (!tmp1) {
-            std::cout << "ERROR: tmp1 is a null pointer\n";
-            exit(-1);
+            ec->emitError(new NameError("Interface cannot be resolved", i->begin, i->end), false);
+            return nullptr;
         }
         if (tmp1->kind != Symbol::SYM_INTERFACE) {
-            std::cout << "ERROR: not a interface\n";
-            exit(-1);
+            ec->emitError(new TypeError("Symbol is not an interface", i->begin, i->end), false);
+            return nullptr;
         }
         impls.push_back((InterfaceSymbol*)tmp1);
     }
@@ -1011,20 +1075,27 @@ MType* Compiler::visitClass(AST* a) {
         if (i->kind == AST::AST_VAR_DEF) {
             auto vd = (VarDef*)i;
             fields.push_back(vd->name);
-            sym->members[vd->name] = conver->getType(vd->type);
-            sym->syms[vd->name] = new VarSymbol(vd->name, sym->members[vd->name], false, VarSymbol::ClassMember);
+            auto mt = conver->getType(vd->type);
+            if (!mt) return nullptr;
+            sym->members[vd->name] = mt;
+            sym->syms[vd->name] = new VarSymbol(vd->name, mt, false, VarSymbol::ClassMember);
         } else if (i->kind == AST::AST_VAR_DEF_GRP) {
             for (auto j : ((VarDefGrp*)i)->vars) {
                 auto vd = (VarDef*)j;
                 fields.push_back(vd->name);
-                sym->members[vd->name] = conver->getType(vd->type);
-                sym->syms[vd->name] = new VarSymbol(vd->name, sym->members[vd->name], false, VarSymbol::ClassMember);
+                auto mt = conver->getType(vd->type);
+                if (!mt) return nullptr;
+                sym->members[vd->name] = mt;
+                sym->syms[vd->name] = new VarSymbol(vd->name, mt, false, VarSymbol::ClassMember);
             }
         } else if (i->kind == AST::AST_INTERFACE) {
             auto inf = (Interface*) i;
             std::unordered_map<std::string, FunctionSymbol*> tags;
-            for (auto i : inf->funcs)
-                tags[((Interface::FunctionTag*)i)->name] = visitFuncTag(i);
+            for (auto k : inf->funcs) {
+                auto fs = visitFuncTag(k);
+                if (!fs) return nullptr;
+                tags[((Interface::FunctionTag*)k)->name] = fs;
+            }
             sym->syms[inf->name] = new InterfaceSymbol(inf->name, tags);
             sym->members[inf->name] = new InterfaceType((InterfaceSymbol*)sym->syms[inf->name]);
         }
@@ -1033,8 +1104,10 @@ MType* Compiler::visitClass(AST* a) {
     for (auto i : cls->methods) {
         if (i->kind == AST::AST_FUNC_DEF) {
             auto fn = (Func*)i;
-            sym->members[fn->name] = conver->getType(fn->ftype);
-            sym->syms[fn->name] = new FunctionSymbol(fn->name, (FunctionType*)sym->members[fn->name], true);
+            auto mt = conver->getType(fn->ftype);
+            if (!mt) return nullptr;
+            sym->members[fn->name] = mt;
+            sym->syms[fn->name] = new FunctionSymbol(fn->name, (FunctionType*)mt, true);
         }
     }
 
@@ -1063,19 +1136,21 @@ MType* Compiler::visitNewClass(AST* a, MType* expect) {
         }
     }
     if (pos == -1) {
-        std::cout << "ERROR: class '" << tmp->className << "' not found \n";
-        exit(-1);
+        ec->emitError(new NameError("Class '" + tmp->className + "' not found", a->begin, a->end), false);
+        return nullptr;
     }
-    emit(getLabel(), LOAD_GCST, pos, 0);   // [class]
-    emit(getLabel(), NEW, 0, 0);           // [obj]
+    emit(getLabel(), LOAD_GCST, pos, 0);
+    emit(getLabel(), NEW, 0, 0);
     if (tmp->isCallInit) {
-        emit(getLabel(), DUP, 0, 0);       // [obj, obj]
-        storeString("__init__");           // [obj, obj, strArr]
-        emit(getLabel(), MEM_GET, 0, 0);   // [obj, fn]
-        emit(getLabel(), DUP, 1, 0);       // [obj, fn, obj]
-        for (auto i : tmp->initArgs)
-            visitValue(i, nullptr);        // [obj, fn, obj, args...]
-        emit(getLabel(), CALL, (int)tmp->initArgs.size() + 1, 0);  // [obj]
+        emit(getLabel(), DUP, 0, 0);
+        storeString("__init__");
+        emit(getLabel(), MEM_GET, 0, 0);
+        emit(getLabel(), DUP, 1, 0);
+        for (auto i : tmp->initArgs) {
+            auto argType = visitValue(i, nullptr);
+            if (!argType) return nullptr;
+        }
+        emit(getLabel(), CALL, (int)tmp->initArgs.size() + 1, 0);
         emit(getLabel(), POP, 0, 0);
     }
     return new ClassType(tmp->className, env->cs.lookup(tmp->className));
@@ -1089,19 +1164,20 @@ MType* Compiler::visitArray(AST* a, MType* type) {
     MType* elemType = nullptr;
     if (type) {
         if (type->baseType != MType::BT_ARRAY) {
-            std::cout << "ERROR: not a array\n";
-            exit(-1);
+            ec->emitError(new TypeError("Expected array type", a->begin, a->end), false);
+            return nullptr;
         }
         elemType = ((TArrayType*)type)->elementType;
     }
     for (int i = 0; i < n; ++i) {
         emit(getLabel(), DUP, 0, 0);
         MType* it = visitValue(tmp->elements[i], elemType);
+        if (!it) return nullptr;
         loadConstS(pushConstL(MicaValue::Int(i)));
         if (!elemType) elemType = it;
         else if (!typeComp(elemType, it)) {
-            std::cout << "ERROR: element type mismatch: " << getTypeString(it) << " vs " << getTypeString(elemType) << "\n";
-            exit(-1);
+            ec->emitError(new TypeError("Array element type mismatch: '" + getTypeString(it) + "' vs '" + getTypeString(elemType) + "'", tmp->elements[i]->begin, tmp->elements[i]->end), false);
+            return nullptr;
         }
         emit(getLabel(), EL_SET, 0, 0);
     }
@@ -1195,6 +1271,7 @@ MType *Compiler::visitReturn(AST *a) {
     MType* tp = new BaseType(BaseType::MVOID);
     if (tmp->value) {
         tp = visitValue(tmp->value, getCurrentTsk()->fnRetTp);
+        if (!tp) return nullptr;
     } else {
         emit(getLabel(), LOAD_NULL, 0, 0);
     }
@@ -1205,6 +1282,7 @@ MType *Compiler::visitReturn(AST *a) {
 FunctionSymbol *Compiler::visitFuncTag(AST *f) {
     auto symast = (Interface::FunctionTag*) f;
     auto ftype = (FunctionType*)conver->getType((FuncType*) symast->funcType);
+    if (!ftype) return nullptr;
     return new FunctionSymbol(symast->name, ftype, false);
 }
 
@@ -1212,8 +1290,8 @@ MType *Compiler::visitId(AST *a) {
     auto name = ((Id*)a)->name;
     auto info = getCurrentTsk()->currentScope->lookupSymbol(name);
     if (!info) {
-        std::cout << "ERROR: id '" << name << "' is not found.\n";
-        exit(-1);
+        ec->emitError(new NameError("Identifier '" + name + "' is not found", a->begin, a->end), false);
+        return nullptr;
     }
 
     if (info->kind == Symbol::SYM_VAR) {
@@ -1236,8 +1314,8 @@ MType *Compiler::visitId(AST *a) {
     }
 
     if (info->kind == Symbol::SYM_MODULE) {
-        std::cout << "ERROR in visitId, member not suppose\n";
-        exit(-1);
+        ec->emitError(new SystemError("Module member access is not implemented", a->begin, a->end), false);
+        return nullptr;
     }
 
     if (info->kind == Symbol::SYM_CLASS) {
@@ -1250,18 +1328,18 @@ MType *Compiler::visitId(AST *a) {
                 return new ClassType(name, info);
             }
         }
-        std::cout << "ERROR: class '" << name
-                  << "' not found in globalConstPool\n";
-        exit(-1);
+        ec->emitError(new NameError("Class '" + name + "' not found in global const pool", a->begin, a->end), false);
+        return nullptr;
     }
 
-    std::cout << "ERROR: kind '" << info->kind << "' not suppose\n";
+    ec->emitError(new SystemError("Unsupported symbol kind", a->begin, a->end), false);
     return nullptr;
 }
 
 MType *Compiler::visitNeg(AST *a, MType* expect) {
     auto tmp = (Neg*)a;
     auto val = visitValue(tmp->value, expect);
+    if (!val) return nullptr;
     emit(getLabel(), BNEG, 0 , 0);
     return val;
 }
@@ -1277,9 +1355,11 @@ MType *Compiler::visitSelfChange(AST *a) {
     visitAssign(exp);
     return temp;
 }
+
 MType *Compiler::visitBitNot(AST *pAst, MType* expect) {
     auto bn = (BitNot*) pAst;
     auto tmp = visitValue(bn->value, expect);
+    if (!tmp) return nullptr;
     emit(getLabel(), BBNOT, 0, 0);
     return tmp;
 }
@@ -1287,6 +1367,7 @@ MType *Compiler::visitBitNot(AST *pAst, MType* expect) {
 MType *Compiler::visitNot(AST *pAst, MType* expect) {
     auto bn = (Not*) pAst;
     auto tmp = visitValue(bn->value, expect);
+    if (!tmp) return nullptr;
     emit(getLabel(), BNOT, 0, 0);
     return new BaseType(BaseType::MBOOL);
 }
@@ -1297,9 +1378,14 @@ MType *Compiler::visitIf(AST *a, std::string begin, std::string end) {
     std::string if_ = getLabel();
     std::string ie = getLabel();
     auto tp = visitValue(tmp->condition, new BaseType(BaseType::MBOOL));
+    if (!tp) {
+        leaveScope();
+        return nullptr;
+    }
     if (!typeComp(tp, mica_bool)) {
-        std::cout << "ERROR in visitIf, want a bool value, but get a '" << getTypeString(tp) << "'\n";
-        exit(-1);
+        ec->emitError(new TypeError("If condition: expected bool, got '" + getTypeString(tp) + "'", tmp->condition->begin, tmp->condition->end), false);
+        leaveScope();
+        return nullptr;
     }
     emit(getLabel(), JMPF, if_, 0);
     visitBlock(tmp->tblock, begin, end);
@@ -1377,49 +1463,55 @@ Symbol *Compiler::getInterface(AST* tname) {
     if (tname->kind == AST::AST_ID) {
         auto name = ((Id*)tname)->name;
         auto cls = env->cs.lookup(name);
-        if (!cls) return cls;
-        if (((InterfaceSymbol*)cls)->name != name) return nullptr;
+        if (!cls) {
+            ec->emitError(new NameError("Name '" + name + "' not found", tname->begin, tname->end), false);
+            return nullptr;
+        }
+        if (cls->kind != Symbol::SYM_INTERFACE) {
+            ec->emitError(new TypeError("Name '" + name + "' is not an interface", tname->begin, tname->end), false);
+            return nullptr;
+        }
         return cls;
     }
     if (tname->kind == AST::AST_MEMBER_ACCESS) {
         auto h = getInterface(((MemberAccess*)tname)->parent);
-        if (!h) {
-            std::cout << "ERROR: h is a null pointer\n";
-            exit(-1);
-        }
+        if (!h) return nullptr;
         if (h->kind != Symbol::SYM_CLASS) {
-            std::cout << "ERROR: h not a class\n";
-            exit(-1);
+            ec->emitError(new TypeError("Nested interface access on non-class symbol", tname->begin, tname->end), false);
+            return nullptr;
         }
         auto parent = (ClassSymbol*)h;
-        return parent->syms[((MemberAccess*)tname)->member];
+        auto member = ((MemberAccess*)tname)->member;
+        auto it = parent->syms.find(member);
+        if (it == parent->syms.end()) {
+            ec->emitError(new NameError("Class '" + parent->name + "' has no nested symbol '" + member + "'", tname->begin, tname->end), false);
+            return nullptr;
+        }
+        return it->second;
     }
-    std::cout << "ERROR: unknown kind " << tname->kind << "\n";
-    exit(-1);
+    ec->emitError(new SystemError("Unknown interface kind", tname->begin, tname->end), false);
+    return nullptr;
 }
 
 int Compiler::getInterfaceId(AST* name) {
     auto temp = getInterface(name);
-    if (!temp) {
-        std::cout << "ERROR: result is a null pointer\n";
-        exit(-1);
-    }
+    if (!temp) return -1;
     if (temp->kind != Symbol::SYM_INTERFACE) {
-        std::cout << "ERROR: not a interface\n";
-        exit(-1);
+        ec->emitError(new TypeError("Symbol is not an interface", name->begin, name->end), false);
+        return -1;
     }
     auto tmp = (InterfaceSymbol*)temp;
-    if (!tmp) return -1;
     return tmp->interfaceId;
 }
 
-Module* Compiler::getProgram(std::string text, std::string fileName) {
+Module* Compiler::getProgram(std::string text, std::string fileName, ErrorCollect* ec) {
+    this->ec = ec;
+    size_t mark = ec->errors.size();
+
     std::vector<Register> tmp = parser.parseCode(text, fileName);
     for (auto i : tmp)
-        if (!i.isSuc) {
-            std::cout << i.error << std::endl;
-            exit(-1);
-        }
+        if (!i.isSuc)
+            return nullptr;
 
     std::vector<AST*> Class_, globalVar, Fn, Itf, Import, Other;
     for (auto i: tmp) {
@@ -1467,11 +1559,11 @@ Module* Compiler::getProgram(std::string text, std::string fileName) {
         auto fn = (Func*)i;
         if (!env->cs.lookup(fn->name)) {
             auto ftp = (FunctionType*)conver->getType(fn->ftype);
+            if (!ftp) return nullptr;
             env->cs.registSymbolGbl(fn->name,
                                     new FunctionSymbol(fn->name, ftp, false));
         }
     }
-
 
     for (auto i : Itf)   visitInterface(i);
     for (auto i : Class_) visitClass(i);
@@ -1500,6 +1592,8 @@ Module* Compiler::getProgram(std::string text, std::string fileName) {
     emit(getLabel(), LOAD_NULL, 0, 0);
     emit(getLabel(), RET, 0, 0);
     endTask(false);
+
+    if (ec->errors.size() > mark) return nullptr;
 
     Module* md = new Module;
     md->globalConstPool = env->globalConstPool;
