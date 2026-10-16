@@ -1,10 +1,6 @@
-class Parent {
-    fn show(self: Parent): void { println("parent"); }
-}
-class Children extend Parent {
-    fn __init__(self: Children): void { self.show(); }
-}
+fn max(a:int, b:int): int
+    return (a>b)? a : b;
+
 fn main(): void {
-    let p: Parent = new Children();  // 现在能通过类型检查
-    p.show();
+    println(itos(max(1,2)));
 }

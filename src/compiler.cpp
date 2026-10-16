@@ -32,7 +32,7 @@ MType* AstToMtype::getType(AST* a) {
     if (t->tpKind == Type::TYPE_NORMAL) return parseIdNode(a);
     if (t->tpKind == Type::TYPE_FUNC) return parseFuncType(a);
     if (t->tpKind == Type::TYEP_IMPLEMENTS) return parseImplementType(a);
-    printf("WARN: unknown type %d\n", t->tpKind);
+    printf("ERROR: unknown type %d\n", t->tpKind);
     exit(-1);
 }
 
@@ -129,7 +129,10 @@ Symbol* AstToMtype::findInterface(AST* a) {
 
 ClassSymbol *AstToMtype::findClass(std::string name) {
     auto tmp = (ClassSymbol*)env->cs.lookup(name);
-    if (!tmp) std::cout << "WARN: name '" << name << "' not found\n";
+    if (!tmp) {
+        std::cout << "ERROR: name '" << name << "' not found\n";
+        exit(-1);
+    }
     return tmp;
 }
 
@@ -379,7 +382,8 @@ MType* Compiler::visitCallNode(AST* a, MType* expect) {
                                  ? tp->argsType[i] : nullptr;
             MType* actualArg = visitValue(tmp->args[i], expectedArg);
             if (expectedArg && !typeComp(actualArg, expectedArg)) {
-                std::cout << "WARN: type error\n";
+                std::cout << "TYPEERROR: expect type '" << getTypeString(expectedArg) << "', found '" << getTypeString(actualArg) << "' \n";
+                exit(-1);
             }
         }
 
@@ -413,7 +417,8 @@ MType* Compiler::visitCallNode(AST* a, MType* expect) {
                                  ? ftmp->argsType[i + 1] : nullptr;
             MType* actualArg = visitValue(tmp->args[i], expectedArg);
             if (expectedArg && !typeComp(actualArg, expectedArg)) {
-                std::cout << "WARN: type error\n";
+                std::cout << "TYPEERROR: expect type '" << getTypeString(expectedArg) << "', found '" << getTypeString(actualArg) << "' \n";
+                exit(-1);
             }
         }
         emit(getLabel(), CALL, (int)tmp->args.size() + 1, 0);
@@ -440,8 +445,10 @@ MType* Compiler::visitElementGet(AST* a, MType* expect) {
 
         MType* posType = visitValue(arrayId->position, mica_int);
         emit(getLabel(), EL_GET, 0, 0);
-        if (!typeComp(posType, mica_int))
-            std::cout << "Warn: " << getTypeString(posType) << " not int\n";
+        if (!typeComp(posType, mica_int)) {
+            std::cout << "ERROR: " << getTypeString(posType) << " not int\n";
+            exit(-1);
+        }
         return tp->elementType;
 
     } else if (tpm->baseType == MType::BT_CLASS) {
@@ -471,7 +478,8 @@ MType* Compiler::visitElementGet(AST* a, MType* expect) {
                              ? ft->argsType[1] : mica_int;
         MType* actualPos = visitValue(arrayId->position, expectedPos);
         if (expectedPos && !typeComp(actualPos, expectedPos)) {
-            std::cout << "WARN: type error for __elementget__ index\n";
+            std::cout << "TYPEERROR: type error for __elementget__ index\n";
+            exit(-1);
         }
 
         emit(getLabel(), CALL, 2, 0);       // [retval]
@@ -553,8 +561,9 @@ Vresult Compiler::visitVarDefine(AST* a, bool isGlobal) {
                 if (sym && sym->kind == Symbol::SYM_VAR)
                     ((VarSymbol*)sym)->type = tp;
             } else if (!typeComp(initType, tp)) {
-                std::cout << "WARN: type " << getTypeString(initType)
+                std::cout << "ERRPR: type " << getTypeString(initType)
                           << ", " << getTypeString(tp) << std::endl;
+                exit(-1);
             }
             emit(getLabel(), STORE_SVAR, varId, 0);
         }
@@ -578,8 +587,9 @@ Vresult Compiler::visitVarDefine(AST* a, bool isGlobal) {
             if (sym && sym->kind == Symbol::SYM_VAR)
                 ((VarSymbol*)sym)->type = tp;
         } else if (!typeComp(initType, tp)) {
-            std::cout << "WARN: type " << getTypeString(initType)
+            std::cout << "ERRPR: type " << getTypeString(initType)
                       << ", " << getTypeString(tp) << std::endl;
+            exit(-1);
         }
         emit(getLabel(), STORE_GVAR, varId, 0);
     }
@@ -689,8 +699,12 @@ MType* Compiler::visitAssign(AST* a) {
         auto temp = (VarSymbol*) s;
         auto vt = visitValue(src, temp->type);
         auto st = temp->type;
-        if (typeComp(vt, st))
-            std::cout << "WARN: var '" << tmpx->name << "' type is '" << st << "' but value type is '" << vt << "'\n";
+        if (!typeComp(vt, st)) {
+            std::cout << "ERROR: var '" << tmpx->name << "' type is '"
+                      << getTypeString(st) << "' but value type is '"
+                      << getTypeString(vt) << "'\n";
+            exit(-1);
+        }
         int oper = (temp->vkind == VarSymbol::Global)? STORE_GVAR : STORE_SVAR;
         emit(getLabel(), oper, temp->id, 0);
         return temp->type;
@@ -703,10 +717,18 @@ MType* Compiler::visitAssign(AST* a) {
             MType* valt = visitValue(src, ((TArrayType*)obj)->elementType);
             MType* pos_ = visitValue(temp->position, new BaseType(BaseType::MINT));
             emit(getLabel(), EL_SET, 0, 0);
-            if (!typeComp(pos_, mica_int)) std::cout << "WARN: want a int, get '" << getTypeString(pos_) << "'\n";
-            if (obj->baseType != MType::BT_ARRAY) std::cout << "WARN: not a array\n";
-            if (!typeComp(valt, ((TArrayType*)obj)->elementType))
-                std::cout << "WARN: element type is '" << getTypeString(((TArrayType*)obj)->elementType) << "' value type is '" << getTypeString(valt) << "'\n";
+            if (!typeComp(pos_, mica_int)) {
+                std::cout << "ERROR: want a int, get '" << getTypeString(pos_) << "'\n";
+                exit(-1);
+            }
+            if (obj->baseType != MType::BT_ARRAY) {
+                std::cout << "ERROR: not a array\n";
+                exit(-1);
+            }
+            if (!typeComp(valt, ((TArrayType*)obj)->elementType)) {
+                std::cout << "ERROR: element type is '" << getTypeString(((TArrayType*)obj)->elementType) << "' value type is '" << getTypeString(valt) << "'\n";
+                exit(-1);
+            }
             return valt;
         } else if (obj->baseType == MType::BT_CLASS) {
             // [obj]
@@ -809,8 +831,10 @@ MType* Compiler::visitTernOp(AST* a, MType* expect) {
     emit(false_, NOP, 0, 0);
     retTypef = visitValue(tmp->falseValue, expect);
     emit(end, NOP, 0, 0);
-    if (!typeComp(retTypef, retTypet))
-        std::cout << "WARN: " << getTypeString(retTypet) << ", " << getTypeString(retTypef) << std::endl;
+    if (!typeComp(retTypef, retTypet)) {
+        std::cout << "ERROR: " << getTypeString(retTypet) << ", " << getTypeString(retTypef) << std::endl;
+        exit(-1);
+    }
     return retTypet;
 }
 
@@ -844,7 +868,8 @@ MType* Compiler::visitForLoop(AST* a) {
     emit(end, NOP, 0, 0);
 
     if (tp && !typeComp(tp, mica_bool)) {
-        std::cout << "WARN: want a bool, but get a '" << getTypeString(tp) << "'\n";
+        std::cout << "ERROR: want a bool, but get a '" << getTypeString(tp) << "'\n";
+        exit(-1);
     }
     leaveScope();
     return nullptr;
@@ -861,8 +886,10 @@ MType* Compiler::visitWhileLoop(AST* a) {
     visitBlock(tmp->body, begin, end);
     emit(getLabel(), JMP, begin, 0);
     emit(end, NOP, 0,0);
-    if (!typeComp(tp , mica_bool))
-        std::cout << "warn in visitWhile, want a bool value, but get a '" << getTypeString(tp) << "'\n";
+    if (!typeComp(tp , mica_bool)) {
+        std::cout << "ERROR in visitWhile, want a bool value, but get a '" << getTypeString(tp) << "'\n";
+        exit(-1);
+    }
     leaveScope();
     return nullptr;
 }
@@ -910,7 +937,10 @@ MType* Compiler::visitSwitch(AST* a) {
     }
     emit(end, POP, 0, 0);
     for (auto i: types)
-        if (!typeComp(i, t)) std::cout << "WARN: type '" << getTypeString(t) << "' != '" << getTypeString(i) << "'\n";
+        if (!typeComp(i, t)) {
+            std::cout << "ERROR: type '" << getTypeString(t) << "' != '" << getTypeString(i) << "'\n";
+            exit(-1);
+        }
     leaveScope();
     return nullptr;
 }
@@ -1061,7 +1091,10 @@ MType* Compiler::visitArray(AST* a, MType* type) {
         MType* it = visitValue(tmp->elements[i], elemType);
         loadConstS(pushConstL(MicaValue::Int(i)));
         if (!elemType) elemType = it;
-        else if (!typeComp(elemType, it)) std::cout << "WARN: element type mismatch: " << getTypeString(it) << " vs " << getTypeString(elemType) << "\n";
+        else if (!typeComp(elemType, it)) {
+            std::cout << "ERROR: element type mismatch: " << getTypeString(it) << " vs " << getTypeString(elemType) << "\n";
+            exit(-1);
+        }
         emit(getLabel(), EL_SET, 0, 0);
     }
     return new TArrayType(elemType, n);
@@ -1256,8 +1289,10 @@ MType *Compiler::visitIf(AST *a, std::string begin, std::string end) {
     std::string if_ = getLabel();
     std::string ie = getLabel();
     auto tp = visitValue(tmp->condition, new BaseType(BaseType::MBOOL));
-    if (!typeComp(tp, mica_bool))
-        std::cout << "warn in visitIf, want a bool value, but get a '" << getTypeString(tp) << "'\n";
+    if (!typeComp(tp, mica_bool)) {
+        std::cout << "ERROR in visitIf, want a bool value, but get a '" << getTypeString(tp) << "'\n";
+        exit(-1);
+    }
     emit(getLabel(), JMPF, if_, 0);
     visitBlock(tmp->tblock, begin, end);
     emit(getLabel(), JMP, ie, 0);
@@ -1378,7 +1413,7 @@ Module* Compiler::getProgram(std::string text, std::string fileName) {
             exit(-1);
         }
 
-    std::vector<AST*> Class_, globalVar, Fn, Itf, Import;
+    std::vector<AST*> Class_, globalVar, Fn, Itf, Import, Other;
     for (auto i: tmp) {
         if (i.result->kind == AST::AST_CLASS)
             Class_.push_back(i.result);
@@ -1391,6 +1426,7 @@ Module* Compiler::getProgram(std::string text, std::string fileName) {
             Itf.push_back(i.result);
         else if (i.result->kind == AST::AST_IMPORT)
             Import.push_back(i.result);
+        else Other.push_back(i.result);
     }
 
 #ifdef TEST
@@ -1433,6 +1469,14 @@ Module* Compiler::getProgram(std::string text, std::string fileName) {
     for (auto i : Class_) visitClass(i);
     for (auto i : Fn)    visitFunction(i, true);
 
+    if (!env->cs.lookup("@init")) {
+        env->cs.registSymbolGbl(
+            "@init",
+            new FunctionSymbol("@init",
+                               new FunctionType(mica_void, {}),
+                               false));
+    }
+
     createTask("@init");
     for (auto i : Import) visitModuleImport(i);
     for (auto i : globalVar) {
@@ -1441,6 +1485,9 @@ Module* Compiler::getProgram(std::string text, std::string fileName) {
         else if (i->kind == AST::AST_VAR_DEF_GRP)
             visitVarDefineGrp(i, true);
     }
+
+    for (auto i : Other)
+        visitStmt(i, "", "");
 
     emit(getLabel(), LOAD_NULL, 0, 0);
     emit(getLabel(), RET, 0, 0);
@@ -1476,7 +1523,7 @@ int Compiler::addGlobalVar(std::string name, MType *type, bool isInit) {
 void Compiler::declareGlobalVars(AST *a) {
     if (a->kind == AST::AST_VAR_DEF) {
         auto vd = (VarDef*)a;
-        auto tp = conver->getType(vd->type);
+        MType* tp = vd->type ? conver->getType(vd->type) : nullptr;
         addGlobalVar(vd->name, tp, vd->init != nullptr);
     } else if (a->kind == AST::AST_VAR_DEF_GRP) {
         for (auto j : ((VarDefGrp*)a)->vars)

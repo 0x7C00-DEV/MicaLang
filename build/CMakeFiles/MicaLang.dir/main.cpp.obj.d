@@ -460,18 +460,7 @@ CMakeFiles/MicaLang.dir/main.cpp.obj: \
  F:/develop/Mingw-14.2.0/mingw64/x86_64-w64-mingw32/include/psdk_inc/_dbg_common.h \
  C:\Users\Lenovo\Desktop\MicaLang\include/asm.h \
  C:\Users\Lenovo\Desktop\MicaLang\include/config.h \
- C:\Users\Lenovo\Desktop\MicaLang\include/parser.h \
- C:\Users\Lenovo\Desktop\MicaLang\include/asm.h \
- C:\Users\Lenovo\Desktop\MicaLang\include/vm.h \
- C:\Users\Lenovo\Desktop\MicaLang\include/native.h \
- C:\Users\Lenovo\Desktop\MicaLang\include/symbol.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/random \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/random.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/x86_64-w64-mingw32/bits/opt_random.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/random.tcc \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/numeric \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_numeric.h \
- F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/pstl/glue_numeric_defs.h \
+ C:\Users\Lenovo\Desktop\MicaLang\include/repl.h \
  C:\Users\Lenovo\Desktop\MicaLang\include/compiler.h \
  C:/Users/Lenovo/Desktop/MicaLang/include/compiler.h \
  C:/Users/Lenovo/Desktop/MicaLang/include/symbol.h \
@@ -482,4 +471,35 @@ CMakeFiles/MicaLang.dir/main.cpp.obj: \
  C:/Users/Lenovo/Desktop/MicaLang/include/parser.h \
  C:/Users/Lenovo/Desktop/MicaLang/include/config.h \
  C:/Users/Lenovo/Desktop/MicaLang/include/asm.h \
+ C:\Users\Lenovo\Desktop\MicaLang\include/native.h \
+ C:\Users\Lenovo\Desktop\MicaLang\include/symbol.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/random \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/random.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/x86_64-w64-mingw32/bits/opt_random.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/random.tcc \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/numeric \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_numeric.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/pstl/glue_numeric_defs.h \
+ C:\Users\Lenovo\Desktop\MicaLang\include/vm.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/memory \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/stl_raw_storage_iter.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/align.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/unique_ptr.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/shared_ptr.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/shared_ptr_base.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/allocated_ptr.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/ext/concurrence.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/shared_ptr_atomic.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/atomic_base.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/atomic_lockfree_defines.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/atomic_wait.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/std_mutex.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/backward/auto_ptr.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/bits/ranges_uninitialized.h \
+ F:/develop/Mingw-14.2.0/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/pstl/glue_memory_defs.h \
+ C:\Users\Lenovo\Desktop\MicaLang\include/loader.h \
+ C:\Users\Lenovo\Desktop\MicaLang\include/parser.h \
+ C:\Users\Lenovo\Desktop\MicaLang\include/asm.h \
+ C:\Users\Lenovo\Desktop\MicaLang\include/vm.h \
+ C:\Users\Lenovo\Desktop\MicaLang\include/compiler.h \
  C:\Users\Lenovo\Desktop\MicaLang\include/debug.h

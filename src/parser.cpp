@@ -55,13 +55,13 @@ Position Parser::posEnd()   { return current.end; }
 
 Register Parser::makeBinOpNode(MPCLBCK clb, std::vector<std::string> ops) {
     auto left = (this->*clb)();
-    test(left);
+    MICA_TEST(left);
     Position begin = left.result->begin;
     while (current.kind != TT_EOF && std::ranges::count(ops, current.data) > 0) {
         const std::string op = current.data;
         advance(SYN_VALUE);
         const auto right = (this->*clb)();
-        test(right);
+        MICA_TEST(right);
         Position end = right.result->end;
         left.result = new BinOpNode(op, left.result, right.result, begin, end);
     }
@@ -80,7 +80,7 @@ Register Parser::makeLambda() {
     advance();
     while (current.kind != TT_EOF && !(equal(")") && equal(TT_OP))) {
         Register tmp = makeVarDefine();
-        test(tmp);
+        MICA_TEST(tmp);
         args.push_back(tmp.result);
         argType.push_back(((VarDef*)tmp.result)->type);
         if (equal(")") && equal(TT_OP)) break;
@@ -93,10 +93,10 @@ Register Parser::makeLambda() {
     setError(res, equal(":")&&equal(TT_OP), "SyntaxError: want a ':'");
     advance();
     retType = makeType();
-    test(retType);
+    MICA_TEST(retType);
 
     body = makeBlock();
-    test(body);
+    MICA_TEST(body);
     auto end = posEnd();
     res.ok(new Lambda(body.result, args, new FuncType(retType.result, argType, {}, posBegin(), posEnd()), begin, end));
     return res;
@@ -149,7 +149,7 @@ Register Parser::makeValue() {
         auto begin = posBegin();
         advance();
         auto tmp = makeValue();
-        test(tmp);
+        MICA_TEST(tmp);
         auto end = posEnd();
         return Register(new BitNot(tmp.result, begin, end));
     }
@@ -158,7 +158,7 @@ Register Parser::makeValue() {
         auto begin = posBegin();
         advance();
         auto tmp = makeValue();
-        test(tmp);
+        MICA_TEST(tmp);
         auto end = posEnd();
         return Register(new Not(tmp.result, begin, end));
     }
@@ -168,7 +168,7 @@ Register Parser::makeValue() {
         std::string op = current.data;
         advance(SYN_VALUE);
         Register tmp = makeValue();
-        test(tmp);
+        MICA_TEST(tmp);
         Position end = tmp.result->end;
         return {new SelfChangeNode(tmp.result, op == "++", true, begin, end)};
     }
@@ -183,7 +183,7 @@ Register Parser::makeValue() {
         Position begin = posBegin();
         advance(SYN_VALUE);
         auto tmp = makeValue();
-        test(tmp);
+        MICA_TEST(tmp);
         Position end = tmp.result->end;
         tmp.result = new Neg(tmp.result, begin, end);
         return tmp;
@@ -206,7 +206,7 @@ Register Parser::makeValue() {
 
     if (equal(TT_ID)) {
         auto tmp = makeId(SYN_VALUE);
-        test(tmp);
+        MICA_TEST(tmp);
         if (equal("++") || equal("--")) {
             Position end = posEnd();
             std::string op = current.data;
@@ -227,7 +227,7 @@ Register Parser::makeValue() {
             restore();
             advance(SYN_VALUE);
             auto tmp = makeExpr();
-            test(tmp);
+            MICA_TEST(tmp);
             setError(tmp, equal(")") && equal(TT_OP), "SyntaxError: Want a ')'");
             advance(SYN_VALUE);
             return makeElementGetN(tmp.result, {}, SYN_VALUE);
@@ -251,7 +251,7 @@ Register Parser::makeArray() {
     if (!(equal("]") && equal(TT_OP))) {
         while (true) {
             auto elem = makeExpr();
-            test(elem);
+            MICA_TEST(elem);
             elements.push_back(elem.result);
             if (equal("]") && equal(TT_OP)) break;
             setError(elem, equal(",") && equal(TT_OP), "SyntaxError: want a ','");
@@ -284,12 +284,12 @@ Register Parser::makeExpr_() {
 Register Parser::makeExpr() {
     std::vector<std::string> unionSymbol = { "+=", "-=", "/=", "*=", "%=", "&=", "|=", ">>=", "<<=", "=" };
     auto first = makeExprA();
-    test(first);
+    MICA_TEST(first);
     if (equal(TT_OP) && std::count(unionSymbol.begin(), unionSymbol.end(), current.data) > 0) {
         std::string tmp = current.data;
         advance(SYN_VALUE);
         Register t = makeExpr();
-        test(t);
+        MICA_TEST(t);
         Position begin = first.result->begin;
         Position end = t.result->end;
         first.ok(new AssignNode(tmp, first.result, t.result, begin, end));
@@ -299,16 +299,16 @@ Register Parser::makeExpr() {
 
 Register Parser::makeExprA() {
     Register tmp = makeExpr_();
-    test(tmp);
+    MICA_TEST(tmp);
     if (!equal("?")) return tmp;
     Position begin = tmp.result->begin;
     advance(SYN_VALUE);
     Register tvalue = makeExpr();
-    test(tvalue);
+    MICA_TEST(tvalue);
     setError(tmp, equal(":") && equal(TT_OP), "SyntaxError: want a ':', found '" + current.data + "'");
     advance(SYN_VALUE);
     Register fvalue = makeExpr();
-    test(fvalue);
+    MICA_TEST(fvalue);
     Position end = fvalue.result->end;
     tmp.ok(new ThreeOp(tmp.result, tvalue.result, fvalue.result, begin, end));
     return tmp;
@@ -326,7 +326,7 @@ Register Parser::makeElementGetN(AST* name, std::vector<AST*> t_, int ptype) {
             Position begin = res.result->begin;
             advance(SYN_VALUE);
             Register tmp = makeExpr();
-            test(tmp);
+            MICA_TEST(tmp);
             setError(tmp, equal("]") && equal(TT_OP), "SyntaxError: want a ']'");
             Position end = posEnd();
             advance(SYN_VALUE);
@@ -338,12 +338,12 @@ Register Parser::makeElementGetN(AST* name, std::vector<AST*> t_, int ptype) {
             t = tmp.result;
         } else if (equal("(")) {
             auto tmp = makeCallNodeN(res.result, t, ptype);
-            test(tmp);
+            MICA_TEST(tmp);
             res.ok(tmp.result);
             t.clear();
         } else if (equal(".")) {
             auto tmp = makeMemberAccessN(res.result, {}, ptype);
-            test(tmp);
+            MICA_TEST(tmp);
             res.ok(tmp.result);
             t.clear();
         } else {
@@ -415,7 +415,7 @@ Register Parser::makeCallNodeN(AST* name, std::vector<AST*> t_, int ptype) {
             std::vector<AST*> args;
             while (current.kind != TT_EOF && !(equal(TT_OP) && equal(")"))) {
                 Register tmp = makeExpr();
-                test(tmp);
+                MICA_TEST(tmp);
                 args.push_back(tmp.result);
                 if (equal(")") && equal(TT_OP)) break;
                 setError(res, equal(",") && equal(TT_OP), "SyntaxError: want a ','");
@@ -428,11 +428,11 @@ Register Parser::makeCallNodeN(AST* name, std::vector<AST*> t_, int ptype) {
             templates.clear();
         } else if (equal("[")) {
             auto tmp = makeElementGetN(res.result, {}, ptype);
-            test(tmp);
+            MICA_TEST(tmp);
             res.ok(tmp.result);
         } else if (equal(".")) {
             auto tmp = makeMemberAccessN(res.result, {}, ptype);
-            test(tmp);
+            MICA_TEST(tmp);
             res.ok(tmp.result);
         } else {
             break;
@@ -443,7 +443,7 @@ Register Parser::makeCallNodeN(AST* name, std::vector<AST*> t_, int ptype) {
 
 Register Parser::makeId(int ptype) {
     auto tmp = makeMemberAccess(ptype);
-    test(tmp);
+    MICA_TEST(tmp);
     TRegister t;
     if (tmp.result->kind == AST::AST_ID && equal("<") && equal(TT_OP)) {
         saveState();
@@ -459,13 +459,13 @@ Register Parser::makeId(int ptype) {
 
 Register Parser::makeElementGet(int ptype) {
     auto tmp = makeMemberAccess(ptype);
-    test(tmp);
+    MICA_TEST(tmp);
     return makeElementGetN(tmp.result, {}, ptype);
 }
 
 Register Parser::makeCallNode() {
     auto tmp = makeMemberAccess(SYN_VALUE);
-    test(tmp);
+    MICA_TEST(tmp);
     TRegister temp;
     if (tmp.result->kind == AST::AST_ID && equal("<") && equal(TT_OP)) {
         saveState();
@@ -535,7 +535,7 @@ Register Parser::makeFunction() {
     std::vector<AST*> args;
     while (current.kind != TT_EOF && !(equal(TT_OP) && equal(")"))) {
         Register tmp = makeVarDefine();
-        test(tmp);
+        MICA_TEST(tmp);
         args.push_back(tmp.result);
         if (equal(TT_OP) && equal(")")) break;
         setError(tmp, equal(",") && equal(TT_OP), "SyntaxError: want a ',', found '" + current.data + "'");
@@ -547,12 +547,12 @@ Register Parser::makeFunction() {
     setError(body, equal(":") && equal(TT_OP), "SyntaxError: want a ':', found '" + current.data + "'");
     advance();
     retType = makeType();
-    test(retType);
+    MICA_TEST(retType);
 
     Position end = posEnd();
     if (!isNative) {
         body = makeBlock();
-        test(body);
+        MICA_TEST(body);
         end = body.result->end;
     } else {
         body.ok(nullptr);
@@ -624,7 +624,7 @@ Register Parser::makeStmt() {
             return {new Return(new Null(begin, end), begin, end)};
         }
         Register tmp = makeExpr();
-        test(tmp);
+        MICA_TEST(tmp);
         Position end = tmp.result->end;
         setError(tmp, equal(TT_OP) && equal(";"), "SyntaxError: want a ';', found '" + current.data + "'");
         advance(SYN_VALUE);
@@ -643,7 +643,7 @@ Register Parser::makeStmt() {
     }
 
     Register tmp = makeExpr();
-    test(tmp);
+    MICA_TEST(tmp);
     setError(tmp, equal(TT_OP) && equal(";"), "SyntaxError: want a ';', found '" + current.data + "'");
     advance(SYN_VALUE);
     return tmp;
@@ -656,17 +656,17 @@ Register Parser::makeIf() {
     setError(res, equal("(") && equal(TT_OP), "SyntaxError: want a '(', but found '" + current.data + "'");
     advance();
     res = makeExpr();
-    test(res);
+    MICA_TEST(res);
     setError(res, equal(")") && equal(TT_OP), "SyntaxError: want a ')', but found '" + current.data + "'");
     advance();
     Register tblock = makeBlock();
     Register fblock;
-    test(tblock);
+    MICA_TEST(tblock);
     fblock.ok(nullptr);
     if (equal("else") && equal(TT_KEY)) {
         advance();
         fblock = makeBlock();
-        test(fblock);
+        MICA_TEST(fblock);
     }
     Position end = fblock.result ? fblock.result->end : tblock.result->end;
     res.ok(new If(res.result, tblock.result, fblock.result, begin, end));
@@ -681,7 +681,7 @@ Register Parser::makeBlock() {
         advance(SYN_VALUE);
         while (current.kind != TT_EOF && !(equal("}") && equal(TT_OP))) {
             auto tmp = makeStmt();
-            test(tmp);
+            MICA_TEST(tmp);
             codes.push_back(tmp.result);
         }
         Position end = posEnd();
@@ -690,7 +690,7 @@ Register Parser::makeBlock() {
         res.ok(new Block(codes, begin, end));
     } else {
         auto tmp = makeStmt();
-        test(tmp);
+        MICA_TEST(tmp);
         codes.push_back(tmp.result);
         res.ok(new Block(codes, begin, tmp.result->end));
     }
@@ -703,14 +703,14 @@ Register Parser::makeType() {
     if (equal("[") && equal(TT_OP)) {
         advance(SYN_TYPE);
         res = makeType();
-        test(res);
+        MICA_TEST(res);
         Register size;
         Position end = posEnd();
         size.ok(new Number("-1", begin, end));
         if (equal(",") && equal(TT_OP)) {
             advance(SYN_TYPE);
             size = makeExpr();
-            test(size);
+            MICA_TEST(size);
         }
         end = posEnd();
         setError(res, equal("]") && equal(TT_OP), "SyntaxError: '[' not close");
@@ -721,7 +721,7 @@ Register Parser::makeType() {
         std::vector<AST*> argsTypes;
         while (current.kind != TT_EOF && !(equal(")") && equal(TT_OP))) {
             Register st = makeType();
-            test(st);
+            MICA_TEST(st);
             argsTypes.push_back(st.result);
             if (equal(")") && equal(TT_OP)) break;
             setError(st, equal(",") && equal(TT_OP), "SyntaxError: need a ')'");
@@ -733,11 +733,11 @@ Register Parser::makeType() {
         setError(res, equal(TT_OP) && equal(":"), "SyntaxError: want a ':', but found '" + current.data + "'");
         advance(SYN_TYPE);
         Register retT = makeType();
-        test(retT);
+        MICA_TEST(retT);
         res.ok(new FuncType(retT.result, argsTypes, {}, begin, end));
     } else if (equal(TT_ID)) {
         Register clid = makeMemberAccess(SYN_TYPE);
-        test(clid);
+        MICA_TEST(clid);
         std::vector<AST*> args;
         bool isT = false;
         if (equal("<") && equal(TT_OP)) {
@@ -745,7 +745,7 @@ Register Parser::makeType() {
             advance(SYN_TYPE);
             while (current.kind != TT_EOF && !(equal(">") && equal(TT_OP))) {
                 auto t = makeType();
-                test(t);
+                MICA_TEST(t);
                 args.push_back(t.result);
                 if (equal(TT_OP) && equal(">")) break;
                 setError(res, equal(TT_OP) && equal(","), "SyntaxError: want a ',', but found '" + current.data + "'");
@@ -763,7 +763,7 @@ Register Parser::makeType() {
         auto begin = posBegin();
         while (current.kind != TT_EOF && !(equal("}") && equal(TT_OP))) {
             Register tmp = makeType();
-            test(tmp);
+            MICA_TEST(tmp);
             interfaceName.push_back(tmp.result);
             if (equal("}") && equal(TT_OP)) break;
             setError(res, equal(",") && equal(TT_OP), "SyntaxError: want a ','");
@@ -804,7 +804,7 @@ Register Parser::makeVarDefGrp() {
     std::vector<AST*> vars;
     while (current.kind != TT_EOF && !(equal(";") && equal(TT_OP))) {
         auto tmp = makeVarDefine();
-        test(tmp);
+        MICA_TEST(tmp);
         vars.push_back(tmp.result);
         if (equal(";") && equal(TT_OP)) break;
         setError(res, equal(TT_OP) && equal(","), "SyntaxError: want a ',', found '" + current.data + "'");
@@ -826,7 +826,7 @@ Register Parser::makeVarDefine() {
     if (equal(":") && equal(TT_OP)) {
         advance();
         type = makeType();
-        test(type);
+        MICA_TEST(type);
     }
 
     Register init;
@@ -834,7 +834,7 @@ Register Parser::makeVarDefine() {
     if (equal("=")) {
         advance();
         init = makeExpr();
-        test(init);
+        MICA_TEST(init);
     }
 
     Position end = posEnd();
@@ -850,19 +850,19 @@ Register Parser::makeFor() {
     setError(init, equal("(") && equal(TT_OP), "SyntaxError: want a '('");
     advance();
     init = makeForInit();
-    test(init);
+    MICA_TEST(init);
     setError(init, equal(";") && equal(TT_OP), "SyntaxError: want a ';'");
     advance();
     cond = makeExpr();
-    test(cond);
+    MICA_TEST(cond);
     setError(init, equal(";") && equal(TT_OP), "SyntaxError: want a ';'");
     advance();
     chang = makeForChange();
-    test(chang);
+    MICA_TEST(chang);
     setError(init, equal(")") && equal(TT_OP), "SyntaxError: want a ')'");
     advance();
     body = makeBlock();
-    test(body);
+    MICA_TEST(body);
     Position end = body.result->end;
     return {new ForLoop(init.result, cond.result, chang.result, body.result, begin, end)};
 }
@@ -873,13 +873,13 @@ Register Parser::makeForInit() {
     while (current.kind != TT_EOF && !(equal(TT_OP) && equal(";"))) {
         if (equal(TT_KEY) && equal("let")) {
             Register temp = makeVarDefGrp();
-            test(temp);
+            MICA_TEST(temp);
             res.push_back(temp.result);
             setError(temp, equal(";") && equal(TT_OP), "SyntaxError: want a ';'");
             break;
         }
         Register tmp = makeVarDefine();
-        test(tmp);
+        MICA_TEST(tmp);
         res.push_back(tmp.result);
         if (equal(";") && equal(TT_OP)) break;
         setError(tmp, equal(",") && equal(TT_OP), "SyntaxError: want a ','");
@@ -896,7 +896,7 @@ Register Parser::makeForChange() {
     Position begin = posBegin();
     while (current.kind != TT_EOF && !(equal(TT_OP) && equal(")"))) {
         auto tmp = makeExpr();
-        test(tmp);
+        MICA_TEST(tmp);
         res.push_back(tmp.result);
         if (equal(")") && equal(TT_OP)) break;
         setError(tmp, equal(TT_OP) && equal(","), "SyntaxError: want a ','");
@@ -913,11 +913,11 @@ Register Parser::makeWhile() {
     setError(res, equal("(") && equal(TT_OP), "SyntaxError: want a '(', found '" + current.data + "'");
     advance();
     Register cond = makeExpr();
-    test(cond);
+    MICA_TEST(cond);
     setError(res, equal(")") && equal(TT_OP), "SyntaxError: want a ')', found '" + current.data + "'");
     advance();
     Register body = makeBlock();
-    test(body);
+    MICA_TEST(body);
     Position end = body.result->end;
     res.ok(new WhileLoop(cond.result, body.result, begin, end));
     return res;
@@ -927,13 +927,13 @@ Register Parser::makeDoWhile() {
     Position begin = posBegin();
     advance();
     Register body = makeBlock();
-    test(body);
+    MICA_TEST(body);
     setError(body, equal("while") && equal(TT_KEY), "SyntaxError: want a 'while'");
     advance();
     setError(body, equal("(") && equal(TT_OP), "SyntaxError: want a '('");
     advance();
     Register cond = makeExpr();
-    test(cond);
+    MICA_TEST(cond);
     setError(body, equal(")") && equal(TT_OP), "SyntaxError: want a ')'");
     Position end = posEnd();
     advance();
@@ -946,11 +946,11 @@ Register Parser::makeCase() {
     if (equal("case") && equal(TT_KEY)) {
         advance();
         Register tmp = makeExpr();
-        test(tmp);
+        MICA_TEST(tmp);
         setError(tmp, equal(":") && equal(TT_OP), "SyntaxError: want a ':', found '" + current.data + "'");
         advance();
         Register body = makeBlock();
-        test(body);
+        MICA_TEST(body);
         Position end = body.result->end;
         res.ok(new Case(tmp.result, body.result, begin, end));
     } else if (equal("default") && equal(TT_KEY)) {
@@ -958,7 +958,7 @@ Register Parser::makeCase() {
         setError(res, equal(":") && equal(TT_OP), "SyntaxError: want a ':', found '" + current.data + "'");
         advance();
         Register tmp = makeBlock();
-        test(tmp);
+        MICA_TEST(tmp);
         Position end = tmp.result->end;
         res.ok(new Case(nullptr, tmp.result, begin, end));
     } else {
@@ -995,7 +995,7 @@ Register Parser::makeFunctionTag(AccessType at) {
     Register retType;
     while (current.kind != TT_EOF && !(equal(TT_OP) && equal(")"))) {
         Register tmp = makeType();
-        test(tmp);
+        MICA_TEST(tmp);
         types.push_back(tmp.result);
         if (equal(")") && equal(TT_OP)) break;
         setError(tmp, equal(",") && equal(TT_OP), "SyntaxError: want a ','");
@@ -1007,7 +1007,7 @@ Register Parser::makeFunctionTag(AccessType at) {
     advance();
 
     retType = makeType();
-    test(retType);
+    MICA_TEST(retType);
     Position end = retType.result->end;
     setError(res, equal(TT_OP) && equal(";"), "SyntaxError: want a ';'");
     advance();
@@ -1032,7 +1032,7 @@ Register Parser::makeInterface() {
         else if (equal(TT_KEY) && equal("private")) { at = APRIVATE; advance(); }
         else if (equal(TT_KEY) && equal("protected")) { at = APROTECTED; advance(); }
         Register tmp = makeFunctionTag(at);
-        test(tmp);
+        MICA_TEST(tmp);
         funcs.push_back(tmp.result);
         at = APRIVATE;
     }
@@ -1050,7 +1050,7 @@ Register Parser::makeSwitch() {
     setError(res, equal("(") && equal(TT_OP), "SyntaxError: want a '('");
     advance();
     res = makeExpr();
-    test(res);
+    MICA_TEST(res);
     setError(res, equal(")") && equal(TT_OP), "SyntaxError: want a ')'");
     advance();
     setError(res, equal("{") && equal(TT_OP), "SyntaxError: want a '{'");
@@ -1058,7 +1058,7 @@ Register Parser::makeSwitch() {
     std::vector<AST*> cases;
     while (current.kind != TT_EOF && !(equal(TT_OP) && equal("}"))) {
         auto tmp = makeCase();
-        test(tmp);
+        MICA_TEST(tmp);
         cases.push_back(tmp.result);
     }
     Position end = posEnd();
@@ -1104,7 +1104,7 @@ Register Parser::makeClass() {
         while (current.kind != TT_EOF && !(equal("{") && equal(TT_OP))) {
             setError(res, equal(TT_ID), "SyntaxError: want a id2");
             Register tmp1 = makeMemberAccess(SYN_TYPE);
-            test(tmp1);
+            MICA_TEST(tmp1);
             impls.push_back(tmp1.result);
             if (equal("{") && equal(TT_OP)) break;
             setError(res, equal(",") && equal(TT_OP), "SyntaxError: want a ,");
@@ -1119,17 +1119,17 @@ Register Parser::makeClass() {
     while (current.kind != TT_EOF && !(equal(TT_OP) && equal("}"))) {
         if (equal(TT_KEY) && equal("interface")) {
             Register tmp = makeInterface();
-            test(tmp);
+            MICA_TEST(tmp);
             fields.push_back(tmp.result);
         } else if (!(equal(TT_KEY) && equal("fn"))) {
             Register tmp = makeVarDefine();
-            test(tmp);
+            MICA_TEST(tmp);
             fields.push_back(tmp.result);
             setError(res, equal(";") && equal(TT_OP), "SyntaxError: want a ';'");
             advance();
         } else {
             Register tmp = makeFunction();
-            test(tmp);
+            MICA_TEST(tmp);
             methods.push_back(tmp.result);
         }
     }
@@ -1167,7 +1167,7 @@ Register Parser::makeNew() {
         advance();
         while (current.kind != TT_EOF && !(equal(")") && equal(TT_OP))) {
             auto tmp = makeExpr();
-            test(tmp);
+            MICA_TEST(tmp);
             initArgs.push_back(tmp.result);
             if (equal(")") && equal(TT_OP)) break;
             setError(res, equal(",") && equal(TT_OP), "SyntaxError: want a ','");

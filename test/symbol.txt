@@ -1,0 +1,61 @@
+// 字节码文件:
+	Header   := [4] magic, [4] version, [str] moduleName
+	Body     := ConstPool, GlobalVars, MethodPool, ClassPool, ExportTable
+
+	ConstPool   := [4] n, Value[n]
+	GlobalVars  := [4] n, Value[n]
+	MethodPool  := [4] n, Function[n]
+	ClassPool   := [4] n, ClassDef[n]
+	ExportTable := [4] n, String[n]
+
+	Function := [str] name, [1] isNative, [1] access
+	            Type retType
+	            [4] argc, Type[argc]
+	            [1] hasBody
+	            if hasBody:
+	              [4] insCount, int32[insCount]
+	              [4] localConstCount, Value[localConstCount]
+
+	ClassDef := [str] name
+	            [1] access
+	            Type super
+	            [4] interfaceCount, Type[interfaceCount]
+	            [4] fieldCount, ( [str] name, [1] access, Type )[]
+	            [4] methodCount, ( [str] name, [4] funcRef )[]   // 引用 MethodPool
+	            [4] templateParamCount, String[]
+
+	Value := [1] tag
+	  0 NULL        ->
+	  1 INT         -> int64
+	  2 FLOAT       -> double
+	  3 BOOL        -> uint8
+	  4 CHAR        -> char
+	  5 FUNC_REF    -> uint32
+	  6 CLASS_REF   -> uint32
+
+	Type := [1] tag
+	  0 BASE        -> [1] (0 int / 1 double / 2 char / 3 bool / 4 void / 5 null)
+	  1 CLASS       -> [str] qualifiedName        // "mod@Cls"
+	  2 INTERFACE   -> [str] qualifiedName
+	  3 ARRAY       -> Type elem
+	  4 FUNC        -> Type ret, [4] argc, Type[argc]
+	  5 TEMPLATE    -> Type root, [4] targc, Type[targc]
+	  6 TEMPLATE_VAR-> [4] index
+
+
+// .sym文件
+	SymFile := [str] moduleName
+	           [4] funcCount, ( [str] name, Type, [1] access )[]
+	           [4] classCount, ClassSym[]
+	           [4] interfaceCount, IfaceSym[]
+
+	ClassSym := [str] name
+	            Type super
+	            [4] interfaceCount, Type[]
+	            [4] templateParamCount, String[]
+	            [4] memberCount, Member[]
+	Member   := [str] name, [1] kind, [1] access, Type
+
+	IfaceSym := [str] name
+	            [4] templateParamCount, String[]
+	            [4] methodCount, ( [str] name, Type, [1] access )[]

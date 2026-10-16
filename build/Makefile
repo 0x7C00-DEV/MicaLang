@@ -392,6 +392,30 @@ src/position.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/position.cpp.s
 .PHONY : src/position.cpp.s
 
+src/repl.obj: src/repl.cpp.obj
+.PHONY : src/repl.obj
+
+# target to build an object file
+src/repl.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/repl.cpp.obj
+.PHONY : src/repl.cpp.obj
+
+src/repl.i: src/repl.cpp.i
+.PHONY : src/repl.i
+
+# target to preprocess a source file
+src/repl.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/repl.cpp.i
+.PHONY : src/repl.cpp.i
+
+src/repl.s: src/repl.cpp.s
+.PHONY : src/repl.s
+
+# target to generate assembly for a file
+src/repl.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/repl.cpp.s
+.PHONY : src/repl.cpp.s
+
 src/symbol.obj: src/symbol.cpp.obj
 .PHONY : src/symbol.obj
 
@@ -530,6 +554,9 @@ help:
 	@echo ... src/position.obj
 	@echo ... src/position.i
 	@echo ... src/position.s
+	@echo ... src/repl.obj
+	@echo ... src/repl.i
+	@echo ... src/repl.s
 	@echo ... src/symbol.obj
 	@echo ... src/symbol.i
 	@echo ... src/symbol.s
