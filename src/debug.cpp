@@ -23,6 +23,15 @@ void showAST(AST* tree, int indent, const std::string& fo, const std::string& eo
             std::cout << printIndent(indent) << "}" << eo;
             break;
         }
+        case AST::AST_FOR_IN: {
+            ForIn* fi = (ForIn*) tree;
+            std::cout << printIndent(indent) << fo << "ForIn {\n";
+            std::cout << printIndent(indent+1) << "ITER: " << fi->iterVar << ",\n";
+            showAST(fi->iterValue, indent+1, "VALUE: ", ",\n");
+            showAST(fi->body, indent+1, "BODY: ", "\n");
+            std::cout << printIndent(indent) << "}" << eo;
+            break;
+        }
         case AST::AST_LAMBDA: {
             std::cout << printIndent(indent) << fo << "Lambda {\n";
             auto tmp = (Lambda*) tree;

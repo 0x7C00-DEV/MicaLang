@@ -559,6 +559,12 @@ void Compiler::visitVarDefineGrp(AST* a, bool isGlobal) {
         visitVarDefine(i, isGlobal);
 }
 
+void Compiler::visitForIn(AST *a) {
+    ForIn* f = (ForIn*)a;
+    for (auto i : f->expand)
+        visitStmt(i, "", "");
+}
+
 Vresult Compiler::visitVarDefine(AST* a, bool isGlobal) {
     Vresult res;
     auto tmp = (VarDef *) a;
@@ -821,6 +827,10 @@ MType* Compiler::visitStmt(AST* a, std::string begin, std::string end) {
         return visitModuleImport(a);
     if (a->kind == AST::AST_VAR_DEF) {
         visitVarDefine(a, false);
+        return nullptr;
+    }
+    if (a->kind == AST::AST_FOR_IN) {
+        visitForIn(a);
         return nullptr;
     }
     if (a->kind == AST::AST_CONTINUE) {

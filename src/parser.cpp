@@ -931,10 +931,10 @@ Register Parser::makeForIn() {
             nullptr, 
             new Call(
                 new MemberAccess(new Id(tmpN, posBegin(), posEnd()), "__iter__", {}, posBegin(), posEnd()), 
-                    {}, 
-                    {},
-                    posBegin(),
-                    posEnd()
+                {}, 
+                {},
+                posBegin(),
+                posEnd()
             ), 
             posBegin(),
             posEnd()

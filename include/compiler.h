@@ -131,6 +131,7 @@ private:
     MType* visitElementGet(AST*, MType*);
     MType* visitMemberAccess(AST*, MType*);
     void visitVarDefineGrp(AST*, bool);
+    void visitForIn(AST*);
     Vresult visitVarDefine(AST*, bool);
     MType* visitFunction(AST*, bool);
     MType* visitValue(AST*, MType*);
