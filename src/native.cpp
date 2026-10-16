@@ -166,7 +166,7 @@ std::vector<NativeFunction*> getFuncs() {
     });
     res.push_back(new NativeFunction("ftos", fn_ftos, fs_ftos));
 
-    auto fs_resize = new FunctionSymbol("resize", new FunctionType(mica_void, {mica_int}), false);
+    auto fs_resize = new FunctionSymbol("resize", new FunctionType(mica_void, {new TArrayType(new BaseType(BaseType::MINT))}), false);
     auto fn_resize = new Function("resize", MFBEGIN {
         ((ObjArray*)((ObjInstance*)args[0].obj)->cls)->elements.resize(args[1].i);
             return MicaValue::Null();
