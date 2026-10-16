@@ -20,6 +20,27 @@ Repl::Repl(ErrorCollect* ec) {
 
 Repl::~Repl() = default;
 
+void calc(const std::string& expr, int& bigBlockCnt, int& midBlockCnt) {
+    bigBlockCnt = 0;
+    midBlockCnt = 0;
+    for (int i = 0; i < (int)expr.size(); ++i) {
+        if (expr[i] == '\'') {
+            ++i;
+            while (i < (int)expr.size() && expr[i] != '\'') ++i;
+            continue;
+        }
+        if (expr[i] == '"') {
+            ++i;
+            while (i < (int)expr.size() && expr[i] != '"') ++i;
+            continue;
+        }
+        if (expr[i] == '(') ++midBlockCnt;
+        else if (expr[i] == ')') { if (midBlockCnt > 0) --midBlockCnt; }
+        else if (expr[i] == '{') ++bigBlockCnt;
+        else if (expr[i] == '}') { if (bigBlockCnt > 0) --bigBlockCnt; }
+    }
+}
+
 void Repl::run() {
     std::string line;
     std::cout << "Mica REPL\n";
@@ -29,6 +50,16 @@ void Repl::run() {
         if (line == "exit" || line == "quit") break;
         if (line.empty()) continue;
 
+        int bigBlockCnt = 0, midBlockCnt = 0;
+        calc(line, bigBlockCnt, midBlockCnt);
+        while (bigBlockCnt != 0 || midBlockCnt != 0) {
+            printf("...");
+            std::string tmp;
+            if (!std::getline(std::cin, tmp)) return;
+            line += "\n" + tmp;
+            calc(line, bigBlockCnt, midBlockCnt);
+        }
+        
         try { eval(line); }
         catch (...) { std::cout << "error\n"; }
     }
@@ -53,8 +84,17 @@ void Repl::eval(const std::string& line) {
     module_->isReady         = true;
 
     for (auto& v : module_->globalConstPool) {
-        if (v.kind == MicaValue::OBJ && v.obj->tp == Obj::FUNCTION)
+        if (v.kind != MicaValue::OBJ) continue;
+
+        if (v.obj->tp == Obj::FUNCTION) {
             ((Function*)v.obj)->module = module_;
+        } else if (v.obj->tp == Obj::USER_DEFING_CLASS) {
+            auto cls = (ObjClass*)v.obj;
+            for (auto& [name, mv] : cls->methods) {
+                if (mv.kind == MicaValue::OBJ && mv.obj->tp == Obj::FUNCTION)
+                    ((Function*)mv.obj)->module = module_;
+            }
+        }
     }
 
     vm_->env.mainModule = module_;
