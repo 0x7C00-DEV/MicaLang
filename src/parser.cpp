@@ -846,7 +846,7 @@ Register Parser::makeVarDefine() {
     return res;
 }
 
-Register Parser::makeFor() {
+Register Parser::makeForNormal() {
     Position begin = posBegin();
     Register init, cond, chang, body;
 
@@ -869,6 +869,97 @@ Register Parser::makeFor() {
     MICA_TEST(body);
     Position end = body.result->end;
     return {new ForLoop(init.result, cond.result, chang.result, body.result, begin, end)};
+}
+
+Register Parser::makeFor() {
+    saveState();
+    Register t1 = makeForIn();
+    if (t1.isSuc) return t1;
+    restore();
+    return makeForNormal();
+}
+
+Register Parser::makeForIn() {
+    Position begin = posBegin();
+    std::string itervar;
+    Register iterValue;
+    Register body;
+    std::string tmpVar = "iter#" + std::to_string(iterVarCnt);
+    std::string tmpN = "tmp#" + std::to_string(iterVarCnt++);
+
+    setError(iterValue, equal("for")&&equal(TT_KEY), "SyntaxError: want a for");
+    advance();
+    setError(iterValue, equal("(")&&equal(TT_OP), "SyntaxError: want a '('");
+    advance();
+    setError(iterValue, equal(TT_ID), "SyntaxError: want a id");
+    itervar = current.data;
+    advance();
+    setError(iterValue, equal(TT_OP)&&equal("in"), "SyntaxError: want a 'in'");
+    advance();
+    iterValue = makeValue();
+    MICA_TEST(iterValue);
+    setError(iterValue, equal(")")&&equal(TT_OP), "SyntaxError: want a ')'");
+    body = makeBlock();
+    MICA_TEST(body);
+    std::vector<AST*> tbody;
+    for (auto i : ((Block*)body.result)->codes)
+        tbody.push_back(i);
+    tbody.push_back(new AssignNode(
+        "=",
+        new Id(itervar, posBegin(), posEnd()),
+        new Call(
+            new MemberAccess(
+                new Id(tmpVar, posBegin(), posEnd()),
+                "__next__",
+                {},
+                posBegin(),
+                posEnd()
+            ),
+            {},
+            {},
+            posBegin(),
+            posEnd()
+        ),
+        posBegin(),
+        posEnd()
+    ));
+    
+    std::vector<AST*> expand = {
+        new VarDef(tmpN, nullptr, iterValue.result, posBegin(), posEnd()),
+        new VarDef(
+            tmpVar, 
+            nullptr, 
+            new Call(
+                new MemberAccess(new Id(tmpN, posBegin(), posEnd()), "__iter__", {}, posBegin(), posEnd()), 
+                    {}, 
+                    {},
+                    posBegin(),
+                    posEnd()
+            ), 
+            posBegin(),
+            posEnd()
+        ),
+        new VarDef(
+            itervar,
+            nullptr,
+            new Call(
+                new MemberAccess(new Id(tmpVar, posBegin(), posEnd()), "__next__", {}, posBegin(), posEnd()),
+                {},
+                {},
+                posBegin(),
+                posEnd()
+            ),
+            posBegin(),
+            posEnd()
+        ),
+        new WhileLoop(
+            (AST*)(new BinOpNode("!=", new Id(itervar, posBegin(), posEnd()), new Null(posBegin(), posEnd()), posBegin(), posEnd())), 
+            new Block(tbody, posBegin(), posEnd()),
+            posBegin(), 
+            posEnd()
+        )
+    };
+    return Register(new ForIn(itervar, iterValue.result, body.result, expand, posBegin(), posEnd()));
 }
 
 Register Parser::makeForInit() {

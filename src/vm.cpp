@@ -612,6 +612,8 @@ MicaValue VM::BMOD__(MicaValue left, MicaValue right) {
 }
 
 MicaValue VM::BEQ__(MicaValue left, MicaValue right) {
+    if (left.kind == MicaValue::NUL && right.kind == MicaValue::NUL)
+        return MicaValue::Bool(true);
     if ((left.kind == MicaValue::INT || left.kind == MicaValue::FLOAT) &&
         (right.kind == MicaValue::INT || right.kind == MicaValue::FLOAT)) {
         return MicaValue::Bool(asDouble(left) == asDouble(right));
@@ -624,6 +626,8 @@ MicaValue VM::BEQ__(MicaValue left, MicaValue right) {
 }
 
 MicaValue VM::BNEQ__(MicaValue left, MicaValue right) {
+    if (left.kind == MicaValue::NUL && right.kind == MicaValue::NUL)
+        return MicaValue::Bool(false);
     if ((left.kind == MicaValue::INT || left.kind == MicaValue::FLOAT) &&
         (right.kind == MicaValue::INT || right.kind == MicaValue::FLOAT)) {
         return MicaValue::Bool(asDouble(left) != asDouble(right));

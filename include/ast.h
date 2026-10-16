@@ -20,7 +20,7 @@ struct AST {
         AST_ASSIGN_NODE, AST_RETURN, AST_CONTINUE, AST_BREAK, AST_GOTO, AST_BLOCK,
         AST_FOR, AST_WHILE, AST_DO_WHILE, AST_SWITCH, AST_TYPE, AST_VAR_DEF, AST_VAR_DEF_GRP,
         AST_CASE, AST_LABEL, AST_IF, AST_FUNC_DEF, AST_INTERFACE, AST_FUNC_TAG, AST_CLASS,
-        AST_NEW_CLASS, AST_IMPORT, AST_BIT_NOT, AST_NOT, AST_LAMBDA
+        AST_NEW_CLASS, AST_IMPORT, AST_BIT_NOT, AST_NOT, AST_LAMBDA, AST_FOR_IN
     } kind;
 
     explicit AST(TKind kind, Position begin, Position end): begin(std::move(begin)), end(std::move(end)) {
@@ -29,6 +29,31 @@ struct AST {
 };
 
 enum AccessType { APUBLIC, APRIVATE, APROTECTED };
+
+struct ForIn : AST {
+    /*
+        for (i in x) { <B1> }
+
+        expand as:
+            let tmp#N = x;
+            let iter#N = tmp#N.__iter__();
+            let i = iter.__next__();
+            while (i != null) {
+                <B1>
+                i = iter#N.__next__();
+            }
+    */
+    std::vector<AST*> expand;
+    std::string iterVar;
+    AST* iterValue;
+    AST* body;
+    ForIn(std::string iterVar, AST* iterValue, AST* body, std::vector<AST*> expand, Position begin, Position end): AST(AST_FOR_IN, begin, end) {
+        this->iterValue = iterValue;
+        this->iterVar = iterVar;
+        this->body = body;
+        this->expand = expand;
+    }
+};
 
 struct BitNot : AST {
     AST* value;

@@ -55,6 +55,7 @@ public:
     Register parseExpr(std::string, std::string);
     std::vector<Register> parseCode(std::string, std::string);
     ErrorCollect* ec;
+    int iterVarCnt=0;
 private:
     Token current;
     Lexer lexer;
@@ -100,6 +101,8 @@ private:
 
     Register makeImport();
     Register makeIf();
+    Register makeForNormal();
+    Register makeForIn();
     Register makeFor();
     Register makeWhile();
     Register makeDoWhile();

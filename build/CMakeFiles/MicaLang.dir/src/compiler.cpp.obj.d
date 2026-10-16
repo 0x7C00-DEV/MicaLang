@@ -443,6 +443,8 @@ CMakeFiles/MicaLang.dir/src/compiler.cpp.obj: \
  C:/Users/Lenovo/Desktop/MicaLang/include/asm.h \
  C:/Users/Lenovo/Desktop/MicaLang/include/config.h \
  C:/Users/Lenovo/Desktop/MicaLang/include/symbol.h \
+ C:/Users/Lenovo/Desktop/MicaLang/include/errorCollect.h \
+ C:/Users/Lenovo/Desktop/MicaLang/include/errors.h \
  C:/Users/Lenovo/Desktop/MicaLang/include/value.h \
  C:/Users/Lenovo/Desktop/MicaLang/include/parser.h \
  C:/Users/Lenovo/Desktop/MicaLang/include/lexer.h \
