@@ -854,6 +854,10 @@ MType* Compiler::visitForLoop(AST* a) {
     MType* tp = nullptr;
     if (tmp->condition) {
         tp = visitValue(tmp->condition, new BaseType(BaseType::MBOOL));
+        if (!typeComp(tp , mica_bool) && !typeComp(tp, mica_int)) {
+            std::cout << "ERROR in visitWhile, want a bool value, but get a '" << getTypeString(tp) << "'\n";
+            exit(-1);
+        }
         emit("", JMPF, end, 0);
     }
 
@@ -886,7 +890,7 @@ MType* Compiler::visitWhileLoop(AST* a) {
     visitBlock(tmp->body, begin, end);
     emit(getLabel(), JMP, begin, 0);
     emit(end, NOP, 0,0);
-    if (!typeComp(tp , mica_bool)) {
+    if (!typeComp(tp , mica_bool) && !typeComp(tp, mica_int)) {
         std::cout << "ERROR in visitWhile, want a bool value, but get a '" << getTypeString(tp) << "'\n";
         exit(-1);
     }
@@ -904,6 +908,10 @@ MType* Compiler::visitDoWhile(AST* a) {
     visitBlock(tmp->body, cond, end);
     emit(cond, NOP, 0, 0);
     auto tp = visitValue(tmp->condition, new BaseType(BaseType::MBOOL));
+    if (!typeComp(tp , mica_bool) && !typeComp(tp, mica_int)) {
+        std::cout << "ERROR in visitWhile, want a bool value, but get a '" << getTypeString(tp) << "'\n";
+        exit(-1);
+    }
     emit(getLabel(), JMPT, begin, 0);
     emit(end, NOP, 0, 0);
     leaveScope();

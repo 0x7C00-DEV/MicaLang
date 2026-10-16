@@ -308,6 +308,14 @@ void VM::jmp(int a, int b) {
 
 void VM::jmpf(int a, int b) {
     auto v = pop();
+    if (v.kind == MicaValue::NUL) {
+        env.getCTask()->pc = a;
+        return;
+    }
+    if (v.kind == MicaValue::INT && v.i <= 0) {
+        env.getCTask()->pc = a; 
+        return;
+    }
     if (v.kind != MicaValue::MBOOL) {
         std::cerr << "Not a bool value.\n";
         exit(-1);
@@ -317,6 +325,8 @@ void VM::jmpf(int a, int b) {
 
 void VM::jmpt(int a, int b) {
     auto v = pop();
+    if (v.kind == MicaValue::NUL) return;
+    if (v.kind == MicaValue::INT && v.i <= 0) return;
     if (v.kind != MicaValue::MBOOL) {
         std::cerr << "Not a bool value.\n";
         exit(-1);
