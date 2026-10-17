@@ -388,7 +388,7 @@ void showAST(AST* tree, int indent, const std::string& fo, const std::string& eo
         }
         case AST::AST_IMPORT: {
             auto import_ = (Import*) tree;
-            std::cout << printIndent(indent) << fo << "Import[" << import_->path << ", " << import_->align << "]" << eo;
+            std::cout << printIndent(indent) << fo << "Import[" << import_->moduleName << "]" << eo;
             break;
         }
         case AST::AST_BIT_NOT: {

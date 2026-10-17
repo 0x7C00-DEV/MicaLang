@@ -101,8 +101,8 @@ Register Parser::makeLambda() {
 
     body = makeBlock();
     MICA_TEST(body);
-    auto end = posEnd();
-    res.ok(new Lambda(body.result, args, new FuncType(retType.result, argType, {}, posBegin(), posEnd()), begin, end));
+    auto end = body.result->end;
+    res.ok(new Lambda(body.result, args, new FuncType(retType.result, argType, {}, begin, end), begin, end));
     return res;
 }
 
@@ -366,29 +366,19 @@ TRegister::TRegister(std::string error, Position begin, Position end) : begin(be
     this->error = error;
 }
 
-
 Register Parser::makeImport() {
     Register res;
-    std::string path, align;
+    std::string moduleName;
     auto begin = posBegin();
-    setError(res, equal(TT_KEY)&&equal("import"), "SyntaxError: want a 'import'");
+    setError(res, equal(TT_KEY) && equal("import"), "SyntaxError: want a 'import'");
     advance();
-
-    setError(res, equal(TT_STRING), "SyntaxError: want a string");
-    path = current.data;
+    setError(res, equal(TT_ID), "SyntaxError: want a module name");
+    moduleName = current.data;
     advance();
-
-    setError(res, equal(TT_KEY)&&equal("as"), "SyntaxError: want a 'as'");
-    advance();
-
-    setError(res, equal(TT_ID), "SyntaxError: want a id4");
-    align = current.data;
-    advance();
-
-    setError(res, equal(";")&&equal(TT_OP), "SyntaxError: want a ';'");
+    setError(res, equal(";") && equal(TT_OP), "SyntaxError: want a ';'");
     advance();
     auto end = posEnd();
-    res.ok(new Import(path, align, begin, end));
+    res.ok(new Import(moduleName, begin, end));
     return res;
 }
 
@@ -578,6 +568,18 @@ Register Parser::makeStmt() {
         return makeFor();
     if (equal(TT_KEY) && equal("while"))
         return makeWhile();
+    if (equal(TT_KEY) && equal("module"))
+    {
+        advance();
+        std::string name;
+        Register tmp;
+        setError(tmp, equal(TT_ID), "SyntaxError: want a id");
+        name = current.data;
+        advance();
+        setError(tmp, equal(";")&&equal(TT_OP), "SyntaxError: want a ';'");
+        advance();
+        return Register(new ModuleName(name, posBegin(), posEnd()));
+    }
     if (equal(TT_KEY) && equal("do"))
         return makeDoWhile();
     if (equal(TT_KEY) && equal("switch"))
@@ -859,11 +861,11 @@ Register Parser::makeForNormal() {
     advance();
     cond = makeExpr();
     MICA_TEST(cond);
-    setError(init, equal(";") && equal(TT_OP), "SyntaxError: want a ';'");
+    setError(cond, equal(";") && equal(TT_OP), "SyntaxError: want a ';'");
     advance();
     chang = makeForChange();
     MICA_TEST(chang);
-    setError(init, equal(")") && equal(TT_OP), "SyntaxError: want a ')'");
+    setError(chang, equal(")") && equal(TT_OP), "SyntaxError: want a ')'");
     advance();
     body = makeBlock();
     MICA_TEST(body);
@@ -904,33 +906,34 @@ Register Parser::makeForIn() {
     int n = iterVarCnt++;
     std::string tmpN   = "tmp#"  + std::to_string(n);
     std::string tmpVar = "iter#" + std::to_string(n);
-    Position p = begin;
+    Position p = src.result->begin;
+    Position srcEnd = src.result->end;
 
     std::vector<AST*> tbody;
     for (auto i : ((Block*)body.result)->codes)
         tbody.push_back(i);
     tbody.push_back(new AssignNode(
         "=",
-        new Id(itervar, p, p),
+        new Id(itervar, p, srcEnd),
         new Call(
-            new MemberAccess(new Id(tmpVar, p, p), "__next__", {}, p, p),
-            {}, {}, p, p),
-        p, p));
+            new MemberAccess(new Id(tmpVar, p, srcEnd), "__next__", {}, p, srcEnd),
+            {}, {}, p, srcEnd),
+        p, srcEnd));
 
     std::vector<AST*> expand = {
-        new VarDef(tmpN, nullptr, src.result, p, p),
+        new VarDef(tmpN, nullptr, src.result, p, srcEnd),
         new VarDef(tmpVar, nullptr,
-            new Call(new MemberAccess(new Id(tmpN, p, p), "__iter__", {}, p, p),
-                     {}, {}, p, p), p, p),
+            new Call(new MemberAccess(new Id(tmpN, p, srcEnd), "__iter__", {}, p, srcEnd),
+                     {}, {}, p, srcEnd), p, srcEnd),
         new VarDef(itervar, nullptr,
-            new Call(new MemberAccess(new Id(tmpVar, p, p), "__next__", {}, p, p),
-                     {}, {}, p, p), p, p),
+            new Call(new MemberAccess(new Id(tmpVar, p, srcEnd), "__next__", {}, p, srcEnd),
+                     {}, {}, p, srcEnd), p, srcEnd),
         new WhileLoop(
-            new BinOpNode("!=", new Id(itervar, p, p), new Null(p, p), p, p),
-            new Block(tbody, p, p), p, p)
+            new BinOpNode("!=", new Id(itervar, p, srcEnd), new Null(p, srcEnd), p, srcEnd),
+            new Block(tbody, p, srcEnd), p, srcEnd)
     };
 
-    return Register(new ForIn(itervar, src.result, body.result, expand, begin, posEnd()));
+    return Register(new ForIn(itervar, src.result, body.result, expand, begin, body.result->end));
 }
 
 Register Parser::makeForInit() {
@@ -1207,19 +1210,26 @@ Register Parser::makeClass() {
 }
 
 Register Parser::makeNew() {
-    std::string name;
-    TRegister temps;
-    std::vector<AST*> initArgs;
-
     Position begin = posBegin();
     Register res;
     setError(res, equal(TT_KEY) && equal("new"), "SyntaxError: want a 'new'");
     advance();
 
-    setError(res, equal(TT_ID), "SyntaxError: want a id3");
-    name = current.data;
+    std::vector<std::string> path;
+    setError(res, equal(TT_ID), "SyntaxError: want a id");
+    path.push_back(current.data);
     advance();
+    while (equal(".") && equal(TT_OP)) {
+        advance();
+        setError(res, equal(TT_ID), "SyntaxError: want a id");
+        path.push_back(current.data);
+        advance();
+    }
+    std::string name = path[0];
+    for (size_t i = 1; i < path.size(); ++i)
+        name += "." + path[i];
 
+    TRegister temps;
     if (equal("<") && equal(TT_OP)) {
         temps = makeTemplate();
         if (!temps.isSuc)
@@ -1227,6 +1237,7 @@ Register Parser::makeNew() {
     }
 
     bool isCallInit = false;
+    std::vector<AST*> initArgs;
 
     if (equal("(") && equal(TT_OP)) {
         isCallInit = true;

@@ -1,6 +1,20 @@
 #include "../include/compiler.h"
 #include "../include/types.h"
 
+namespace {
+
+    MicaValue strToObj(const std::string& s) {
+        auto arr = new ObjArray();
+        arr->elements.clear();
+        for (char c : s)
+            arr->elements.push_back(MicaValue::Char(c));
+        auto inst = new ObjInstance();
+        inst->cls = arr;
+        return MicaValue::Object(inst);
+    }
+
+} // namespace
+
 AstToMtype::AstToMtype(CompileEnvironment* env, ErrorCollect* ec) {
     this->env = env;
     this->ec = ec;
@@ -85,14 +99,30 @@ MType *AstToMtype::findClassMember(AST *a) {
             return new InterfaceType((InterfaceSymbol*)sym);
         if (sym->kind == Symbol::SYM_CLASS)
             return new ClassType(name, sym);
-        ec->emitError(new SyntaxError("Name '" + name + "' is not a class or interface", a->begin, a->end), false);
+        if (sym->kind == Symbol::SYM_MODULE)
+            return new ModuleType(name, name, sym);
+        ec->emitError(new SyntaxError("Name '" + name + "' is not a type", a->begin, a->end), false);
         return nullptr;
     }
 
     auto parent = ((MemberAccess*)a)->parent;
     auto member = ((MemberAccess*)a)->member;
     auto parentType = findClassMember(parent);
-    if (!parentType || parentType->baseType != MType::BT_CLASS) {
+    if (!parentType) return nullptr;
+
+    if (parentType->baseType == MType::BT_MODULE) {
+        auto* ms = (ModuleSymbol*)((ModuleType*)parentType)->moduleSymbol;
+        auto cit = ms->cls.find(member);
+        if (cit != ms->cls.end())
+            return new ClassType(member, cit->second);
+        auto fit = ms->funcs.find(member);
+        if (fit != ms->funcs.end())
+            return fit->second->type;
+        ec->emitError(new NameError("Module has no member '" + member + "'", a->begin, a->end), false);
+        return nullptr;
+    }
+
+    if (parentType->baseType != MType::BT_CLASS) {
         ec->emitError(new TypeError("Invalid class member access", a->begin, a->end), false);
         return nullptr;
     }
@@ -362,16 +392,27 @@ Symbol *Compiler::getMemberType(AST* node) {
         return sym;
     }
     if (node->kind == AST::AST_MEMBER_ACCESS) {
-        auto tmp = getMemberType(((MemberAccess*)node)->parent);
-        if (!tmp) return nullptr;
-        if (tmp->kind != Symbol::SYM_CLASS) {
+        auto parent = getMemberType(((MemberAccess*)node)->parent);
+        if (!parent) return nullptr;
+        auto member = ((MemberAccess*)node)->member;
+
+        if (parent->kind == Symbol::SYM_MODULE) {
+            auto* ms = (ModuleSymbol*)parent;
+            auto fit = ms->funcs.find(member);
+            if (fit != ms->funcs.end()) return fit->second;
+            auto cit = ms->cls.find(member);
+            if (cit != ms->cls.end()) return cit->second;
+            ec->emitError(new NameError("Module has no member '" + member + "'", node->begin, node->end), false);
+            return nullptr;
+        }
+
+        if (parent->kind != Symbol::SYM_CLASS) {
             ec->emitError(new TypeError("Not a class", node->begin, node->end), false);
             return nullptr;
         }
-        auto member = ((MemberAccess*)node)->member;
-        auto it = ((ClassSymbol*)tmp)->syms.find(member);
-        if (it == ((ClassSymbol*)tmp)->syms.end()) {
-            ec->emitError(new NameError("Class '" + ((ClassSymbol*)tmp)->name + "' has no member '" + member + "'", node->begin, node->end), false);
+        auto it = ((ClassSymbol*)parent)->syms.find(member);
+        if (it == ((ClassSymbol*)parent)->syms.end()) {
+            ec->emitError(new NameError("Class '" + ((ClassSymbol*)parent)->name + "' has no member '" + member + "'", node->begin, node->end), false);
             return nullptr;
         }
         return it->second;
@@ -403,7 +444,7 @@ MType* Compiler::visitCallNode(AST* a, MType* expect) {
 
         if (tmp->fnid->kind == AST::AST_MEMBER_ACCESS) {
             auto temp = getMemberType(((MemberAccess*)tmp->fnid)->parent);
-            if (temp && temp->kind != Symbol::SYM_CLASS) {
+            if (temp && temp->kind != Symbol::SYM_CLASS && temp->kind != Symbol::SYM_MODULE) {
                 auto recvType = visitValue(((MemberAccess*)tmp->fnid)->parent, nullptr);
                 if (!recvType) return nullptr;
                 argc += 1;
@@ -527,6 +568,25 @@ MType* Compiler::visitMemberAccess(AST* a, MType* expect) {
         return nullptr;
     }
 
+    if (parent->baseType == MType::BT_MODULE) {
+        auto* ms = (ModuleSymbol*)((ModuleType*)parent)->moduleSymbol;
+
+        auto fit = ms->funcs.find(tmp->member);
+        if (fit != ms->funcs.end()) {
+            int idx = pushConstL(strToObj(tmp->member));
+            emit(getLabel(), LOAD_MODULE_MEMBER, idx, 0);
+            return fit->second->type;
+        }
+        auto cit = ms->cls.find(tmp->member);
+        if (cit != ms->cls.end()) {
+            int idx = pushConstL(strToObj(tmp->member));
+            emit(getLabel(), LOAD_MODULE_MEMBER, idx, 0);
+            return new ClassType(tmp->member, cit->second);
+        }
+        ec->emitError(new NameError("Module has no member '" + tmp->member + "'", a->begin, a->end), false);
+        return nullptr;
+    }
+
     storeString(tmp->member);
     emit(getLabel(), MEM_GET, 0, 0);
 
@@ -631,16 +691,15 @@ Vresult Compiler::visitVarDefine(AST* a, bool isGlobal) {
 
 MType* Compiler::visitModuleImport(AST* a) {
     auto tmp = (Import*) a;
-    std::string path = tmp->path;
-    std::string rename = tmp->align;
-    ProgramLoader loader(path);
-    ModuleSymbol* sym = loader.getModuleTag(rename);
+    std::string moduleName = tmp->moduleName;
+    SymLoader loader(moduleName);
+    ModuleSymbol* sym = loader.getModuleTag(moduleName);
     if (!sym) {
-        ec->emitError(new NameError("Module '" + path + "' cannot be loaded", a->begin, a->end), false);
+        ec->emitError(new NameError("Module '" + moduleName + "' cannot be loaded", a->begin, a->end), false);
         return nullptr;
     }
-    env->cs.registSymbolGbl(rename, sym);
-    return new ModuleType(rename, path, sym);
+    env->cs.registSymbolGbl(moduleName, sym);
+    return new ModuleType(moduleName, moduleName, sym);
 }
 
 Function* Compiler::makeFunction(AST* a) {
@@ -1138,21 +1197,52 @@ MType* Compiler::visitClass(AST* a) {
 
 MType* Compiler::visitNewClass(AST* a, MType* expect) {
     auto tmp = (NewClass*) a;
-    int pos = -1;
-    for (int i = 0; i < (int)env->globalConstPool.size(); ++i) {
-        auto k = env->globalConstPool[i];
-        if (k.kind == MicaValue::OBJ && k.obj->tp == Obj::USER_DEFING_CLASS &&
-            ((ObjClass*)k.obj)->name == tmp->className) {
-            pos = i;
-            break;
+    std::string className = tmp->className;
+    auto dotPos = className.find('.');
+
+    MType* retType = nullptr;
+
+    if (dotPos != std::string::npos) {
+        std::string modName = className.substr(0, dotPos);
+        std::string clsName = className.substr(dotPos + 1);
+
+        auto* sym = env->cs.lookup(modName);
+        if (!sym || sym->kind != Symbol::SYM_MODULE) {
+            ec->emitError(new NameError("'" + modName + "' is not a module", a->begin, a->end), false);
+            return nullptr;
         }
+        auto* ms = (ModuleSymbol*)sym;
+        auto it = ms->cls.find(clsName);
+        if (it == ms->cls.end()) {
+            ec->emitError(new NameError("Module '" + modName + "' has no class '" + clsName + "'", a->begin, a->end), false);
+            return nullptr;
+        }
+        retType = new ClassType(clsName, it->second);
+
+        int modIdx = pushConstL(strToObj(modName));
+        int clsIdx = pushConstL(strToObj(clsName));
+        emit(getLabel(), LOAD_MODULE, modIdx, 0);
+        emit(getLabel(), LOAD_MODULE_MEMBER, clsIdx, 0);
+        emit(getLabel(), NEW, 0, 0);
+    } else {
+        int pos = -1;
+        for (int i = 0; i < (int)env->globalConstPool.size(); ++i) {
+            auto k = env->globalConstPool[i];
+            if (k.kind == MicaValue::OBJ && k.obj->tp == Obj::USER_DEFING_CLASS &&
+                ((ObjClass*)k.obj)->name == className) {
+                pos = i;
+                break;
+            }
+        }
+        if (pos == -1) {
+            ec->emitError(new NameError("Class '" + className + "' not found", a->begin, a->end), false);
+            return nullptr;
+        }
+        retType = new ClassType(className, env->cs.lookup(className));
+        emit(getLabel(), LOAD_GCST, pos, 0);
+        emit(getLabel(), NEW, 0, 0);
     }
-    if (pos == -1) {
-        ec->emitError(new NameError("Class '" + tmp->className + "' not found", a->begin, a->end), false);
-        return nullptr;
-    }
-    emit(getLabel(), LOAD_GCST, pos, 0);
-    emit(getLabel(), NEW, 0, 0);
+
     if (tmp->isCallInit) {
         emit(getLabel(), DUP, 0, 0);
         storeString("__init__");
@@ -1165,7 +1255,7 @@ MType* Compiler::visitNewClass(AST* a, MType* expect) {
         emit(getLabel(), CALL, (int)tmp->initArgs.size() + 1, 0);
         emit(getLabel(), POP, 0, 0);
     }
-    return new ClassType(tmp->className, env->cs.lookup(tmp->className));
+    return retType;
 }
 
 MType* Compiler::visitArray(AST* a, MType* type) {
@@ -1320,14 +1410,14 @@ MType *Compiler::visitId(AST *a) {
             placeholder->name = name;
             fsym->constPoolIdx = env->addFunctionValue(placeholder);
         }
-
         emit(getLabel(), LOAD_GCST, fsym->constPoolIdx, 0);
         return fsym->type;
     }
 
     if (info->kind == Symbol::SYM_MODULE) {
-        ec->emitError(new SystemError("Module member access is not implemented", a->begin, a->end), false);
-        return nullptr;
+        int idx = pushConstL(strToObj(name));
+        emit(getLabel(), LOAD_MODULE, idx, 0);
+        return new ModuleType(name, name, info);
     }
 
     if (info->kind == Symbol::SYM_CLASS) {
@@ -1338,7 +1428,7 @@ MType *Compiler::visitId(AST *a) {
                 ((ObjClass*)k.obj)->name == name) {
                 emit(getLabel(), LOAD_GCST, i, 0);
                 return new ClassType(name, info);
-            }
+                }
         }
         ec->emitError(new NameError("Class '" + name + "' not found in global const pool", a->begin, a->end), false);
         return nullptr;
@@ -1519,6 +1609,7 @@ int Compiler::getInterfaceId(AST* name) {
 Module* Compiler::getProgram(std::string text, std::string fileName, ErrorCollect* ec) {
     this->ec = ec;
     size_t mark = ec->errors.size();
+    std::string moduleName;
 
     std::vector<Register> tmp = parser.parseCode(text, fileName);
     for (auto i : tmp)
@@ -1538,6 +1629,10 @@ Module* Compiler::getProgram(std::string text, std::string fileName, ErrorCollec
             Itf.push_back(i.result);
         else if (i.result->kind == AST::AST_IMPORT)
             Import.push_back(i.result);
+        else if (i.result->kind == AST::AST_MODULE_NAME)
+        {
+            moduleName = ((ModuleName*)i.result)->moduleName;
+        }
         else Other.push_back(i.result);
     }
 
@@ -1609,6 +1704,7 @@ Module* Compiler::getProgram(std::string text, std::string fileName, ErrorCollec
 
     Module* md = new Module;
     md->globalConstPool = env->globalConstPool;
+    md->moduleName = moduleName;
     return md;
 }
 

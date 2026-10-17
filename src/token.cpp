@@ -23,7 +23,7 @@ const std::vector<std::string> micaKey = {
     "fn", "class", "enum", "interface",
     "public", "private", "protected", "extend", "implement",
     "return", "goto", "native", "import", "in", "as", "let",
-    "continue", "break", "default", "new"
+    "continue", "break", "default", "new", "module"
 };
 
 bool isKey(const std::string& name) {

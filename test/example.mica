@@ -23,7 +23,8 @@ class Counter {
 
 fn main(): void {
     println("begin:");
-    for (x in new Counter()) {
+    let tmp = new Counter();
+    for (x in tmp) {
         println(itos(x));
     }
     println("end");

@@ -71,16 +71,13 @@ void VM::initModule(Module* module) {
 }
 
 void VM::importModule(int a, int b) {
-    auto modulePath_ = loadSubConst(a);
-    auto moduleAlign_ = loadSubConst(b);
-    std::string path, align;
-    for (auto i : ((ObjArray*)modulePath_.obj)->elements)
-        path += i.c;
-    for (auto i : ((ObjArray*)moduleAlign_.obj)->elements)
-        align += i.c;
-    ProgramLoader loader(path);
+    auto val = pop();
+    std::string name;
+    for (auto i : ((ObjArray*)val.obj)->elements)
+        name += i.c;
+    ProgramLoader loader(name);
     auto p = loader.getData();
-    env.loadModule(this, p, align, path);
+    env.loadModule(this, p, name, name);
 }
 
 void VM::initVec() {
@@ -257,36 +254,47 @@ void VM::start0(std::string path) {
 }
 
 void VM::loadModule(int a, int b) {
-    auto module_ = loadSubConst(a);
-    std::string name ;
-    for (auto i : ((ObjArray*)module_.obj)->elements)
+    auto nameVal = loadSubConst(a);
+    std::string name;
+    for (auto i : ((ObjArray*)nameVal.obj)->elements)
         name += i.c;
-    for (auto i : env.modules)
+
+    for (auto i : env.modules) {
         if (i->moduleName == name) {
             push(MicaValue::Object(i));
             return;
         }
-    std::cout << "module '" << name << "' not found.\n";
-    exit(-1);
+    }
+
+    ProgramLoader loader(name);
+    Program* p = loader.getData();
+    if (!p) {
+        std::cout << "module '" << name << "' not found.\n";
+        exit(-1);
+    }
+    Module* m = env.loadModule(this, p, name, name);
+    push(MicaValue::Object(m));
 }
 
-void VM::loadModuleMember(int a , int b) {
+void VM::loadModuleMember(int a, int b) {
     auto module = (Module*) pop().obj;
-    auto name = loadSubConst(a);
+    auto nameVal = loadSubConst(a);
     std::string n;
-    for (auto i : ((ObjArray*)name.obj)->elements)
+    for (auto i : ((ObjArray*)nameVal.obj)->elements)
         n += i.c;
-    for (auto i : module->globalConstPool) {
-        if (i.kind == MicaValue::OBJ && i.obj->tp == Obj::FUNCTION && ((Function*)i.obj)->name == n) {
+
+    for (auto& i : module->globalConstPool) {
+        if (i.kind != MicaValue::OBJ) continue;
+        if (i.obj->tp == Obj::FUNCTION && ((Function*)i.obj)->name == n) {
             push(i);
             return;
         }
-        if (i.kind == MicaValue::OBJ && i.obj->tp == Obj::USER_DEFING_CLASS && ((ObjClass *) i.obj)->name == n) {
+        if (i.obj->tp == Obj::USER_DEFING_CLASS && ((ObjClass*)i.obj)->name == n) {
             push(i);
             return;
         }
     }
-    std::cout << "Member '" << n << "not found in module '" << module->moduleName << "' \n";
+    std::cout << "Member '" << n << "' not found in module '" << module->moduleName << "'\n";
     exit(-1);
 }
 

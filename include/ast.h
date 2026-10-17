@@ -1,7 +1,3 @@
-//
-// Created by Lenovo on 2026/9/11.
-//
-
 #ifndef MICALANG_AST_H
 #define MICALANG_AST_H
 #include <complex>
@@ -20,7 +16,7 @@ struct AST {
         AST_ASSIGN_NODE, AST_RETURN, AST_CONTINUE, AST_BREAK, AST_GOTO, AST_BLOCK,
         AST_FOR, AST_WHILE, AST_DO_WHILE, AST_SWITCH, AST_TYPE, AST_VAR_DEF, AST_VAR_DEF_GRP,
         AST_CASE, AST_LABEL, AST_IF, AST_FUNC_DEF, AST_INTERFACE, AST_FUNC_TAG, AST_CLASS,
-        AST_NEW_CLASS, AST_IMPORT, AST_BIT_NOT, AST_NOT, AST_LAMBDA, AST_FOR_IN
+        AST_NEW_CLASS, AST_IMPORT, AST_BIT_NOT, AST_NOT, AST_LAMBDA, AST_FOR_IN, AST_MODULE_NAME
     } kind;
 
     explicit AST(TKind kind, Position begin, Position end): begin(std::move(begin)), end(std::move(end)) {
@@ -30,19 +26,16 @@ struct AST {
 
 enum AccessType { APUBLIC, APRIVATE, APROTECTED };
 
-struct ForIn : AST {
-    /*
-        for (i in x) { <B1> }
+struct ModuleName : AST
+{
+    std::string moduleName;
+    ModuleName(std::string moduleName, Position begin, Position end): AST(AST_MODULE_NAME, begin, end)
+    {
+        this->moduleName = moduleName;
+    }
+};
 
-        expand as:
-            let tmp#N = x;
-            let iter#N = tmp#N.__iter__();
-            let i = iter.__next__();
-            while (i != null) {
-                <B1>
-                i = iter#N.__next__();
-            }
-    */
+struct ForIn : AST {
     std::vector<AST*> expand;
     std::string iterVar;
     AST* iterValue;
@@ -86,11 +79,9 @@ struct Not : AST {
 };
 
 struct Import : AST {
-    std::string path;
-    std::string align;
-    Import(std::string path, std::string align, Position begin, Position end): AST(AST_IMPORT, begin, end) {
-        this->path = path;
-        this->align = align;
+    std::string moduleName;
+    Import(std::string moduleName, Position begin, Position end): AST(AST_IMPORT, begin, end) {
+        this->moduleName = std::move(moduleName);
     }
 };
 
@@ -448,13 +439,11 @@ struct AssignNode : AST {
 
 struct Break : AST {
     Break(Position begin, Position end) : AST(AST_BREAK, std::move(begin), std::move(end)) {
-
     }
 };
 
 struct Continue : AST {
     Continue(Position begin, Position end) : AST(AST_CONTINUE, std::move(begin), std::move(end)) {
-
     }
 };
 
@@ -467,8 +456,8 @@ struct Return : AST {
 
 struct SelfChangeNode : AST {
     AST* value;
-    bool incOrDec; // true -> inc, false -> dec
-    bool isPre; // true -> pre, false -> no pre
+    bool incOrDec;
+    bool isPre;
     AST* expand;
     AST* retType;
     SelfChangeNode(AST* value, bool incOrDec, bool isPre, Position begin, Position end): AST(AST_SELF_CHANGE, begin, end) {

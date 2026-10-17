@@ -38,4 +38,6 @@ add_executable(MicaLang main.cpp
         include/errorCollect.h
         src/errorCollect.cpp
         include/errors.h
-        src/errors.cpp)
+        src/errors.cpp
+        include/writer.h
+        src/writer.cpp)
