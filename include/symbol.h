@@ -20,7 +20,7 @@ bool typeComp(MType*, std::vector<InterfaceSymbol*>);
 std::string getTypeString(MType*);
 
 struct MType {
-    enum TP { BT_BASIC, BT_NORMAL, BT_FUNC, BT_ARRAY, BT_TEMPLATE, BT_MODULE, BT_CLASS, BT_IMPL, BT_INTERFACE } baseType;
+    enum TP { BT_ANY, BT_BASIC, BT_NORMAL, BT_FUNC, BT_ARRAY, BT_TEMPLATE, BT_MODULE, BT_CLASS, BT_IMPL, BT_INTERFACE } baseType;
 
     MType(TP tp);
 private:
@@ -34,10 +34,15 @@ private:
 };
 
 struct BaseType : MType {
-    enum MicaTypes { MINT, MDOUBLE, MCHAR, MBOOL, MVOID, MNULL } type;
+    enum MicaTypes { MINT, MDOUBLE, MCHAR, MBOOL, MVOID, MNULL, MANY } type;
     std::string str;
     std::string __str__() override;
     BaseType(MicaTypes);
+};
+
+struct AnyType : MType {
+    AnyType() : MType(BT_ANY) {}
+    std::string __str__() override { return "any;"; }
 };
 
 struct ModuleType : MType {

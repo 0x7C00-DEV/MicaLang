@@ -560,6 +560,30 @@ src/vm.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/vm.cpp.s
 .PHONY : src/vm.cpp.s
 
+src/writer.obj: src/writer.cpp.obj
+.PHONY : src/writer.obj
+
+# target to build an object file
+src/writer.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/writer.cpp.obj
+.PHONY : src/writer.cpp.obj
+
+src/writer.i: src/writer.cpp.i
+.PHONY : src/writer.i
+
+# target to preprocess a source file
+src/writer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/writer.cpp.i
+.PHONY : src/writer.cpp.i
+
+src/writer.s: src/writer.cpp.s
+.PHONY : src/writer.s
+
+# target to generate assembly for a file
+src/writer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\MicaLang.dir\build.make CMakeFiles/MicaLang.dir/src/writer.cpp.s
+.PHONY : src/writer.cpp.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -623,6 +647,9 @@ help:
 	@echo ... src/vm.obj
 	@echo ... src/vm.i
 	@echo ... src/vm.s
+	@echo ... src/writer.obj
+	@echo ... src/writer.i
+	@echo ... src/writer.s
 .PHONY : help
 
 

@@ -106,5 +106,11 @@
   "command": "F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -g -std=gnu++20 -o CMakeFiles\\MicaLang.dir\\src\\errors.cpp.obj -c C:\\Users\\Lenovo\\Desktop\\MicaLang\\src\\errors.cpp",
   "file": "C:/Users/Lenovo/Desktop/MicaLang/src/errors.cpp",
   "output": "CMakeFiles/MicaLang.dir/src/errors.cpp.obj"
+},
+{
+  "directory": "C:/Users/Lenovo/Desktop/MicaLang/build",
+  "command": "F:\\develop\\Mingw-14.2.0\\mingw64\\bin\\g++.exe   -g -std=gnu++20 -o CMakeFiles\\MicaLang.dir\\src\\writer.cpp.obj -c C:\\Users\\Lenovo\\Desktop\\MicaLang\\src\\writer.cpp",
+  "file": "C:/Users/Lenovo/Desktop/MicaLang/src/writer.cpp",
+  "output": "CMakeFiles/MicaLang.dir/src/writer.cpp.obj"
 }
 ]

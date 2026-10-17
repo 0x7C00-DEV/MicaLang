@@ -329,7 +329,8 @@ std::string ClassType::__str__() {
 
 bool typeComp(MType* a, MType* b) {
     if (!a || !b) return false;
-
+    if (a->baseType == MType::BT_ANY || b->baseType == MType::BT_ANY) 
+        return true;
     if (a->baseType == MType::BT_CLASS && b->baseType == MType::BT_CLASS) {
         auto target = (ClassSymbol*)((ClassType*)b)->sym;
         auto cur    = (ClassSymbol*)((ClassType*)a)->sym;
@@ -346,11 +347,12 @@ bool typeComp(MType* a, MType* b) {
 
     if (a->baseType == MType::BT_CLASS && b->baseType == MType::BT_INTERFACE)
         return ((ClassType*)a)->isImplement({((InterfaceType*)b)->symbol});
-
     return a->__str__() == b->__str__();
 }
 
 bool typeComp(MType* a, std::vector<InterfaceSymbol*> b) {
+    if (a->baseType == MType::BT_ANY)
+        return true;
     if (a->baseType != MType::BT_CLASS) {
         std::cout << "ERROR: not a class\n";
         exit(-1);

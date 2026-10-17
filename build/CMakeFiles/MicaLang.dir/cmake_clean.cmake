@@ -35,6 +35,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/MicaLang.dir/src/value.cpp.obj.d"
   "CMakeFiles/MicaLang.dir/src/vm.cpp.obj"
   "CMakeFiles/MicaLang.dir/src/vm.cpp.obj.d"
+  "CMakeFiles/MicaLang.dir/src/writer.cpp.obj"
+  "CMakeFiles/MicaLang.dir/src/writer.cpp.obj.d"
   "MicaLang.exe"
   "MicaLang.exe.manifest"
   "MicaLang.pdb"

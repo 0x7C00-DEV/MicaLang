@@ -173,11 +173,11 @@ std::vector<NativeFunction*> getFuncs() {
     });
     res.push_back(new NativeFunction("resize", fn_resize, fs_resize));
 
-    auto fs_strlen = new FunctionSymbol("strLen", new FunctionType(mica_int, {mica_string}), false);
-    auto fn_strlen = new Function("strLen", MFBEGIN {
+    auto fs_strlen = new FunctionSymbol("len", new FunctionType(mica_int, {mica_any}), false);
+    auto fn_strlen = new Function("len", MFBEGIN {
         return MicaValue::Int(((ObjArray*)((ObjInstance*)args[0].obj)->cls)->elements.size());
     });
-    res.push_back(new NativeFunction("strLen", fn_strlen, fs_strlen));
+    res.push_back(new NativeFunction("len", fn_strlen, fs_strlen));
 
     auto fs_randrange = new FunctionSymbol("random", new FunctionType(mica_int, {mica_int, mica_int}), false);
     auto fn_randrange = new Function("random",  MFBEGIN {

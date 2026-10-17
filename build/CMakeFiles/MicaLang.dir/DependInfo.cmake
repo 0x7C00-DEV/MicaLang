@@ -26,6 +26,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/Lenovo/Desktop/MicaLang/src/token.cpp" "CMakeFiles/MicaLang.dir/src/token.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/token.cpp.obj.d"
   "C:/Users/Lenovo/Desktop/MicaLang/src/value.cpp" "CMakeFiles/MicaLang.dir/src/value.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/value.cpp.obj.d"
   "C:/Users/Lenovo/Desktop/MicaLang/src/vm.cpp" "CMakeFiles/MicaLang.dir/src/vm.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/vm.cpp.obj.d"
+  "C:/Users/Lenovo/Desktop/MicaLang/src/writer.cpp" "CMakeFiles/MicaLang.dir/src/writer.cpp.obj" "gcc" "CMakeFiles/MicaLang.dir/src/writer.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

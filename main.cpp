@@ -52,11 +52,8 @@ void testFile() {
     printf("end\n");
 }
 
-void release(int argc, char** argv) {
-
-}
-
 int main(int argc, char** argv) {
-    testFile();
+    Repl rpl(new ErrorCollect(nullptr));
+    rpl.run();
     return 0;
 }
