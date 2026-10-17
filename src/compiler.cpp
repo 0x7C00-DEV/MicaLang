@@ -13,7 +13,7 @@ namespace {
         return MicaValue::Object(inst);
     }
 
-} // namespace
+} 
 
 AstToMtype::AstToMtype(CompileEnvironment* env, ErrorCollect* ec) {
     this->env = env;
@@ -1639,6 +1639,8 @@ Module* Compiler::getProgram(std::string text, std::string fileName, ErrorCollec
 #ifdef TEST
     registNativeFunction();
 #endif
+    for (auto i : Import)
+        visitModuleImport(i);
 
     for (auto i : globalVar) declareGlobalVars(i);
 
@@ -1685,7 +1687,6 @@ Module* Compiler::getProgram(std::string text, std::string fileName, ErrorCollec
     }
 
     createTask("@init");
-    for (auto i : Import) visitModuleImport(i);
     for (auto i : globalVar) {
         if (i->kind == AST::AST_VAR_DEF)
             visitVarDefine(i, true);

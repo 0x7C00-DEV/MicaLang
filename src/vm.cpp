@@ -1,11 +1,17 @@
-//
-// Created by Lenovo on 2026/9/24.
-//
 #include "../include/loader.h"
 #include "../include/vm.h"
 
 static double asDouble(const MicaValue& v) {
     return (v.kind == MicaValue::INT) ? (double)v.i : v.f;
+}
+
+static std::string objToString(const MicaValue& v) {
+    std::string s;
+    if (v.kind != MicaValue::OBJ || !v.obj) return s;
+    auto arr = (ObjArray*)((ObjInstance*)v.obj)->cls;
+    if (!arr) return s;
+    for (auto& c : arr->elements) s += c.c;
+    return s;
 }
 
 Function* VM::lookFunction(std::string name) {
@@ -72,9 +78,7 @@ void VM::initModule(Module* module) {
 
 void VM::importModule(int a, int b) {
     auto val = pop();
-    std::string name;
-    for (auto i : ((ObjArray*)val.obj)->elements)
-        name += i.c;
+    std::string name = objToString(val);
     ProgramLoader loader(name);
     auto p = loader.getData();
     env.loadModule(this, p, name, name);
@@ -143,13 +147,11 @@ void VM::registNativeFunction(Module* mod) {
         for (auto& v : mod->globalConstPool) {
             if (v.kind == MicaValue::OBJ && v.obj->tp == Obj::FUNCTION &&
                 ((Function*)v.obj)->name == i->name) {
-                if (!((Function*)v.obj)->isNative) {
-                    ((Function*)v.obj)->__native__ = i->nativeFn->__native__;
-                    ((Function*)v.obj)->isNative  = true;
-                }
+                ((Function*)v.obj)->__native__ = i->nativeFn->__native__;
+                ((Function*)v.obj)->isNative  = true;
                 exists = true;
                 break;
-                }
+            }
         }
         if (!exists)
             mod->globalConstPool.push_back(MicaValue::Object(i->nativeFn));
@@ -212,7 +214,6 @@ void VM::execute(int instr) {
     (this->*command)(i.v1, i.v2);
 }
 
-
 void VM::execute(Instr instr) {
     (this->*IVEC[instr.op])(instr.v1, instr.v2);
 }
@@ -255,9 +256,7 @@ void VM::start0(std::string path) {
 
 void VM::loadModule(int a, int b) {
     auto nameVal = loadSubConst(a);
-    std::string name;
-    for (auto i : ((ObjArray*)nameVal.obj)->elements)
-        name += i.c;
+    std::string name = objToString(nameVal);
 
     for (auto i : env.modules) {
         if (i->moduleName == name) {
@@ -279,9 +278,7 @@ void VM::loadModule(int a, int b) {
 void VM::loadModuleMember(int a, int b) {
     auto module = (Module*) pop().obj;
     auto nameVal = loadSubConst(a);
-    std::string n;
-    for (auto i : ((ObjArray*)nameVal.obj)->elements)
-        n += i.c;
+    std::string n = objToString(nameVal);
 
     for (auto& i : module->globalConstPool) {
         if (i.kind != MicaValue::OBJ) continue;
@@ -321,7 +318,7 @@ void VM::jmpf(int a, int b) {
         return;
     }
     if (v.kind == MicaValue::INT && v.i <= 0) {
-        env.getCTask()->pc = a; 
+        env.getCTask()->pc = a;
         return;
     }
     if (v.kind != MicaValue::MBOOL) {
@@ -349,7 +346,6 @@ void VM::swap(int a, int b) {
 }
 
 void VM::call(int a, int b) {
-    // Stack: [fn, v1, v2, v3, v4, ..., vN]
     std::vector<MicaValue> args;
     for (int i=0; i<a; ++i)
         args.push_back(pop());
@@ -454,7 +450,6 @@ void VM::dup(int a, int b) {
 
 void VM::memGet(int a, int b) {
     std::string fieldName;
-    // [obj, fieldName]
     auto fieName = pop();
     auto arr = (ObjArray*)(((ObjInstance*)fieName.obj)->cls);
     for (auto i : arr->elements)
@@ -486,7 +481,6 @@ void VM::elGet(int a, int b) {
 }
 
 void VM::elSet(int a, int b) {
-    // STACK: [obj, val, pos]
     auto pos = pop();
     auto val = pop();
     auto obj = pop();
@@ -503,19 +497,19 @@ void VM::newArr(int a, int b) {
     push(MicaValue::Object(tmp));
 }
 
-MicaValue VM::accessSubVar(int address /*模块内索引*/) {
+MicaValue VM::accessSubVar(int address ) {
     return env.getCTask()->localVar[address];
 }
 
-MicaValue VM::accessGlobalVar(int address/*模块内索引*/) {
+MicaValue VM::accessGlobalVar(int address) {
     return env.getCTask()->module->globalVars[address];
 }
 
-MicaValue VM::loadGlobalConst(int address/*模块内索引*/) {
+MicaValue VM::loadGlobalConst(int address) {
     return env.getCTask()->module->globalConstPool[address];
 }
 
-MicaValue VM::loadSubConst(int address/*模块内索引*/) {
+MicaValue VM::loadSubConst(int address) {
     return env.getCTask()->fn->constants[address];
 }
 
@@ -620,6 +614,8 @@ MicaValue VM::BMOD__(MicaValue left, MicaValue right) {
 }
 
 MicaValue VM::BEQ__(MicaValue left, MicaValue right) {
+    if (left.kind == MicaValue::CHAR && right.kind == MicaValue::CHAR)
+        return MicaValue::Bool(left.c == right.c);
     if (left.kind == MicaValue::NUL || right.kind == MicaValue::NUL)
         return MicaValue::Bool(left.kind == right.kind);
     if ((left.kind == MicaValue::INT || left.kind == MicaValue::FLOAT) &&
@@ -634,6 +630,8 @@ MicaValue VM::BEQ__(MicaValue left, MicaValue right) {
 }
 
 MicaValue VM::BNEQ__(MicaValue left, MicaValue right) {
+    if (left.kind == MicaValue::CHAR && right.kind == MicaValue::CHAR)
+        return MicaValue::Bool(left.c != right.c);
     if (left.kind == MicaValue::NUL || right.kind == MicaValue::NUL)
         return MicaValue::Bool(left.kind != right.kind);
     if ((left.kind == MicaValue::INT || left.kind == MicaValue::FLOAT) &&

@@ -1,5 +1,6 @@
 #include "../include/dis.h"
 #include <iomanip>
+#include <string>
 
 std::string getOperator(int op) {
     auto tmp = operMap.find(op);
