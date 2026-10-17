@@ -1,6 +1,30 @@
-fn max(a:int, b:int): int
-    return (a>b)? a : b;
+class Counter {
+    values: [int];
+    pos: int;
+
+    fn __init__(self: Counter): void {
+        self.values = [10, 20, 30];
+        self.pos = 0;
+    }
+
+    fn __iter__(self: Counter): Counter {
+        return self;
+    }
+
+    fn __next__(self: Counter): int {
+        if (self.pos >= 3) {
+            return null;
+        }
+        let v = self.values[self.pos];
+        self.pos = self.pos + 1;
+        return v;
+    }
+}
 
 fn main(): void {
-    println(itos(max(1,2)));
+    println("begin:");
+    for (x in new Counter()) {
+        println(itos(x));
+    }
+    println("end");
 }

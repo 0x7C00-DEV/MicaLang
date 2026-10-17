@@ -57,7 +57,6 @@ void release(int argc, char** argv) {
 }
 
 int main(int argc, char** argv) {
-    Repl repl(new ErrorCollect(nullptr));
-    repl.run();
+    testFile();
     return 0;
 }

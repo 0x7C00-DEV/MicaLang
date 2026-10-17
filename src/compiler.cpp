@@ -560,9 +560,11 @@ void Compiler::visitVarDefineGrp(AST* a, bool isGlobal) {
 }
 
 void Compiler::visitForIn(AST *a) {
+    createScope(Scope::SNORMAL_BLOCK);
     ForIn* f = (ForIn*)a;
     for (auto i : f->expand)
         visitStmt(i, "", "");
+    leaveScope();
 }
 
 Vresult Compiler::visitVarDefine(AST* a, bool isGlobal) {
